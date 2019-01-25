@@ -1,0 +1,73 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enter the username and password."
+            android:textSize="20dp" />
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/fragment_login_input_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="flagNoExtractUi"
+            app:errorEnabled="true"
+            app:passwordToggleEnabled="true">
+
+            <EditText
+                android:id="@+id/fragment_login_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Username"
+                android:imeOptions="flagNoExtractUi" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/fragment_login_input_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="flagNoExtractUi"
+            app:errorEnabled="true"
+            app:passwordToggleEnabled="true">
+
+            <EditText
+                android:id="@+id/fragment_login_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="textPassword" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/fragment_btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Login" />
+
+
+        <TextView
+            android:id="@+id/fragment_link_signup"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="No account yet? Create one"
+            android:textSize="16dip" />
+
+    </LinearLayout>
+
+
+</ScrollView>
