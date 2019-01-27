@@ -7,9 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.selclientapp.selapp.R;
-import com.selclientapp.selapp.database.entity.Exchange;
+import com.selclientapp.selapp.model.Exchange;
 
 import java.util.List;
+
 
 public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> {
 
@@ -19,7 +20,6 @@ public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> {
     public ExchangeAdapter(List<Exchange> exchanges) {
         this.exchanges = exchanges;
     }
-
 
     @Override
     public ExchangeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

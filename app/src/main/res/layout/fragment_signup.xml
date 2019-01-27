@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:imeOptions="flagNoExtractUi"
             app:errorEnabled="true"
+            app:errorTextAppearance="@color/colorError"
             app:passwordToggleEnabled="true">
 
             <EditText
@@ -40,6 +41,7 @@
             android:layout_height="wrap_content"
             android:imeOptions="flagNoExtractUi"
             app:errorEnabled="true"
+            app:errorTextAppearance="@color/colorError"
             app:passwordToggleEnabled="true">
 
             <EditText
@@ -57,6 +59,7 @@
             android:layout_height="wrap_content"
             android:imeOptions="flagNoExtractUi"
             app:errorEnabled="true"
+            app:errorTextAppearance="@color/colorError"
             app:passwordToggleEnabled="true">
 
             <EditText
@@ -74,7 +77,8 @@
             android:layout_height="wrap_content"
             android:imeOptions="flagNoExtractUi"
             app:errorEnabled="true"
-            app:passwordToggleEnabled="true">
+            app:errorTextAppearance="@color/colorError"
+            app:passwordToggleEnabled="true">>
 
             <EditText
                 android:id="@+id/fragment_sign_up_email"

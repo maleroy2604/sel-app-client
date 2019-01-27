@@ -1,18 +1,10 @@
 package com.selclientapp.selapp.di.module;
 
-import android.app.Application;
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.migration.Migration;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.selclientapp.selapp.api.ExchangeWebService;
 import com.selclientapp.selapp.api.TokenWebService;
 import com.selclientapp.selapp.api.UserWebService;
-import com.selclientapp.selapp.database.MyDatabase;
-import com.selclientapp.selapp.database.dao.ExchangeDao;
-import com.selclientapp.selapp.database.dao.UserDao;
 import com.selclientapp.selapp.repositories.ExchangeRepository;
 import com.selclientapp.selapp.repositories.TokenRepository;
 import com.selclientapp.selapp.repositories.UserRepository;
@@ -30,36 +22,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module(includes = ViewModelmodule.class)
 public class AppModule {
-
-    // --- DATABASE INJECTION ---
-
-    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
-        @Override
-        public void migrate(SupportSQLiteDatabase database) {
-            // Since we didn't alter the table, there's nothing else to do here.
-        }
-    };
-
-    @Provides
-    @Singleton
-    MyDatabase provideDatabase(Application application) {
-        return Room.databaseBuilder(application, MyDatabase.class, "MyDatabase.db")
-                .addMigrations(MIGRATION_1_2)
-                .build();
-    }
-
-    @Provides
-    @Singleton
-    UserDao provideUserDao(MyDatabase database) {
-        return database.userDao();
-    }
-
-    @Provides
-    @Singleton
-    ExchangeDao provideExchangeDao(MyDatabase database) {
-        return database.exchangeDao();
-    }
-
     // --- REPOSITORY INJECTION ---
 
     @Provides
@@ -75,14 +37,14 @@ public class AppModule {
 
     @Provides
     @Singleton
-    UserRepository provideUserRepository(UserWebService webservice, Executor executor, UserDao userDao) {
-        return new UserRepository(webservice, executor, userDao);
+    UserRepository provideUserRepository(UserWebService webservice, Executor executor) {
+        return new UserRepository(webservice, executor);
     }
 
     @Provides
     @Singleton
-    ExchangeRepository provideExchangeRepository(ExchangeWebService webservice, Executor executor, ExchangeDao exchangeDao) {
-        return new ExchangeRepository(webservice, executor, exchangeDao);
+    ExchangeRepository provideExchangeRepository(ExchangeWebService webservice, Executor executor) {
+        return new ExchangeRepository(webservice, executor);
     }
 
 

@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.selclientapp.selapp.R;
-import com.selclientapp.selapp.database.entity.Exchange;
+import com.selclientapp.selapp.model.Exchange;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

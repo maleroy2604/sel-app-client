@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.selclientapp.selapp.App;
 import com.selclientapp.selapp.R;
-import com.selclientapp.selapp.database.entity.User;
+import com.selclientapp.selapp.model.User;
 import com.selclientapp.selapp.utils.Tools;
 import com.selclientapp.selapp.view_models.LoginAndSignUpViewModel;
 
@@ -201,7 +201,6 @@ public class SignUpFragment extends Fragment {
         }
     };
 
-
     private void configElemView() {
         btnSignUp.setEnabled(false);
         passwordInput.setError("Field can't be empty");
@@ -228,10 +227,10 @@ public class SignUpFragment extends Fragment {
     private void showExchangeFragment() {
         ExchangeFragment fragment = new ExchangeFragment();
         getFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, fragment, null)
+                .replace(R.id.fragment_container, fragment, null)
                 .commit();
+        getFragmentManager().addOnBackStackChangedListener(null);
     }
-
 
     // -----------------
     // UTILS

@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:imeOptions="flagNoExtractUi"
             app:errorEnabled="true"
-            app:passwordToggleEnabled="true">
+            app:errorTextAppearance="@color/colorError">
 
             <EditText
                 android:id="@+id/fragment_login_username"
@@ -40,7 +40,8 @@
             android:layout_height="wrap_content"
             android:imeOptions="flagNoExtractUi"
             app:errorEnabled="true"
-            app:passwordToggleEnabled="true">
+            app:passwordToggleEnabled="true"
+            app:errorTextAppearance="@color/colorError">>
 
             <EditText
                 android:id="@+id/fragment_login_password"

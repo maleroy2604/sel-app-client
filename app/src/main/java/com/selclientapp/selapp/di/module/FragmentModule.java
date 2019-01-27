@@ -16,6 +16,6 @@ public abstract class FragmentModule {
     abstract SignUpFragment contributeSingUp();
 
     @ContributesAndroidInjector
-    abstract ExchangeFragment contributeexchange();
+    abstract ExchangeFragment contributeExchange();
 
 }

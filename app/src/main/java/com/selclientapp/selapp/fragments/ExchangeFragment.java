@@ -4,7 +4,6 @@ package com.selclientapp.selapp.fragments;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.selclientapp.selapp.R;
-import com.selclientapp.selapp.database.entity.Exchange;
+import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.view_models.ExchangeViewModel;
 import com.selclientapp.selapp.views.ExchangeAdapter;
 
@@ -39,7 +38,6 @@ public class ExchangeFragment extends Fragment {
     private List<Exchange> exchanges;
     private ExchangeAdapter adapter;
 
-
     public ExchangeFragment() {
 
     }
@@ -49,14 +47,9 @@ public class ExchangeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_exchange, container, false);
         ButterKnife.bind(this, view);
         this.configureRecyclerView();
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         this.configureDagger();
         this.configureViewmodel();
+        return view;
     }
 
     // -----------------
@@ -85,7 +78,7 @@ public class ExchangeFragment extends Fragment {
     // -------------------
 
     private void updateUI(List<Exchange> exchanges) {
-        this.exchanges = exchanges;
+        this.exchanges.addAll(exchanges);
         adapter.notifyDataSetChanged();
     }
 

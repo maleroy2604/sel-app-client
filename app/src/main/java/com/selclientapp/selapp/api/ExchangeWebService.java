@@ -1,6 +1,6 @@
 package com.selclientapp.selapp.api;
 
-import com.selclientapp.selapp.database.entity.Exchange;
+import com.selclientapp.selapp.model.Exchange;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import retrofit2.http.Path;
 
 public interface ExchangeWebService {
     @POST("{id}")
-    Call<Exchange> saveExchange(@Header("authorization") String token,@Path("id") int id, @Body Exchange exchange);
+    Call<Exchange> saveExchange(@Header("authorization") String token, @Path("id") int id, @Body Exchange exchange);
 
     @GET("exchanges")
     Call<List<Exchange>> getAllExchange(@Header("authorization") String token);

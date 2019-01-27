@@ -1,6 +1,7 @@
 package com.selclientapp.selapp.api;
 
-import com.selclientapp.selapp.database.entity.User;
+
+import com.selclientapp.selapp.model.User;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

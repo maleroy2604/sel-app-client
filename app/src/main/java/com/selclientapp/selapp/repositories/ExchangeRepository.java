@@ -1,11 +1,12 @@
 package com.selclientapp.selapp.repositories;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 
 import com.selclientapp.selapp.api.ExchangeWebService;
-import com.selclientapp.selapp.database.dao.ExchangeDao;
-import com.selclientapp.selapp.database.entity.Exchange;
+import com.selclientapp.selapp.model.Exchange;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -18,25 +19,20 @@ import retrofit2.Response;
 public class ExchangeRepository {
 
     private final ExchangeWebService exchangeWebService;
-    private final ExchangeDao exchangeDao;
     private final Executor executor;
 
     @Inject
-    public ExchangeRepository(ExchangeWebService exchangeWebService, Executor executor, ExchangeDao exchangeDao) {
+    public ExchangeRepository(ExchangeWebService exchangeWebService, Executor executor) {
         this.exchangeWebService = exchangeWebService;
-        this.exchangeDao = exchangeDao;
+
         this.executor = executor;
     }
 
     public void saveExchange(Exchange exchange) {
         executor.execute(() -> {
-            exchangeWebService.saveExchange(SaveSharedpreferences.getToken(), exchange.getExchangeId(), exchange).enqueue(new Callback<Exchange>() {
+            exchangeWebService.saveExchange(SaveSharedpreferences.getToken(), exchange.getId(), exchange).enqueue(new Callback<Exchange>() {
                 @Override
                 public void onResponse(Call<Exchange> call, Response<Exchange> response) {
-                    executor.execute(() -> {
-                        Exchange exchange = response.body();
-                        exchangeDao.saveExchange(exchange);
-                    });
                 }
 
                 @Override
@@ -48,17 +44,16 @@ public class ExchangeRepository {
     }
 
     public LiveData<List<Exchange>> getAllExchanges() {
+        final MutableLiveData<List<Exchange>> data = new MutableLiveData<>();
+
         exchangeWebService.getAllExchange(SaveSharedpreferences.getToken()).enqueue(new Callback<List<Exchange>>() {
             @Override
             public void onResponse(Call<List<Exchange>> call, Response<List<Exchange>> response) {
-                executor.execute(() -> {
-                    System.out.println(response.body());
-                    List<Exchange> allExchange = response.body();
-                    for (Exchange exchange : allExchange) {
-                        exchangeDao.saveExchange(exchange);
-                    }
-
-                });
+                if (response.isSuccessful()) {
+                    System.out.println("response" + response.body());
+                    data.setValue(response.body());
+                    System.out.println("data response " + data.getValue());
+                }
             }
 
             @Override
@@ -66,8 +61,8 @@ public class ExchangeRepository {
 
             }
         });
-        return exchangeDao.getAllExchange();
+        System.out.println("data " + data.getValue());
+        return data;
     }
-
 
 }

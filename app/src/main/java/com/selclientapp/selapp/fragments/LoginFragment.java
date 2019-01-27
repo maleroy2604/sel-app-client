@@ -53,7 +53,6 @@ public class LoginFragment extends Fragment {
     public LoginFragment() {
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
@@ -73,9 +72,7 @@ public class LoginFragment extends Fragment {
 
                 if (Tools.hasInternetConnection()) {
                     loginModel.getTokenAndSaveIt(usernameInput.getEditText().getText().toString(), passwordInput.getEditText().getText().toString());
-                    if (SaveSharedpreferences.contains("TOKEN")) {
-                        showExchangeFragment();
-                    }
+                    showExchangeFragment();
                 } else {
                     Toast.makeText(App.context, "No internet connetion available !", Toast.LENGTH_LONG).show();
                 }
@@ -153,8 +150,9 @@ public class LoginFragment extends Fragment {
     private void showExchangeFragment() {
         ExchangeFragment fragment = new ExchangeFragment();
         getFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, fragment, null)
+                .replace(R.id.fragment_container, fragment, null)
                 .commit();
+        getFragmentManager().addOnBackStackChangedListener(null);
     }
 
     private void showSignUpFragment() {
