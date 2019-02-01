@@ -3,6 +3,7 @@ package com.selclientapp.selapp.fragments;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.selclientapp.selapp.App;
 import com.selclientapp.selapp.R;
+import com.selclientapp.selapp.activities.HomeActivity;
 import com.selclientapp.selapp.model.User;
 import com.selclientapp.selapp.utils.Tools;
 import com.selclientapp.selapp.view_models.LoginAndSignUpViewModel;
@@ -101,8 +103,13 @@ public class SignUpFragment extends Fragment {
                 if (Tools.hasInternetConnection()) {
                     User user = new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(), emailEditText.getText().toString());
                     loginModel.saveUser(user);
-                    loginModel.getTokenAndSaveIt(usernameEditText.getText().toString(), passwordEditText.getText().toString());
-                    showExchangeFragment();
+                    loginModel.getUserLiveData().observe(getActivity(), userLiveData -> {
+                        loginModel.getTokenAndSaveIt(user.getUsername(),user.getPassword());
+                        loginModel.getSelApiTokenLiveData().observe(getActivity(), selApiToken -> {
+                            Intent intent = new Intent(getActivity(), HomeActivity.class);
+                            startActivity(intent);
+                        });
+                    });
                 } else {
                     Toast.makeText(App.context, "No internet connetion available !", Toast.LENGTH_LONG).show();
                 }
@@ -129,7 +136,7 @@ public class SignUpFragment extends Fragment {
         loginModel = ViewModelProviders.of(this, viewModelFactory).get(LoginAndSignUpViewModel.class);
     }
 
-    TextWatcher watcherUsername = new TextWatcher() {
+    private final TextWatcher watcherUsername = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -147,7 +154,7 @@ public class SignUpFragment extends Fragment {
         }
     };
 
-    TextWatcher watcherPassword = new TextWatcher() {
+    private final TextWatcher watcherPassword = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -165,7 +172,7 @@ public class SignUpFragment extends Fragment {
         }
     };
 
-    TextWatcher watcherEmail = new TextWatcher() {
+    private final TextWatcher watcherEmail = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -183,7 +190,7 @@ public class SignUpFragment extends Fragment {
         }
     };
 
-    TextWatcher watcherPasswordConfirm = new TextWatcher() {
+    private final TextWatcher watcherPasswordConfirm = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -220,18 +227,8 @@ public class SignUpFragment extends Fragment {
     private void showLoginFragment() {
         LoginFragment fragment = new LoginFragment();
         getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment, null).commit();
-        getFragmentManager().addOnBackStackChangedListener(null);
+                .replace(R.id.fragment_container, fragment, null).addToBackStack("fragment_sign_up").commit();
     }
-
-    private void showExchangeFragment() {
-        ExchangeFragment fragment = new ExchangeFragment();
-        getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment, null)
-                .commit();
-        getFragmentManager().addOnBackStackChangedListener(null);
-    }
-
     // -----------------
     // UTILS
     // -----------------

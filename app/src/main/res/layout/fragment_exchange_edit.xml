@@ -1,0 +1,107 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorExchangeItem"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/enter_the_fields_to_create_an_exchange"
+            android:textSize="20sp" />
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/fragment_exchange_add_input_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="flagNoExtractUi"
+            android:maxLines="10">
+
+            <EditText
+                android:id="@+id/fragment_exchange_add_username"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:hint="Name"
+                android:imeOptions="flagNoExtractUi" />
+        </android.support.design.widget.TextInputLayout>
+
+        <EditText
+            android:id="@+id/fragment_exchange_add_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|left"
+            android:layout_marginBottom="10dp"
+            android:hint="Description"
+            android:imeOptions="flagNoExtractUi"
+            android:inputType="textMultiLine"
+            android:maxLines="4"
+            android:scrollbars="vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/fragment_exchange_add_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="4"
+                android:hint="Select Date"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number"
+                android:textSize="19dp" />
+
+            <ImageButton
+                android:id="@+id/fragment_exchange_add_image_btn_date"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:background="@android:drawable/ic_menu_my_calendar" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/fragment_exchange_add_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="4"
+                android:hint="Select Time"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number"
+                android:textSize="19dp" />
+
+            <ImageButton
+                android:id="@+id/fragment_exchange_add_image_btn_time"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:background="@android:drawable/ic_menu_recent_history" />
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/fragment_btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Create" />
+
+    </LinearLayout>
+
+
+</ScrollView>

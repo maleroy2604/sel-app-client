@@ -2,6 +2,7 @@ package com.selclientapp.selapp.fragments;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -18,7 +19,7 @@ import android.widget.Toast;
 
 import com.selclientapp.selapp.App;
 import com.selclientapp.selapp.R;
-import com.selclientapp.selapp.repositories.SaveSharedpreferences;
+import com.selclientapp.selapp.activities.HomeActivity;
 import com.selclientapp.selapp.utils.Tools;
 import com.selclientapp.selapp.view_models.LoginAndSignUpViewModel;
 
@@ -72,7 +73,10 @@ public class LoginFragment extends Fragment {
 
                 if (Tools.hasInternetConnection()) {
                     loginModel.getTokenAndSaveIt(usernameInput.getEditText().getText().toString(), passwordInput.getEditText().getText().toString());
-                    showExchangeFragment();
+                    loginModel.getSelApiTokenLiveData().observe(getActivity(), selApiToken -> {
+                        Intent intent = new Intent(getActivity(), HomeActivity.class);
+                        startActivity(intent);
+                    });
                 } else {
                     Toast.makeText(App.context, "No internet connetion available !", Toast.LENGTH_LONG).show();
                 }
@@ -102,7 +106,7 @@ public class LoginFragment extends Fragment {
         loginModel = ViewModelProviders.of(this, viewModelFactory).get(LoginAndSignUpViewModel.class);
     }
 
-    TextWatcher watcherUsername = new TextWatcher() {
+    private final TextWatcher watcherUsername = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -119,7 +123,7 @@ public class LoginFragment extends Fragment {
         }
     };
 
-    TextWatcher watcherPassword = new TextWatcher() {
+    private final TextWatcher watcherPassword = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -147,19 +151,11 @@ public class LoginFragment extends Fragment {
     // ACTION
     // -----------------
 
-    private void showExchangeFragment() {
-        ExchangeFragment fragment = new ExchangeFragment();
-        getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment, null)
-                .commit();
-        getFragmentManager().addOnBackStackChangedListener(null);
-    }
-
     private void showSignUpFragment() {
         SignUpFragment fragment = new SignUpFragment();
         getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment, null).commit();
-        getFragmentManager().addOnBackStackChangedListener(null);
+                .replace(R.id.fragment_container, fragment, null).addToBackStack("fragment_login").commit();
+
     }
     // -----------------
     // UTILS

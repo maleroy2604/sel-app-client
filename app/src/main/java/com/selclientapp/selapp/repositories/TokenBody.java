@@ -1,4 +1,4 @@
-package com.selclientapp.selapp.api;
+package com.selclientapp.selapp.repositories;
 
 public class TokenBody {
     private String username;
@@ -19,6 +19,10 @@ public class TokenBody {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     @Override

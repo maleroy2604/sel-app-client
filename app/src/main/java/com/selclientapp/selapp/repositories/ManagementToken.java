@@ -7,29 +7,26 @@ import java.util.Date;
 
 import static com.selclientapp.selapp.App.context;
 
-public class SaveSharedpreferences {
+public class ManagementToken {
 
-    private static SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+    private static final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
 
     // -----------------
     // ACTION FOR REPO-PACKAGE
     // -----------------
-    protected static void saveToken(String token) {
+    static void saveToken(String token) {
         String JWTtoken = "JWT " + token;
         pref.edit().putString("TOKEN", JWTtoken).apply();
         pref.edit().putLong("SAVATIMETOKEN", new Date().getTime()).apply();
     }
 
-    protected static String getToken() {
+    static String getToken() {
         return pref.getString("TOKEN", "NO TOKEN FOUND");
     }
 
-    protected static void savecurrentUsername(String username) {
+    static void savecurrentUsername(String username, String password) {
         pref.edit().putString("CURRENTUSERNAME", username).apply();
-    }
-
-    protected static boolean hasToRefreshToken(Date date) {
-        return pref.getLong("SAVATIMETOKEN", 0) - date.getTime() <= 0;
+        pref.edit().putString("PASSWORD", username).apply();
     }
 
     // -----------------
@@ -40,4 +37,15 @@ public class SaveSharedpreferences {
         return pref.contains(token);
     }
 
+    public static boolean hasToRefreshToken(Date date) {
+        return date.getTime() - pref.getLong("SAVATIMETOKEN", 0) <= 0;
+    }
+
+    public static TokenBody getCurrentTokenBody() {
+        return new TokenBody(pref.getString("CURRENTUSERNAME", ""), pref.getString("PASSWORD", ""));
+    }
+
+    public static void logOut(){
+        pref.edit().clear().apply();
+    }
 }

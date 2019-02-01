@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SelApp</string>
+    <string name="todo">TODO</string>
+    <string name="enter_the_fields_to_create_an_exchange">Enter the fields to create an exchange.</string>
 </resources>

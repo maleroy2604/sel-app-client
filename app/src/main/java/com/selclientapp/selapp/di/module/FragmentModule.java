@@ -1,5 +1,6 @@
 package com.selclientapp.selapp.di.module;
 
+import com.selclientapp.selapp.fragments.AddExchangeFragment;
 import com.selclientapp.selapp.fragments.ExchangeFragment;
 import com.selclientapp.selapp.fragments.LoginFragment;
 import com.selclientapp.selapp.fragments.SignUpFragment;
@@ -17,5 +18,8 @@ public abstract class FragmentModule {
 
     @ContributesAndroidInjector
     abstract ExchangeFragment contributeExchange();
+
+    @ContributesAndroidInjector
+    abstract AddExchangeFragment contributeAddExchange();
 
 }

@@ -14,11 +14,20 @@ import java.util.List;
 
 public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> {
 
+    public interface Listener {
+        void onclickDeleteButton(int position);
+        void onclickEditButton(int position);
+    }
+
     //FOR DATA
     private List<Exchange> exchanges;
 
-    public ExchangeAdapter(List<Exchange> exchanges) {
+    //FOR CALLBACK
+    private final Listener callback;
+
+    public ExchangeAdapter(List<Exchange> exchanges, Listener callback) {
         this.exchanges = exchanges;
+        this.callback = callback;
     }
 
     @Override
@@ -32,11 +41,15 @@ public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> {
 
     @Override
     public void onBindViewHolder(ExchangeViewHolder holder, int position) {
-        holder.updateWithExchange(this.exchanges.get(position));
+        holder.updateWithExchange(this.exchanges.get(position),this.callback);
     }
 
     @Override
     public int getItemCount() {
         return this.exchanges.size();
+    }
+
+    public Exchange getExchange(int possition) {
+        return this.exchanges.get(possition);
     }
 }

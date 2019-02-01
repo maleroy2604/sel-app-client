@@ -1,7 +1,10 @@
 package com.selclientapp.selapp.repositories;
 
+import android.arch.lifecycle.MutableLiveData;
+
 import com.selclientapp.selapp.api.UserWebService;
 import com.selclientapp.selapp.model.User;
+import com.selclientapp.selapp.utils.Tools;
 
 import java.util.concurrent.Executor;
 
@@ -23,21 +26,22 @@ public class UserRepository {
         this.executor = executor;
     }
 
-    public void saveUser(User user) {
+    public MutableLiveData<User> saveUser(User user) {
+        final MutableLiveData<User> data = new MutableLiveData<>();
         executor.execute(() -> {
             userWebService.saveUser(user.getUsername(), user).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
-
+                    data.postValue(response.body());
                 }
 
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
-
+                    Tools.backgroundThreadShortToast("Server not available");
                 }
             });
         });
-
+        return data;
     }
 
 

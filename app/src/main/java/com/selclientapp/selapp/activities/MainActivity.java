@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.fragments.LoginFragment;
-
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
@@ -23,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.configureDagger();
-        this.showFragment(savedInstanceState);
+        this.showLoginFragment(savedInstanceState);
     }
 
     @Override
@@ -33,16 +32,18 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     // ---
 
-    private void showFragment(Bundle savedInstanceState){
+    private void showLoginFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             LoginFragment fragment = new LoginFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, fragment, null)
+                    .replace(R.id.fragment_container, fragment, null)
                     .commit();
         }
     }
 
-    private void configureDagger(){
+    private void configureDagger() {
         AndroidInjection.inject(this);
     }
+
+
 }

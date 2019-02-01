@@ -1,15 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/colorExchangeItem"
+    android:orientation="horizontal"
     android:padding="20dip">
 
-    <TextView
-        android:id="@+id/fragment_exchange_item_name"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:background="@drawable/customborder"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="60dp"
+            android:layout_height="0dp"
+            android:layout_gravity="end"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/fragment_exchange_item_delete"
+                android:layout_width="@dimen/button_image_width"
+                android:layout_height="@dimen/button_image_height"
+                android:background="@android:drawable/ic_menu_delete"
+                android:contentDescription="@string/todo" />
+
+            <ImageButton
+                android:id="@+id/fragment_exchange_item_update"
+                android:layout_width="@dimen/button_image_width"
+                android:layout_height="@dimen/button_image_height"
+                android:layout_gravity="end"
+                android:background="@android:drawable/ic_menu_edit" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/fragment_exchange_item_name"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/fragment_exchange_item_date"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/fragment_exchange_item_author"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/fragment_exchange_item_capacity"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
 
 </LinearLayout>

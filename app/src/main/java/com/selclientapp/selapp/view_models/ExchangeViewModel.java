@@ -5,26 +5,34 @@ import android.arch.lifecycle.ViewModel;
 
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.repositories.ExchangeRepository;
-import com.selclientapp.selapp.repositories.UserRepository;
+import com.selclientapp.selapp.repositories.ManagementToken;
+import com.selclientapp.selapp.repositories.TokenRepository;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
 public class ExchangeViewModel extends ViewModel {
-    private UserRepository userRepository;
+    private final TokenRepository tokenRepository;
     private ExchangeRepository exchangeRepository;
     private LiveData<List<Exchange>> allExchanges = null;
 
     @Inject
-    public ExchangeViewModel(UserRepository userRepository, ExchangeRepository exchangeRepository) {
-        this.userRepository = userRepository;
+    public ExchangeViewModel( ExchangeRepository exchangeRepository,TokenRepository tokenRepository) {
         this.exchangeRepository = exchangeRepository;
+        this.tokenRepository = tokenRepository;
     }
 
     public void init() {
+        if(ManagementToken.hasToRefreshToken(new Date())){
+            tokenRepository.getTokenAndSaveIt(ManagementToken.getCurrentTokenBody());
+        }
         allExchanges = exchangeRepository.getAllExchanges();
-        System.out.println("allExchanges" + allExchanges.getValue());
+    }
+
+    public void deleteOneExchange(int id) {
+        allExchanges = exchangeRepository.deleteOneExchange(id);
     }
 
     public LiveData<List<Exchange>> getAllExchanges() {

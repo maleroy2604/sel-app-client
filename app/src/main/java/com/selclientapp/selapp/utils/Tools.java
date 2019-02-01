@@ -1,6 +1,7 @@
 package com.selclientapp.selapp.utils;
 
 
+import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
@@ -17,7 +18,7 @@ public class Tools {
 
     public static boolean hasInternetConnection() {
         ConnectivityManager cm =
-                (ConnectivityManager) App.context.getSystemService(App.context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) App.context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null &&

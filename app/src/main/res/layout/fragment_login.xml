@@ -8,6 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorExchangeItem"
         android:orientation="vertical"
         android:padding="5dp">
 
@@ -15,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Enter the username and password."
-            android:textSize="20dp" />
+            android:textSize="20sp" />
 
 
         <android.support.design.widget.TextInputLayout
@@ -31,7 +32,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Username"
-                android:imeOptions="flagNoExtractUi" />
+                android:imeOptions="flagNoExtractUi"
+                android:autofillHints="" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -40,8 +42,8 @@
             android:layout_height="wrap_content"
             android:imeOptions="flagNoExtractUi"
             app:errorEnabled="true"
-            app:passwordToggleEnabled="true"
-            app:errorTextAppearance="@color/colorError">>
+            app:errorTextAppearance="@color/colorError"
+            app:passwordToggleEnabled="true">>
 
             <EditText
                 android:id="@+id/fragment_login_password"
@@ -49,7 +51,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Password"
                 android:imeOptions="flagNoExtractUi"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:autofillHints="" />
         </android.support.design.widget.TextInputLayout>
 
         <Button
@@ -66,7 +69,7 @@
             android:layout_margin="10dp"
             android:gravity="center"
             android:text="No account yet? Create one"
-            android:textSize="16dip" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 

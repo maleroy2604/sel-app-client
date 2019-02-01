@@ -1,5 +1,6 @@
 package com.selclientapp.selapp.model;
 
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
@@ -35,6 +36,10 @@ public class Exchange {
     @Expose
     private Integer owner;
 
+    @SerializedName("ownerName")
+    @Expose
+    private String ownerName;
+
     @SerializedName("exchangeocurence")
     @Expose
     private List<Object> exchangeocurence = null;
@@ -43,14 +48,21 @@ public class Exchange {
     @Expose
     private List<Object> messages = null;
 
-    public Exchange(Integer id, String name, String description, String date, Integer capacity, Integer currentCapacity, Integer owner) {
+    public Exchange(Integer id, String name, String description, String date, Integer capacity, Integer owner) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.date = date;
         this.capacity = capacity;
-        this.currentCapacity = currentCapacity;
         this.owner = owner;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 
     public Integer getId() {

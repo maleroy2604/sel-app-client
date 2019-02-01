@@ -1,9 +1,10 @@
 package com.selclientapp.selapp.repositories;
 
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 
-import com.selclientapp.selapp.api.SelApiToken;
-import com.selclientapp.selapp.api.TokenBody;
+import com.selclientapp.selapp.model.SelApiToken;
 import com.selclientapp.selapp.api.TokenWebService;
 import com.selclientapp.selapp.utils.Tools;
 
@@ -16,21 +17,22 @@ import retrofit2.Response;
 
 
 public class TokenRepository {
-    private final TokenWebService tokenWebService;
+    private  TokenWebService tokenWebService;
 
     @Inject
     public TokenRepository(TokenWebService webService) {
-        this.tokenWebService = webService;
+        tokenWebService = webService;
     }
 
-    public void getTokenAndSaveIt(TokenBody tokenBody) {
-
+    public LiveData<SelApiToken> getTokenAndSaveIt(TokenBody tokenBody) {
+        final MutableLiveData<SelApiToken> data = new MutableLiveData<>();
         tokenWebService.getToken(tokenBody).enqueue(new Callback<SelApiToken>() {
             @Override
             public void onResponse(Call<SelApiToken> call, Response<SelApiToken> response) {
                 if (response.isSuccessful()) {
-                    SaveSharedpreferences.saveToken(response.body().getAccessToken());
-                    SaveSharedpreferences.savecurrentUsername(tokenBody.getUsername());
+                    ManagementToken.saveToken(response.body().getAccessToken());
+                    ManagementToken.savecurrentUsername(tokenBody.getUsername(), tokenBody.getPassword());
+                    data.postValue(response.body());
                 } else {
                     Tools.backgroundThreadShortToast("Wrong Username or password");
                 }
@@ -41,6 +43,6 @@ public class TokenRepository {
                 Tools.backgroundThreadShortToast("Server not available");
             }
         });
+        return data;
     }
-
 }

@@ -63,5 +63,8 @@ public class User {
         this.counterhours = counterhours;
     }
 
+    public String getPassword() {
+        return password;
+    }
 }
 

@@ -37,8 +37,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    UserRepository provideUserRepository(UserWebService webservice, Executor executor) {
-        return new UserRepository(webservice, executor);
+    UserRepository provideUserRepository(UserWebService userWebService, Executor executor) {
+        return new UserRepository(userWebService, executor);
     }
 
     @Provides
@@ -50,8 +50,6 @@ public class AppModule {
 
     // --- NETWORK INJECTION ---
 
-    private static String BASE_URL = "http://10.0.2.2:5000/";
-
     @Provides
     Gson provideGson() {
         return new GsonBuilder().create();
@@ -59,11 +57,11 @@ public class AppModule {
 
     @Provides
     Retrofit provideRetrofit(Gson gson) {
-        Retrofit retrofit = new Retrofit.Builder()
+        String BASE_URL = "http://10.0.2.2:5000/";
+        return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(BASE_URL)
                 .build();
-        return retrofit;
     }
 
     @Provides
