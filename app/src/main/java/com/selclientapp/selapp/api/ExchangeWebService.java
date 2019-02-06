@@ -10,10 +10,11 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface ExchangeWebService {
-    @POST("{id}")
+    @POST("exchange/{id}")
     Call<Exchange> saveExchange(@Header("authorization") String token, @Path("id") int id, @Body Exchange exchange);
 
     @GET("exchanges")
@@ -21,4 +22,7 @@ public interface ExchangeWebService {
 
     @DELETE("exchange/{id}")
     Call<List<Exchange>> deleteExchange(@Header("authorization") String token, @Path("id") int id);
+
+    @PUT("exchange/{id}")
+    Call <Exchange> updateExchange(@Header("authorization") String token, @Path("id") int id, @Body Exchange exchange);
 }

@@ -74,8 +74,12 @@ public class LoginFragment extends Fragment {
                 if (Tools.hasInternetConnection()) {
                     loginModel.getTokenAndSaveIt(usernameInput.getEditText().getText().toString(), passwordInput.getEditText().getText().toString());
                     loginModel.getSelApiTokenLiveData().observe(getActivity(), selApiToken -> {
-                        Intent intent = new Intent(getActivity(), HomeActivity.class);
-                        startActivity(intent);
+                        loginModel.getUser();
+                        loginModel.getUserLiveData().observe(getActivity(), user -> {
+                            Intent intent = new Intent(getActivity(), HomeActivity.class);
+                            startActivity(intent);
+                        });
+
                     });
                 } else {
                     Toast.makeText(App.context, "No internet connetion available !", Toast.LENGTH_LONG).show();

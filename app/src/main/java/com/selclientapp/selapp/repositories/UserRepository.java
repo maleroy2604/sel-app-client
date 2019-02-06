@@ -44,5 +44,22 @@ public class UserRepository {
         return data;
     }
 
+    public MutableLiveData<User> getUser() {
+        final MutableLiveData<User> data = new MutableLiveData<>();
+        executor.execute(() -> {
+            userWebService.getUser(ManagementToken.getToken(),ManagementToken.getCurrentTokenBody().getUsername()).enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    data.postValue(response.body());
+                    ManagementToken.saveCurrentId(response.body().getId());
+                }
 
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    Tools.backgroundThreadShortToast("Server not available");
+                }
+            });
+        });
+        return data;
+    }
 }

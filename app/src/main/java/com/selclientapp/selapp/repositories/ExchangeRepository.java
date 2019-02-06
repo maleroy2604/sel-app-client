@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 
 import com.selclientapp.selapp.api.ExchangeWebService;
+import com.selclientapp.selapp.api.TokenWebService;
 import com.selclientapp.selapp.model.Exchange;
 
 import java.util.List;
@@ -23,15 +24,16 @@ public class ExchangeRepository {
     @Inject
     public ExchangeRepository(ExchangeWebService exchangeWebService, Executor executor) {
         this.exchangeWebService = exchangeWebService;
-
         this.executor = executor;
     }
 
-    public void saveExchange(Exchange exchange) {
+    public LiveData<Exchange> saveExchange(Exchange exchange) {
+        final MutableLiveData<Exchange> data = new MutableLiveData<>();
         executor.execute(() -> {
             exchangeWebService.saveExchange(ManagementToken.getToken(), exchange.getId(), exchange).enqueue(new Callback<Exchange>() {
                 @Override
                 public void onResponse(Call<Exchange> call, Response<Exchange> response) {
+                    data.postValue(response.body());;
                 }
 
                 @Override
@@ -40,6 +42,7 @@ public class ExchangeRepository {
                 }
             });
         });
+        return data;
     }
 
     public LiveData<List<Exchange>> getAllExchanges() {
@@ -75,6 +78,26 @@ public class ExchangeRepository {
 
                 @Override
                 public void onFailure(Call<List<Exchange>> call, Throwable t) {
+
+                }
+            });
+        });
+        return data;
+    }
+
+    public LiveData<Exchange> updateExchange(Exchange exchange) {
+        final MutableLiveData<Exchange> data = new MutableLiveData<>();
+        executor.execute(() -> {
+            exchangeWebService.updateExchange(ManagementToken.getToken(),exchange.getId(),exchange).enqueue(new Callback<Exchange>() {
+                @Override
+                public void onResponse(Call<Exchange> call, Response<Exchange> response) {
+                    if (response.isSuccessful()) {
+                        data.setValue(response.body());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Exchange> call, Throwable t) {
 
                 }
             });

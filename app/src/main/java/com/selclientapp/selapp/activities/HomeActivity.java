@@ -2,7 +2,6 @@ package com.selclientapp.selapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -23,6 +22,9 @@ import dagger.android.support.HasSupportFragmentInjector;
 
 public class HomeActivity extends AppCompatActivity implements HasSupportFragmentInjector {
 
+
+    BottomNavigationView bottomNavigationView;
+
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
 
@@ -35,6 +37,10 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         this.configureBottomNavBar(savedInstanceState);
     }
 
+    // -----------------
+    // CONFIGURATION
+    // -----------------
+
     @Override
     public DispatchingAndroidInjector<Fragment> supportFragmentInjector() {
         return dispatchingAndroidInjector;
@@ -44,9 +50,8 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         AndroidInjection.inject(this);
     }
 
-    private void configureBottomNavBar(Bundle savedInstanceState){
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.home_activity_bottom_navigation);
-        bottomNavigationView.canScrollVertically(1);
+    private void configureBottomNavBar(Bundle savedInstanceState) {
+        bottomNavigationView = findViewById(R.id.home_activity_bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
@@ -70,13 +75,9 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
             }
         });
     }
-
-
-
-
-
-
-
+    // -----------------
+    // ACTION
+    // -----------------
 
     private void showExchangeFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
@@ -91,8 +92,9 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();
 
-        if(count != 0){
+        if (count != 0) {
             getSupportFragmentManager().popBackStack();
+            bottomNavigationView.setSelectedItemId(R.id.action_home);
         }
 
     }

@@ -29,6 +29,12 @@ public class ManagementToken {
         pref.edit().putString("PASSWORD", username).apply();
     }
 
+    static void saveCurrentId(int userId){
+        pref.edit().putInt("CURRENTID",userId).apply();
+    }
+
+
+
     // -----------------
     // ACTION FOR ALL-APP
     // -----------------
@@ -38,7 +44,7 @@ public class ManagementToken {
     }
 
     public static boolean hasToRefreshToken(Date date) {
-        return date.getTime() - pref.getLong("SAVATIMETOKEN", 0) <= 0;
+        return date.getTime() - pref.getLong("SAVATIMETOKEN", 0) >=7200000;
     }
 
     public static TokenBody getCurrentTokenBody() {
@@ -47,5 +53,9 @@ public class ManagementToken {
 
     public static void logOut(){
         pref.edit().clear().apply();
+    }
+
+    public static int getCurrentId(){
+        return pref.getInt("CURRENTID", 0);
     }
 }

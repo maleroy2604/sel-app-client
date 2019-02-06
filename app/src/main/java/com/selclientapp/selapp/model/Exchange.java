@@ -1,12 +1,14 @@
 package com.selclientapp.selapp.model;
 
-import java.util.Date;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Exchange {
+public class Exchange implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -56,6 +58,45 @@ public class Exchange {
         this.capacity = capacity;
         this.owner = owner;
     }
+
+    protected Exchange(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readInt();
+        }
+        name = in.readString();
+        description = in.readString();
+        date = in.readString();
+        if (in.readByte() == 0) {
+            capacity = null;
+        } else {
+            capacity = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            currentCapacity = null;
+        } else {
+            currentCapacity = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            owner = null;
+        } else {
+            owner = in.readInt();
+        }
+        ownerName = in.readString();
+    }
+
+    public static final Creator<Exchange> CREATOR = new Creator<Exchange>() {
+        @Override
+        public Exchange createFromParcel(Parcel in) {
+            return new Exchange(in);
+        }
+
+        @Override
+        public Exchange[] newArray(int size) {
+            return new Exchange[size];
+        }
+    };
 
     public String getOwnerName() {
         return ownerName;
@@ -137,4 +178,40 @@ public class Exchange {
         this.messages = messages;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(id);
+        }
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeString(date);
+        if (capacity == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(capacity);
+        }
+        if (currentCapacity == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(currentCapacity);
+        }
+        if (owner == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(owner);
+        }
+        dest.writeString(ownerName);
+    }
 }

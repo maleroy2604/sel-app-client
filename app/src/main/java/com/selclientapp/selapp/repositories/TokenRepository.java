@@ -17,14 +17,14 @@ import retrofit2.Response;
 
 
 public class TokenRepository {
-    private  TokenWebService tokenWebService;
+    private TokenWebService tokenWebService;
 
     @Inject
     public TokenRepository(TokenWebService webService) {
         tokenWebService = webService;
     }
 
-    public LiveData<SelApiToken> getTokenAndSaveIt(TokenBody tokenBody) {
+    public  LiveData<SelApiToken> getTokenAndSaveIt(TokenBody tokenBody) {
         final MutableLiveData<SelApiToken> data = new MutableLiveData<>();
         tokenWebService.getToken(tokenBody).enqueue(new Callback<SelApiToken>() {
             @Override

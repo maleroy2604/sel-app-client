@@ -7,13 +7,14 @@ import android.widget.TextView;
 
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
+import com.selclientapp.selapp.repositories.ManagementToken;
 
 import java.lang.ref.WeakReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ExchangeViewHolder extends RecyclerView.ViewHolder  {
+public class ExchangeViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.fragment_exchange_item_name)
     TextView textViewName;
@@ -28,7 +29,10 @@ public class ExchangeViewHolder extends RecyclerView.ViewHolder  {
     TextView textViewCapacity;
 
     @BindView(R.id.fragment_exchange_item_delete)
-    ImageButton imageButton;
+    ImageButton imageButtonDelete;
+
+    @BindView(R.id.fragment_exchange_item_update)
+    ImageButton imageButtonUpdate;
 
     private WeakReference<ExchangeAdapter.Listener> callbackWeakRef;
 
@@ -38,12 +42,23 @@ public class ExchangeViewHolder extends RecyclerView.ViewHolder  {
     }
 
     public void updateWithExchange(Exchange exchange, ExchangeAdapter.Listener callback) {
-        this.textViewName.setText(exchange.getName());
-        this.textViewDate.setText(exchange.getDate());
-        this.textViewAuthor.setText(exchange.getOwnerName());
-        this.textViewCapacity.setText(exchange.getCurrentCapacity() + "/" + exchange.getCapacity());
+        this.textViewName.setText(String.format("Name: " + exchange.getName()));
+        this.textViewDate.setText(String.format("Date & hour: " + exchange.getDate()));
+        this.textViewAuthor.setText(String.format("Owner: " + exchange.getOwnerName()));
+        this.textViewCapacity.setText(String.format("Capacity: " + exchange.getCurrentCapacity() + "/" + exchange.getCapacity()));
+        configImageButton(exchange);
         this.callbackWeakRef = new WeakReference<ExchangeAdapter.Listener>(callback);
-        this.imageButton.setOnClickListener(new View.OnClickListener() {
+
+
+    }
+
+    public void configImageButton(Exchange exchange) {
+        if (!(exchange.getOwner() == ManagementToken.getCurrentId())) {
+            imageButtonUpdate.setVisibility(View.GONE);
+            imageButtonDelete.setVisibility(View.GONE);
+        }
+
+        this.imageButtonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ExchangeAdapter.Listener callback = callbackWeakRef.get();
@@ -52,6 +67,14 @@ public class ExchangeViewHolder extends RecyclerView.ViewHolder  {
             }
         });
 
+        this.imageButtonUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ExchangeAdapter.Listener callback = callbackWeakRef.get();
+                if (callback != null)
+                    callback.onclickEditButton(getAdapterPosition());
+            }
+        });
     }
 }
 

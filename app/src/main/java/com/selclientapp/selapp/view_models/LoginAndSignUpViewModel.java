@@ -13,32 +13,38 @@ import javax.inject.Inject;
 
 
 public class LoginAndSignUpViewModel extends ViewModel {
-
-    private final TokenRepository tokenRepo;
+    private final TokenRepository tokenRepository;
     private final UserRepository userRepo;
     private LiveData<SelApiToken> selApiTokenLiveData;
     private LiveData<User> userLiveData;
 
+
     @Inject
-    public LoginAndSignUpViewModel(TokenRepository tokenRepo, UserRepository userRepo) {
-        this.tokenRepo = tokenRepo;
+    public LoginAndSignUpViewModel(UserRepository userRepo, TokenRepository tokenRepository) {
         this.userRepo = userRepo;
+        this.tokenRepository = tokenRepository;
     }
 
     // ----
 
     public void getTokenAndSaveIt(String username, String password) {
-        selApiTokenLiveData = tokenRepo.getTokenAndSaveIt(new TokenBody(username, password));
+        selApiTokenLiveData = tokenRepository.getTokenAndSaveIt(new TokenBody(username, password));
     }
 
     public void saveUser(User user) {
         userLiveData = userRepo.saveUser(user);
     }
 
+    public void getUser() {
+        userLiveData = userRepo.getUser();
+    }
+
     public LiveData<SelApiToken> getSelApiTokenLiveData() {
         return selApiTokenLiveData;
     }
 
-   public LiveData<User> getUserLiveData(){return userLiveData;}
+    public LiveData<User> getUserLiveData() {
+        return userLiveData;
+    }
 
 }

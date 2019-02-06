@@ -14,11 +14,15 @@ import android.view.ViewGroup;
 
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
+import com.selclientapp.selapp.repositories.ManagementToken;
 import com.selclientapp.selapp.utils.ItemClickSupport;
 import com.selclientapp.selapp.view_models.ExchangeViewModel;
 import com.selclientapp.selapp.views.ExchangeAdapter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -69,13 +73,20 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
 
     private void configureViewmodel() {
         exchangeViewModel = ViewModelProviders.of(this, viewModelFactory).get(ExchangeViewModel.class);
-        exchangeViewModel.init();
-        exchangeViewModel.getAllExchanges().observe(this, allExchanges -> updateUI(allExchanges));
+        if (ManagementToken.hasToRefreshToken(new Date())) {
+            exchangeViewModel.getTokenAndSaveIt(ManagementToken.getCurrentTokenBody());
+            exchangeViewModel.getSelApiTokenLiveData().observe(this, token -> {
+                getAllExchanges();
+            });
+        } else {
+            getAllExchanges();
+        }
+
     }
 
     private void configureRecyclerView() {
         this.exchanges = new ArrayList<>();
-        this.adapter = new ExchangeAdapter(this.exchanges,this);
+        this.adapter = new ExchangeAdapter(this.exchanges, this);
         this.recyclerView.setAdapter(this.adapter);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
@@ -106,6 +117,7 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
     private void updateUI(List<Exchange> exchanges) {
         swipeRefreshLayout.setRefreshing(false);
         this.exchanges.clear();
+        Collections.reverse(exchanges);
         this.exchanges.addAll(exchanges);
         adapter.notifyDataSetChanged();
     }
@@ -118,11 +130,31 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
     public void onclickDeleteButton(int position) {
         Exchange exchange = adapter.getExchange(position);
         exchangeViewModel.deleteOneExchange(exchange.getId());
-        exchangeViewModel.getAllExchanges().observe(Objects.requireNonNull(getActivity()), allExchanges -> updateUI(allExchanges));
+        exchangeViewModel.getAllExchanges().observe(getActivity(), allExchanges -> updateUI(allExchanges));
     }
 
     @Override
     public void onclickEditButton(int position) {
+        Exchange exchange = adapter.getExchange(position);
+        EditExchangeFragment fragment = new EditExchangeFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("exchange",exchange);
+        fragment.setArguments(bundle);
+        showEditExchangeFragment(fragment);
+    }
 
+    // -----------------
+    // ACTION
+    // -----------------
+
+    private void getAllExchanges() {
+        exchangeViewModel.init();
+        exchangeViewModel.getAllExchanges().observe(this, allExchanges -> updateUI(allExchanges));
+    }
+
+    private void showEditExchangeFragment(EditExchangeFragment fragment) {
+
+        getFragmentManager().beginTransaction()
+                .add(R.id.fragment_home_container, fragment, null).addToBackStack("fragment_edit_exchange").commit();
     }
 }
