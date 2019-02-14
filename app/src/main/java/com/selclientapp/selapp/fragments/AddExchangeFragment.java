@@ -1,5 +1,6 @@
 package com.selclientapp.selapp.fragments;
 
+import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.arch.lifecycle.ViewModelProvider;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -81,6 +83,7 @@ public class AddExchangeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_exchange_edit, container, false);
         ButterKnife.bind(this, view);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         this.configureDagger();
         this.configureViewmodel();
         this.configureDateListener();
@@ -111,7 +114,7 @@ public class AddExchangeFragment extends Fragment {
                 int month = c.get(Calendar.MONTH);
                 int day = c.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog dialog = new DatePickerDialog(getActivity(), android.R.style.Widget_Holo, mDateSetListener, year, month, day);
+                DatePickerDialog dialog = new DatePickerDialog(getActivity(), R.style.DialogTheme, mDateSetListener, year, month, day);
                 dialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 dialog.show();
             }
@@ -125,7 +128,7 @@ public class AddExchangeFragment extends Fragment {
                 int month = c.get(Calendar.MONTH);
                 int day = c.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog dialog = new DatePickerDialog(getActivity(), android.R.style.Widget_Holo, mDateSetListener, year, month, day);
+                DatePickerDialog dialog = new DatePickerDialog(getActivity(), R.style.DialogTheme, mDateSetListener, year, month, day);
                 dialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 dialog.show();
             }
@@ -163,7 +166,7 @@ public class AddExchangeFragment extends Fragment {
                 int minute = c.get(Calendar.MINUTE);
                 int hour = c.get(Calendar.HOUR_OF_DAY);
 
-                TimePickerDialog dialog = new TimePickerDialog(getActivity(), android.R.style.Widget_Holo, mTimeSetListener, hour, minute, true);
+                TimePickerDialog dialog = new TimePickerDialog(getActivity(), R.style.DialogTheme, mTimeSetListener, hour, minute, true);
                 dialog.show();
             }
         });
@@ -175,7 +178,7 @@ public class AddExchangeFragment extends Fragment {
                 int minute = c.get(Calendar.MINUTE);
                 int hour = c.get(Calendar.HOUR_OF_DAY);
 
-                TimePickerDialog dialog = new TimePickerDialog(getActivity(), android.R.style.Widget_Holo, mTimeSetListener, hour, minute, true);
+                TimePickerDialog dialog = new TimePickerDialog(getActivity(), R.style.DialogTheme, mTimeSetListener, hour, minute, true);
                 dialog.show();
             }
         });
@@ -207,13 +210,12 @@ public class AddExchangeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int capa = Integer.parseInt(capacity.getText().toString());
-                Exchange exchange = new Exchange(0, username.getText().toString(), description.getText().toString(), dateExchange + timeExchange, capa, ManagementToken.getCurrentId());
+                Exchange exchange = new Exchange(0, username.getText().toString(), description.getText().toString(), dateExchange + timeExchange + ":00", capa, ManagementToken.getCurrentId());
                 if (ManagementToken.hasToRefreshToken(new Date())) {
                     exchangeViewModel.getTokenAndSaveIt(ManagementToken.getCurrentTokenBody());
                     exchangeViewModel.getSelApiTokenLiveData().observe(getActivity(), token -> {
                         exchangeViewModel.AddExchange(exchange);
                         exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
-                            //showExchangeFragment();
                             getActivity().onBackPressed();
                         });
 
@@ -221,7 +223,6 @@ public class AddExchangeFragment extends Fragment {
                 } else {
                     exchangeViewModel.AddExchange(exchange);
                     exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
-                        //showExchangeFragment();
                         getActivity().onBackPressed();
                     });
                 }
@@ -350,13 +351,6 @@ public class AddExchangeFragment extends Fragment {
     // ACTION
     // -----------------
 
-    private void showExchangeFragment() {
-        ExchangeFragment fragment = new ExchangeFragment();
-        getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_home_container, fragment, null)
-                .commit();
-    }
-
     // -----------------
     // UTILS
     // -----------------
@@ -386,28 +380,32 @@ public class AddExchangeFragment extends Fragment {
     }
 
     private boolean hasToSetErrorTime(String editText, TextInputLayout textInputLayout) {
-        String dateTime = dateExchange + timeExchange;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date currentDate = null;
-        try {
-            currentDate = format.parse(dateTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        if (dateExchange != null && timeExchange != null) {
+            String dateTime = dateExchange + timeExchange;
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            Date currentDate = null;
+            try {
+                currentDate = format.parse(dateTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
 
+            if (editText.isEmpty()) {
+                textInputLayout.setError("Field can't be empty");
+                return false;
+            } else if (currentDate.getTime() < new Date().getTime()) {
+                textInputLayout.setError("Can't choose an hour from the past");
+                return false;
 
-        if (editText.isEmpty()) {
-            textInputLayout.setError("Field can't be empty");
-            return false;
-        } else if (currentDate.getTime() < new Date().getTime()) {
-            textInputLayout.setError("Can't choose an hour from the past");
-            return false;
-
+            } else {
+                textInputLayout.setError("");
+                return true;
+            }
         } else {
-            textInputLayout.setError("");
-            return true;
+            return false;
         }
+
 
     }
 

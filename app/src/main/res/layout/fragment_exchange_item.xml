@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/customborder"
+    android:layout_marginBottom="2dp"
     android:orientation="vertical"
-    android:layout_marginBottom="2dp">
+    android:background="@drawable/shadow_exchange_item"
+    android:padding="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,28 +16,22 @@
         <TextView
             android:id="@+id/fragment_exchange_item_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="18dip"
             android:layout_weight="1"
-            android:textSize="18dip" />
+            android:textColor="@color/colorText"
+            android:textSize="14dip" />
 
         <LinearLayout
-            android:layout_width="60dp"
-            android:layout_height="30dp"
+            android:layout_width="30dp"
+            android:layout_height="15dp"
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/fragment_exchange_item_delete"
+                android:id="@+id/fragment_exchange_item_horiz"
                 android:layout_width="@dimen/button_image_width"
                 android:layout_height="@dimen/button_image_height"
-                android:background="@android:drawable/ic_menu_delete"
+                android:background="@drawable/ic_more_horiz_blue"
                 android:contentDescription="@string/todo" />
-
-            <ImageButton
-                android:id="@+id/fragment_exchange_item_update"
-                android:layout_width="@dimen/button_image_width"
-                android:layout_height="@dimen/button_image_height"
-                android:layout_gravity="end"
-                android:background="@android:drawable/ic_menu_edit" />
 
         </LinearLayout>
     </LinearLayout>
@@ -43,21 +39,22 @@
     <TextView
         android:id="@+id/fragment_exchange_item_date"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:textSize="18dip" />
+        android:layout_height="18dip"
+        android:textSize="14dip"
+        android:textColor="@color/colorText"/>
 
     <TextView
         android:id="@+id/fragment_exchange_item_author"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:textSize="18dip" />
+        android:layout_height="18dip"
+        android:textSize="14dip"
+        android:textColor="@color/colorText"/>
 
     <TextView
         android:id="@+id/fragment_exchange_item_capacity"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:textSize="18dip" />
+        android:layout_height="18dip"
+        android:textSize="14dip"
+        android:textColor="@color/colorText"/>
+
 </LinearLayout>

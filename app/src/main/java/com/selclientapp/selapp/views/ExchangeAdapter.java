@@ -5,22 +5,25 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> {
 
     public interface Listener {
-        void onclickDeleteButton(int position);
-        void onclickEditButton(int position);
+        void onClickDialog(int position);
     }
 
     //FOR DATA
     private List<Exchange> exchanges;
+
 
     //FOR CALLBACK
     private final Listener callback;
@@ -41,7 +44,7 @@ public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> {
 
     @Override
     public void onBindViewHolder(ExchangeViewHolder holder, int position) {
-        holder.updateWithExchange(this.exchanges.get(position),this.callback);
+        holder.updateWithExchange(this.exchanges.get(position), this.callback);
     }
 
     @Override
@@ -52,4 +55,12 @@ public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> {
     public Exchange getExchange(int possition) {
         return this.exchanges.get(possition);
     }
+
+    public void updateList(List<Exchange> newList) {
+        exchanges = new ArrayList<>();
+        exchanges.addAll(newList);
+        notifyDataSetChanged();
+    }
+
+
 }

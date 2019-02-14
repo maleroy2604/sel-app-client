@@ -4,6 +4,8 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import com.selclientapp.selapp.di.key.ViewModelKey;
+import com.selclientapp.selapp.model.ExchangeOcurence;
+import com.selclientapp.selapp.view_models.ExchangeOcurenceViewModel;
 import com.selclientapp.selapp.view_models.ExchangeViewModel;
 import com.selclientapp.selapp.view_models.FactoryViewModel;
 import com.selclientapp.selapp.view_models.LoginAndSignUpViewModel;
@@ -24,6 +26,11 @@ public abstract class ViewModelmodule {
     @IntoMap
     @ViewModelKey(ExchangeViewModel.class)
     abstract ViewModel bindExchangeViewModel(ExchangeViewModel repoViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ExchangeOcurenceViewModel.class)
+    abstract ViewModel bindExchangeOcurenceViewModel(ExchangeOcurenceViewModel repoViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(FactoryViewModel factory);

@@ -2,9 +2,12 @@ package com.selclientapp.selapp.di.module;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.selclientapp.selapp.api.ExchangeOcurenceWebService;
 import com.selclientapp.selapp.api.ExchangeWebService;
 import com.selclientapp.selapp.api.TokenWebService;
 import com.selclientapp.selapp.api.UserWebService;
+import com.selclientapp.selapp.model.ExchangeOcurence;
+import com.selclientapp.selapp.repositories.ExchangeOcurenceRepository;
 import com.selclientapp.selapp.repositories.ExchangeRepository;
 import com.selclientapp.selapp.repositories.TokenRepository;
 import com.selclientapp.selapp.repositories.UserRepository;
@@ -47,6 +50,11 @@ public class AppModule {
         return new ExchangeRepository(webservice, executor);
     }
 
+    @Provides
+    @Singleton
+    ExchangeOcurenceRepository provideExchangeOcurenceRepository(ExchangeOcurenceWebService webservice, Executor executor) {
+        return new ExchangeOcurenceRepository(webservice, executor);
+    }
 
     // --- NETWORK INJECTION ---
 
@@ -81,5 +89,12 @@ public class AppModule {
     ExchangeWebService provideExchangeWebservice(Retrofit restAdapter) {
         return restAdapter.create(ExchangeWebService.class);
     }
+
+    @Provides
+    @Singleton
+    ExchangeOcurenceWebService provideExchangeOcurenceWebservice(Retrofit restAdapter) {
+        return restAdapter.create(ExchangeOcurenceWebService.class);
+    }
+
 
 }

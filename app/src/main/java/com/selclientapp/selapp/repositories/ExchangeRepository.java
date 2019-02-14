@@ -33,7 +33,7 @@ public class ExchangeRepository {
             exchangeWebService.saveExchange(ManagementToken.getToken(), exchange.getId(), exchange).enqueue(new Callback<Exchange>() {
                 @Override
                 public void onResponse(Call<Exchange> call, Response<Exchange> response) {
-                    data.postValue(response.body());;
+                    data.setValue(response.body());;
                 }
 
                 @Override
@@ -52,7 +52,7 @@ public class ExchangeRepository {
                 @Override
                 public void onResponse(Call<List<Exchange>> call, Response<List<Exchange>> response) {
                     if (response.isSuccessful()) {
-                        data.setValue(response.body());
+                        data.postValue(response.body());
                     }
                 }
 

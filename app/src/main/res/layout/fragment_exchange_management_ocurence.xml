@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shadow_exchange_item"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/fragment_management_username"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:layout_weight="4"
+        android:textColor="@color/colorText"/>
+
+    <EditText
+        android:id="@+id/fragment_management_hours"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:layout_weight="1"
+        android:textColor="@color/colorText"/>
+
+    <ImageButton
+        android:id="@+id/fragment_management_delete"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="2dp"
+        android:layout_weight="1"
+        android:background="@color/colorExchangeItem"
+        android:src="@drawable/ic_close" />
+
+    <Button
+        android:id="@+id/fragment_management_send_hours"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:layout_weight="3"
+        android:background="@drawable/shadow"
+        android:text="Send hours"
+        android:textColor="@color/colorExchangeItem" />
+
+
+</LinearLayout>

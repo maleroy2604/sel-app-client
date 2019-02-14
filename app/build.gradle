@@ -63,8 +63,12 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     // Recyclerview
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.+'
 
-    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:design:27.+'
+
+    implementation 'com.android.support:cardview-v7:26.+'
+
+
 }
 

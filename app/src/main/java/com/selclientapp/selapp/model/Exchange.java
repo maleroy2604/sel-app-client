@@ -44,7 +44,7 @@ public class Exchange implements Parcelable {
 
     @SerializedName("exchangeocurence")
     @Expose
-    private List<Object> exchangeocurence = null;
+    private List<ExchangeOcurence> exchangeocurence = null;
 
     @SerializedName("messages")
     @Expose
@@ -162,11 +162,11 @@ public class Exchange implements Parcelable {
         this.owner = owner;
     }
 
-    public List<Object> getExchangeocurence() {
+    public List<ExchangeOcurence> getExchangeocurence() {
         return exchangeocurence;
     }
 
-    public void setExchangeocurence(List<Object> exchangeocurence) {
+    public void setExchangeocurence(List<ExchangeOcurence> exchangeocurence) {
         this.exchangeocurence = exchangeocurence;
     }
 
