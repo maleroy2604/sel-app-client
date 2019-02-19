@@ -19,7 +19,7 @@ import retrofit2.Response;
 public class UserRepository {
 
     private final UserWebService userWebService;
-    TokenWebService tokenWebService;
+    private final TokenWebService tokenWebService;
     private final Executor executor;
 
     @Inject
