@@ -70,7 +70,6 @@ public class LoginFragment extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (Tools.hasInternetConnection()) {
                     loginModel.getTokenAndSaveIt(usernameInput.getEditText().getText().toString(), passwordInput.getEditText().getText().toString());
                     loginModel.getSelApiTokenLiveData().observe(getActivity(), selApiToken -> {

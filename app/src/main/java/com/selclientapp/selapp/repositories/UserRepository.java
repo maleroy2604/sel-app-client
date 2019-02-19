@@ -38,6 +38,8 @@ public class UserRepository {
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
                     Tools.backgroundThreadShortToast("Server not available");
+                    System.out.println(t.getMessage());
+                    System.out.println(t.getCause());
                 }
             });
         });

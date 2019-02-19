@@ -34,8 +34,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    TokenRepository provideTokenRepository(TokenWebService webservice) {
-        return new TokenRepository(webservice);
+    TokenRepository provideTokenRepository(TokenWebService tokenWebService, Executor executor) {
+        return new TokenRepository(tokenWebService, executor);
     }
 
     @Provides
@@ -65,7 +65,9 @@ public class AppModule {
 
     @Provides
     Retrofit provideRetrofit(Gson gson) {
-        String BASE_URL = "http://10.0.2.2:5000/";
+        String BASE_URL = "https://sel-app.herokuapp.com/";
+        //"https://sel-app.herokuapp.com/"
+        //"http://10.0.2.2:5000/"
         return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(BASE_URL)

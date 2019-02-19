@@ -340,7 +340,6 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     }
 
     private void addExchangeOcurence(ExchangeOcurence exchangeOcurence) {
-
         if (ManagementToken.hasToRefreshToken(new Date())) {
             exchangeViewModel.getTokenAndSaveIt(ManagementToken.getCurrentTokenBody());
             exchangeViewModel.getSelApiTokenLiveData().observe(this, token -> {
@@ -359,14 +358,10 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     }
 
     private void refreshExchanges() {
-        if (ManagementToken.hasToRefreshToken(new Date())) {
-            exchangeViewModel.getTokenAndSaveIt(ManagementToken.getCurrentTokenBody());
-            exchangeViewModel.getSelApiTokenLiveData().observe(this, token -> {
-                getAllExchanges();
-            });
-        } else {
-            getAllExchanges();
-        }
+        exchangeViewModel.init();
+        exchangeViewModel.getAllExchanges().observe(this,exchanges -> {
+            updateUI(exchanges);
+        });
     }
 
     private void showExchangeManagment(int position) {
@@ -391,6 +386,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
             bottomNavigationView.setSelectedItemId(R.id.action_home);
             ActionBar actionBar = (this).getSupportActionBar();
             actionBar.show();
+            swipeRefreshLayout.setRefreshing(false);
         }
 
     }

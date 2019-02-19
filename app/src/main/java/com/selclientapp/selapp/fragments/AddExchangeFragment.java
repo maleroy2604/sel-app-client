@@ -1,6 +1,5 @@
 package com.selclientapp.selapp.fragments;
 
-import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.arch.lifecycle.ViewModelProvider;
