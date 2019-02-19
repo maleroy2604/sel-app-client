@@ -40,8 +40,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    UserRepository provideUserRepository(UserWebService userWebService, Executor executor) {
-        return new UserRepository(userWebService, executor);
+    UserRepository provideUserRepository(UserWebService userWebService, Executor executor,TokenWebService tokenWebService) {
+        return new UserRepository(userWebService, executor, tokenWebService);
     }
 
     @Provides

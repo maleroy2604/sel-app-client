@@ -32,7 +32,7 @@ public class LoginAndSignUpViewModel extends ViewModel {
     }
 
     public void saveUser(User user) {
-        userLiveData = userRepo.saveUser(user);
+       selApiTokenLiveData = userRepo.saveUser(user);
     }
 
     public void getUser() {
