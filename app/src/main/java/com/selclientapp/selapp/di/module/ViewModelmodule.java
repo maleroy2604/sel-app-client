@@ -1,10 +1,9 @@
 package com.selclientapp.selapp.di.module;
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.selclientapp.selapp.di.key.ViewModelKey;
-import com.selclientapp.selapp.model.ExchangeOcurence;
 import com.selclientapp.selapp.view_models.ExchangeOcurenceViewModel;
 import com.selclientapp.selapp.view_models.ExchangeViewModel;
 import com.selclientapp.selapp.view_models.FactoryViewModel;

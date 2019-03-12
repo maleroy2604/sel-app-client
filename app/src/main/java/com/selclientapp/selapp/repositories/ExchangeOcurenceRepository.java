@@ -1,7 +1,7 @@
 package com.selclientapp.selapp.repositories;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.selclientapp.selapp.api.ExchangeOcurenceWebService;
 import com.selclientapp.selapp.model.ExchangeOcurence;
@@ -16,7 +16,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ExchangeOcurenceRepository {
-
     private final ExchangeOcurenceWebService exchangeOcurenceWebService;
     private final Executor executor;
 
@@ -29,11 +28,11 @@ public class ExchangeOcurenceRepository {
     public LiveData<ExchangeOcurence> addExchangeOcurence(ExchangeOcurence exchangeOcurence) {
         final MutableLiveData<ExchangeOcurence> data = new MutableLiveData<>();
         executor.execute(() -> {
-            exchangeOcurenceWebService.addExchangeOcurence(ManagementToken.getToken(), exchangeOcurence.getId(), exchangeOcurence).enqueue(new Callback<ExchangeOcurence>() {
+            exchangeOcurenceWebService.addExchangeOcurence(exchangeOcurence.getId(), exchangeOcurence).enqueue(new Callback<ExchangeOcurence>() {
                 @Override
                 public void onResponse(Call<ExchangeOcurence> call, Response<ExchangeOcurence> response) {
                     if (response.isSuccessful()) {
-                        data.setValue(response.body());
+                        data.postValue(response.body());
                     }
                 }
 
@@ -43,13 +42,15 @@ public class ExchangeOcurenceRepository {
                 }
             });
         });
+
         return data;
     }
+
 
     public LiveData<ExchangeOcurence> deleteExchangeOcurence(ExchangeOcurence exchangeOcurence) {
         final MutableLiveData<ExchangeOcurence> data = new MutableLiveData<>();
         executor.execute(() -> {
-            exchangeOcurenceWebService.deleteExchangeOcurence(ManagementToken.getToken(), exchangeOcurence.getId()).enqueue(new Callback<ExchangeOcurence>() {
+            exchangeOcurenceWebService.deleteExchangeOcurence( exchangeOcurence.getId()).enqueue(new Callback<ExchangeOcurence>() {
                 @Override
                 public void onResponse(Call<ExchangeOcurence> call, Response<ExchangeOcurence> response) {
                     if (response.isSuccessful()) {
@@ -69,7 +70,7 @@ public class ExchangeOcurenceRepository {
     public LiveData<ExchangeOcurence> updateExchangeOcurence(ExchangeOcurence exchangeOcurence) {
         final MutableLiveData<ExchangeOcurence> data = new MutableLiveData<>();
         executor.execute(() -> {
-            exchangeOcurenceWebService.updateExchangeOcurence(ManagementToken.getToken(), exchangeOcurence.getId(), exchangeOcurence).enqueue(new Callback<ExchangeOcurence>() {
+            exchangeOcurenceWebService.updateExchangeOcurence( exchangeOcurence.getId(), exchangeOcurence).enqueue(new Callback<ExchangeOcurence>() {
                 @Override
                 public void onResponse(Call<ExchangeOcurence> call, Response<ExchangeOcurence> response) {
                     if (response.isSuccessful()) {
@@ -89,7 +90,7 @@ public class ExchangeOcurenceRepository {
     public LiveData<List<ExchangeOcurence>> getAllExchangeOcurence(Integer exchangeId) {
         final MutableLiveData<List<ExchangeOcurence>> data = new MutableLiveData<>();
         executor.execute(() -> {
-            exchangeOcurenceWebService.getAllExchangeOcurence(ManagementToken.getToken(), exchangeId).enqueue(new Callback<List<ExchangeOcurence>>() {
+            exchangeOcurenceWebService.getAllExchangeOcurence( exchangeId).enqueue(new Callback<List<ExchangeOcurence>>() {
                 @Override
                 public void onResponse(Call<List<ExchangeOcurence>> call, Response<List<ExchangeOcurence>> response) {
                     if (response.isSuccessful()) {

@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
+
 import com.selclientapp.selapp.di.component.DaggerAppComponent;
 
 
@@ -17,6 +18,7 @@ public class App extends Application implements HasActivityInjector {
     DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
 
     public static Context context;
+
 
     @Override
     public void onCreate() {

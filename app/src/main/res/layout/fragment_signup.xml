@@ -2,33 +2,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:scrollbarThumbVertical="@drawable/custom_scroll_style">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorExchangeItem"
+        android:background="@drawable/custom_background"
         android:orientation="vertical"
-        android:padding="5dp">
+        android:padding="21dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="30dp"
+            android:src="@drawable/sel" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
+            android:layout_marginBottom="5dp"
             android:text="Complete the fields."
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorExchangeItem"
             android:textSize="20sp" />
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fragment_sign_up_input_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="flagNoExtractUi"
-            android:textColor="@color/colorText"
             app:errorEnabled="true"
-            app:errorTextAppearance="@color/colorError"
-            app:passwordToggleEnabled="true">
+            app:errorTextAppearance="@color/colorExchangeItem"
+            app:passwordToggleEnabled="true"
+            app:theme="@style/TextInputLayoutAppearance">
 
             <EditText
                 android:id="@+id/fragment_sign_up_username"
@@ -37,77 +45,79 @@
                 android:autofillHints=""
                 android:hint="Username"
                 android:imeOptions="flagNoExtractUi"
-                android:textColor="@color/colorText" />
-        </android.support.design.widget.TextInputLayout>
+                android:textColor="@color/colorExchangeItem"
+                app:theme="@style/MyEditText" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fragment_sign_up_input_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="flagNoExtractUi"
-            android:textColor="@color/colorText"
             app:errorEnabled="true"
-            app:errorTextAppearance="@color/colorError"
-            app:passwordToggleEnabled="true">
+            app:errorTextAppearance="@color/colorExchangeItem"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/colorExchangeItem"
+            app:theme="@style/TextInputLayoutAppearance">
 
             <EditText
                 android:id="@+id/fragment_sign_up_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints=""
                 android:hint="Password"
                 android:imeOptions="flagNoExtractUi"
                 android:inputType="textPassword"
-                android:textColor="@color/colorText" />
-        </android.support.design.widget.TextInputLayout>
+                android:textColor="@color/colorExchangeItem"
+                app:theme="@style/MyEditText" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fragment_sign_up_input_confirm_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="flagNoExtractUi"
-            android:textColor="@color/colorText"
             app:errorEnabled="true"
-            app:errorTextAppearance="@color/colorError"
-            app:passwordToggleEnabled="true">
+            app:errorTextAppearance="@color/colorExchangeItem"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/colorExchangeItem"
+            app:theme="@style/TextInputLayoutAppearance">
 
             <EditText
                 android:id="@+id/fragment_sign_up_confirm_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:hint="Confirm password"
+                android:hint="Confirm Password"
                 android:imeOptions="flagNoExtractUi"
                 android:inputType="textPassword"
-                android:textColor="@color/colorText" />
-        </android.support.design.widget.TextInputLayout>
+                android:textColor="@color/colorExchangeItem"
+                app:theme="@style/MyEditText" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fragment_sign_up_input_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="flagNoExtractUi"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorExchangeItem"
             app:errorEnabled="true"
-            app:errorTextAppearance="@color/colorError"
-            app:passwordToggleEnabled="true">>
+            app:theme="@style/TextInputLayoutAppearance"
+            app:errorTextAppearance="@color/colorExchangeItem">
 
             <EditText
                 android:id="@+id/fragment_sign_up_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints=""
                 android:hint="Email"
                 android:imeOptions="flagNoExtractUi"
                 android:inputType="textEmailAddress"
-                android:textColor="@color/colorText" />
-        </android.support.design.widget.TextInputLayout>
-
+                android:textColor="@color/colorExchangeItem"
+                app:theme="@style/MyEditText" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/fragment_btn_sign_up"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/shadow"
             android:text="SignUp"
@@ -120,8 +130,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:text="No account yet? Create one"
-            android:textColor="@color/colorText"
+            android:text="Already an account ? Log in."
+            android:textColor="@color/colorExchangeItem"
             android:textSize="16sp" />
 
     </LinearLayout>

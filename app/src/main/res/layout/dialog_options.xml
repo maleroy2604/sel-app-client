@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp">
+    android:padding="5dp"
+    android:background="@drawable/backgroundnitem">
 
     <ImageButton
         android:id="@+id/dialog_option_close"
@@ -14,7 +14,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="7dp"
         android:layout_marginRight="7dp"
-        android:background="@color/colorExchangeItem"
+        android:background="@color/colorBackgroundElement"
         android:elevation="5dp"
         android:src="@drawable/ic_close" />
 

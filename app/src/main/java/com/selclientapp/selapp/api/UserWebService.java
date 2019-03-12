@@ -3,6 +3,7 @@ package com.selclientapp.selapp.api;
 
 import com.selclientapp.selapp.model.User;
 
+import okhttp3.Interceptor;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -15,5 +16,5 @@ public interface UserWebService {
     Call<User> saveUser(@Path("username") String username, @Body User user);
 
     @GET("user/{username}")
-    Call<User> getUser(@Header("authorization") String token, @Path("username") String username);
+    Call<User> getUser(@Path("username") String username);
 }

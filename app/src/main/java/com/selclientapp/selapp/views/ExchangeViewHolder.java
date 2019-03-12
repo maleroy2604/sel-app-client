@@ -1,20 +1,14 @@
 package com.selclientapp.selapp.views;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
-import com.selclientapp.selapp.model.ExchangeOcurence;
-import com.selclientapp.selapp.repositories.ManagementToken;
 
 import java.lang.ref.WeakReference;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,10 +39,13 @@ public class ExchangeViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void updateWithExchange(Exchange exchange, ExchangeAdapter.Listener callback) {
-        this.textViewName.setText(String.format("Name: " + exchange.getName()));
-        this.textViewDate.setText(String.format("Date & hour: " + exchange.getDate()));
-        this.textViewAuthor.setText(String.format("Owner: " + exchange.getOwnerName()));
-        this.textViewCapacity.setText(String.format("Capacity: " + exchange.getCurrentCapacity() + "/" + exchange.getCapacity()));
+        String dateExchange = exchange.getDate().substring(0, 10);
+        String timeExchange = exchange.getDate().substring(10, 16);
+
+        this.textViewName.setText(String.format(exchange.getName()).toUpperCase());
+        this.textViewAuthor.setText(String.format("by " + exchange.getOwnerName()));
+        this.textViewDate.setText(String.format(dateExchange + " at " + timeExchange ));
+        this.textViewCapacity.setText(String.format(exchange.getCurrentCapacity() + "/" + exchange.getCapacity()));
         this.callbackWeakRef = new WeakReference<>(callback);
         configHoriz();
     }

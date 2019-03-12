@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#000080</color>
-    <color name="colorPrimaryDark">#000080</color>
-    <color name="colorAccent">#D3D3D3</color>
-    <color name="colorError">#D3D3D3</color>
+    <color name="colorPrimary">#FFFF</color>
+    <color name="colorPrimaryDark">#FFFF</color>
+    <color name="colorAccent">#FFFF</color>
+    <color name="colorError">#FFFF</color>
     <color name="colorExchangeItem">#FFFF</color>
-    <color name="colorText">#000080</color>
+    <color name="colorBackgroundElement">#5F9EA0</color>
     <color name="colorBackground">#FFFF</color>
-    <color name="colorExpired">#990000</color>
-    <color name="colorExpiredShape">#b30000</color>
-    <color name="colorBtndShape">#1a1aff</color>
+    <color name="colorShadow">#5F9EA0</color>
+    <color name="colorText">#FFFF</color>
+    <color name="colorBackgroundExchange">#20B2AA</color>
 </resources>

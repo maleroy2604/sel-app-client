@@ -7,9 +7,7 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar"
-
-        />
+        layout="@layout/toolbar" />
 
     <RelativeLayout
         android:id="@+id/fragment_home_container"
@@ -17,32 +15,32 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/fragment_exchange_swipe_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorBackground"
+            android:background="@color/colorExchangeItem"
             android:padding="10dp">
 
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/fragment_exchange_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/colorExchangeItem" />
             </ScrollView>
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </RelativeLayout>
 
-    <android.support.design.widget.BottomNavigationView
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/home_activity_bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorExchangeItem"
+        android:background="@drawable/backgroundnitem"
         app:menu="@menu/bottom_navigation_main" />
 
 </LinearLayout>

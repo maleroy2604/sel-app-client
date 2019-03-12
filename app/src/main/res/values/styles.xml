@@ -3,15 +3,24 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorText</item>
-        <item name="colorPrimaryDark">@color/colorText</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorError">@color/colorError</item>
+        <item name="colorAccent">@color/colorExchangeItem</item>
+        <item name="colorPrimary">@color/colorExchangeItem</item>
     </style>
 
     <style name="DialogTheme" parent="Theme.AppCompat.Light">
-        <item name="colorAccent">@color/colorText</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="colorAccent">@color/colorBackgroundElement</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="TextInputLayoutAppearance">
+        <item name="colorControlNormal">@color/colorExchangeItem</item>
+        <item name="colorControlActivated">@color/colorExchangeItem</item>
+        <item name="android:textColor">@color/colorExchangeItem</item>
+        <item name="android:textColorHint">@color/colorExchangeItem</item>
+    </style>
+
+    <style name="MyEditText" parent="TextInputLayoutAppearance">
+
     </style>
 </resources>

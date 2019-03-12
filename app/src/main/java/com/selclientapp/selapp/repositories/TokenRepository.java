@@ -1,13 +1,7 @@
 package com.selclientapp.selapp.repositories;
 
-
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-
-import com.selclientapp.selapp.model.SelApiToken;
 import com.selclientapp.selapp.api.TokenWebService;
-import com.selclientapp.selapp.utils.Tools;
-
+import com.selclientapp.selapp.model.SelApiToken;
 
 import java.util.concurrent.Executor;
 
@@ -17,39 +11,30 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
 public class TokenRepository {
+
     private TokenWebService tokenWebService;
     private Executor executor;
 
     @Inject
-    public TokenRepository(TokenWebService webService, Executor executor) {
-        tokenWebService = webService;
+    public TokenRepository(TokenWebService tokenWebService, Executor executor) {
+        this.tokenWebService = tokenWebService;
         this.executor = executor;
     }
 
-    public LiveData<SelApiToken> getTokenAndSaveIt(TokenBody tokenBody) {
-        final MutableLiveData<SelApiToken> data = new MutableLiveData<>();
+    public void getTokenAndSaveIt() {
         executor.execute(() -> {
-            tokenWebService.getToken(tokenBody).enqueue(new Callback<SelApiToken>() {
+            tokenWebService.getToken(ManagementTokenAndUSer.getCurrentTokenBody()).enqueue(new Callback<SelApiToken>() {
                 @Override
                 public void onResponse(Call<SelApiToken> call, Response<SelApiToken> response) {
-                    if (response.isSuccessful()) {
-                        ManagementToken.saveToken(response.body().getAccessToken());
-                        ManagementToken.savecurrentUsername(tokenBody.getUsername(), tokenBody.getPassword());
-                        data.postValue(response.body());
-                    } else {
-                        Tools.backgroundThreadShortToast("Wrong Username or password");
-                    }
+                    ManagementTokenAndUSer.saveToken(response.body().getAccessToken());
                 }
 
                 @Override
                 public void onFailure(Call<SelApiToken> call, Throwable t) {
-                    Tools.backgroundThreadShortToast("Server not available");
+
                 }
             });
         });
-
-        return data;
     }
 }

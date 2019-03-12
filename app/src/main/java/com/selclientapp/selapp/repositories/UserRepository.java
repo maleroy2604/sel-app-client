@@ -1,6 +1,6 @@
 package com.selclientapp.selapp.repositories;
 
-import android.arch.lifecycle.MutableLiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.selclientapp.selapp.api.TokenWebService;
 import com.selclientapp.selapp.api.UserWebService;
@@ -8,6 +8,7 @@ import com.selclientapp.selapp.model.SelApiToken;
 import com.selclientapp.selapp.model.User;
 import com.selclientapp.selapp.utils.Tools;
 
+import java.io.IOException;
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
@@ -29,18 +30,61 @@ public class UserRepository {
         this.tokenWebService = tokenWebService;
     }
 
-    public MutableLiveData<SelApiToken> saveUser(User user) {
+
+    public MutableLiveData<SelApiToken> login(TokenBody tokenBody) {
         final MutableLiveData<SelApiToken> data = new MutableLiveData<>();
+        executor.execute(() -> {
+            tokenWebService.getToken(tokenBody).enqueue(new Callback<SelApiToken>() {
+                @Override
+                public void onResponse(Call<SelApiToken> call, Response<SelApiToken> response) {
+                    ManagementTokenAndUSer.saveToken(response.body().getAccessToken());
+                    ManagementTokenAndUSer.saveTokenBody(tokenBody);
+                    data.postValue(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<SelApiToken> call, Throwable t) {
+
+                }
+            });
+        });
+
+        return data;
+    }
+
+    public MutableLiveData<User> getUser(TokenBody tokenBody) {
+        final MutableLiveData<User> data = new MutableLiveData<>();
+        executor.execute(() -> {
+            userWebService.getUser(tokenBody.getUsername()).enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    ManagementTokenAndUSer.saveUser(response.body());
+                    data.postValue(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+
+                }
+            });
+
+        });
+        return data;
+    }
+
+    public MutableLiveData<User> saveUser(User user) {
+        final MutableLiveData<User> data = new MutableLiveData<>();
         executor.execute(() -> {
             userWebService.saveUser(user.getUsername(), user).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
-                    tokenWebService.getToken(new TokenBody(user.getUsername(), user.getPassword())).enqueue(new Callback<SelApiToken>() {
+                    ManagementTokenAndUSer.saveTokenBody(new TokenBody(user.getUsername(), user.getPassword()));
+                    ManagementTokenAndUSer.saveUser(response.body());
+                    data.postValue(response.body());
+                    tokenWebService.getToken(ManagementTokenAndUSer.getCurrentTokenBody()).enqueue(new Callback<SelApiToken>() {
                         @Override
                         public void onResponse(Call<SelApiToken> call, Response<SelApiToken> response) {
-                            ManagementToken.saveToken(response.body().getAccessToken());
-                            ManagementToken.savecurrentUsername(user.getUsername(), user.getPassword());
-                            data.postValue(response.body());
+                            ManagementTokenAndUSer.saveToken(response.body().getAccessToken());
                         }
 
                         @Override
@@ -52,29 +96,12 @@ public class UserRepository {
 
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
-                    Tools.backgroundThreadShortToast("Server not available");
+
                 }
             });
         });
+
         return data;
     }
 
-    public MutableLiveData<User> getUser() {
-        final MutableLiveData<User> data = new MutableLiveData<>();
-        executor.execute(() -> {
-            userWebService.getUser(ManagementToken.getToken(), ManagementToken.getCurrentTokenBody().getUsername()).enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    data.postValue(response.body());
-                    ManagementToken.saveCurrentId(response.body().getId());
-                }
-
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                    Tools.backgroundThreadShortToast("Server not available");
-                }
-            });
-        });
-        return data;
-    }
 }

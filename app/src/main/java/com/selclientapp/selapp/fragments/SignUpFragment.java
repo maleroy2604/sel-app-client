@@ -1,13 +1,13 @@
 package com.selclientapp.selapp.fragments;
 
 
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -101,12 +101,13 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (Tools.hasInternetConnection()) {
-                    User user = new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(), emailEditText.getText().toString());
+                    User user = new User(0, usernameEditText.getText().toString(), passwordEditText.getText().toString(), emailEditText.getText().toString());
                     loginModel.saveUser(user);
-                    loginModel.getSelApiTokenLiveData().observe(getActivity(), token -> {
+                    loginModel.getUserLiveData().observe(getActivity(), userLiveData -> {
                         Intent intent = new Intent(getActivity(), HomeActivity.class);
                         startActivity(intent);
                     });
+
                 } else {
                     Toast.makeText(App.context, "No internet connetion available !", Toast.LENGTH_LONG).show();
                 }
@@ -248,7 +249,10 @@ public class SignUpFragment extends Fragment {
         String confirmPassword = passwordConfirmEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
 
-        if (confirmPassword.equals(password)) {
+        if (password.isEmpty()) {
+            passwordConfirmInput.setError("Field can't be empty.");
+            return false;
+        } else if (confirmPassword.equals(password)) {
             passwordConfirmInput.setError("");
             return true;
         } else {

@@ -1,13 +1,16 @@
 package com.selclientapp.selapp.fragments;
 
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +18,7 @@ import android.view.ViewGroup;
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.model.ExchangeOcurence;
-import com.selclientapp.selapp.repositories.ManagementToken;
+import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 import com.selclientapp.selapp.view_models.ExchangeOcurenceViewModel;
 import com.selclientapp.selapp.views.OcurenceAdapter;
 
@@ -71,27 +74,13 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
     @Override
     public void onClickSendHours(int position) {
         ExchangeOcurence exchangeOcurence = ocurenceAdapter.getExchangeOcurence(position);
-        if (ManagementToken.hasToRefreshToken(new Date())) {
-            exchangeOcurenceViewModel.getTokenAndSaveIt(ManagementToken.getCurrentTokenBody());
-            exchangeOcurenceViewModel.getSelApiTokenLiveData().observe(this, token -> {
-                updateExchangeOcurence(exchangeOcurence);
-            });
-        } else {
-            updateExchangeOcurence(exchangeOcurence);
-        }
+        updateExchangeOcurence(exchangeOcurence);
     }
 
     @Override
     public void onClickRemoveParticipant(int position) {
         ExchangeOcurence exchangeOcurence = ocurenceAdapter.getExchangeOcurence(position);
-        if (ManagementToken.hasToRefreshToken(new Date())) {
-            exchangeOcurenceViewModel.getTokenAndSaveIt(ManagementToken.getCurrentTokenBody());
-            exchangeOcurenceViewModel.getSelApiTokenLiveData().observe(this, token -> {
-                deleteExchangeOcurence(exchangeOcurence);
-            });
-        } else {
-            deleteExchangeOcurence(exchangeOcurence);
-        }
+        deleteExchangeOcurence(exchangeOcurence);
     }
 
     // -----------------

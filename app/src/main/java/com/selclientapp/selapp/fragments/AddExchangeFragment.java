@@ -2,13 +2,18 @@ package com.selclientapp.selapp.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
+
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+
+import android.content.Context;
 import android.os.Bundle;
 
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import com.google.android.material.textfield.TextInputLayout;
+
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -23,12 +28,13 @@ import android.widget.TimePicker;
 
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
-import com.selclientapp.selapp.repositories.ManagementToken;
+import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 import com.selclientapp.selapp.view_models.ExchangeViewModel;
 
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -77,6 +83,13 @@ public class AddExchangeFragment extends Fragment {
     @Inject
     ViewModelProvider.Factory viewModelFactory;
     protected ExchangeViewModel exchangeViewModel;
+    protected ArrayList<Exchange> exchanges;
+    protected ListenerAddFragment callback;
+
+    public interface ListenerAddFragment {
+        void refreshExchanges(Exchange exchange);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -92,6 +105,7 @@ public class AddExchangeFragment extends Fragment {
         return view;
     }
 
+
     // -----------------
     // CONFIGURATION
     // -----------------
@@ -102,6 +116,16 @@ public class AddExchangeFragment extends Fragment {
 
     private void configureViewmodel() {
         exchangeViewModel = ViewModelProviders.of(this, viewModelFactory).get(ExchangeViewModel.class);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            callback = (ListenerAddFragment) context;
+        } catch (ClassCastException castException) {
+
+        }
     }
 
     private void configureDateListener() {
@@ -209,26 +233,16 @@ public class AddExchangeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int capa = Integer.parseInt(capacity.getText().toString());
-                Exchange exchange = new Exchange(0, username.getText().toString(), description.getText().toString(), dateExchange + timeExchange + ":00", capa, ManagementToken.getCurrentId());
-                if (ManagementToken.hasToRefreshToken(new Date())) {
-                    exchangeViewModel.getTokenAndSaveIt(ManagementToken.getCurrentTokenBody());
-                    exchangeViewModel.getSelApiTokenLiveData().observe(getActivity(), token -> {
-                        exchangeViewModel.AddExchange(exchange);
-                        exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
-                            getActivity().onBackPressed();
-                        });
+                Exchange exchange = new Exchange(0, username.getText().toString(), description.getText().toString(), dateExchange + timeExchange + ":00", capa, ManagementTokenAndUSer.getCurrentId());
+                exchangeViewModel.AddExchange(exchange);
+                exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
+                    callback.refreshExchanges(exchange);
+                    getActivity().onBackPressed();
+                });
 
-                    });
-                } else {
-                    exchangeViewModel.AddExchange(exchange);
-                    exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
-                        getActivity().onBackPressed();
-                    });
-                }
             }
         });
     }
-
 
     private void configureElemView() {
         btnCreate.setEnabled(false);

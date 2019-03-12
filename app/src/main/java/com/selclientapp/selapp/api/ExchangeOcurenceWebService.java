@@ -15,14 +15,14 @@ import retrofit2.http.Path;
 
 public interface ExchangeOcurenceWebService {
     @POST("exchangeocurence/{id}")
-    Call<ExchangeOcurence> addExchangeOcurence(@Header("authorization") String token, @Path("id") int id, @Body ExchangeOcurence exchangeOcurence);
+    Call<ExchangeOcurence> addExchangeOcurence(@Path("id") int id, @Body ExchangeOcurence exchangeOcurence);
 
     @DELETE("exchangeocurence/{id}")
-    Call<ExchangeOcurence> deleteExchangeOcurence(@Header("authorization") String token, @Path("id") int id);
+    Call<ExchangeOcurence> deleteExchangeOcurence(@Path("id") int id);
 
     @PUT("exchangeocurence/{id}")
-    Call<ExchangeOcurence> updateExchangeOcurence(@Header("authorization") String token, @Path("id") int id, @Body ExchangeOcurence exchangeOcurence);
+    Call<ExchangeOcurence> updateExchangeOcurence(@Path("id") int id, @Body ExchangeOcurence exchangeOcurence);
 
     @GET("exchangeocurences/{id}")
-    Call<List<ExchangeOcurence>> getAllExchangeOcurence(@Header("authorization") String token, @Path("id") int id);
+    Call<List<ExchangeOcurence>> getAllExchangeOcurence(@Path("id") int id);
 }

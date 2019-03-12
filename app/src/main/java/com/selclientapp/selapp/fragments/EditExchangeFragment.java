@@ -1,15 +1,12 @@
 package com.selclientapp.selapp.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.selclientapp.selapp.model.Exchange;
-import com.selclientapp.selapp.repositories.ManagementToken;
-
-import java.util.Date;
-
 
 public class EditExchangeFragment extends AddExchangeFragment {
 
@@ -33,7 +30,6 @@ public class EditExchangeFragment extends AddExchangeFragment {
         capacity.setText(Integer.toString(exchange.getCapacity()));
         btnCreate.setText("Update");
         configurBtnUpdate();
-
     }
 
     private void configurBtnUpdate() {
@@ -41,21 +37,11 @@ public class EditExchangeFragment extends AddExchangeFragment {
             @Override
             public void onClick(View v) {
                 updateExchange();
-                if (ManagementToken.hasToRefreshToken(new Date())) {
-                    exchangeViewModel.getTokenAndSaveIt(ManagementToken.getCurrentTokenBody());
-                    exchangeViewModel.getSelApiTokenLiveData().observe(getActivity(), token -> {
-                        exchangeViewModel.updateExchange(exchange);
-                        exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
-                            getActivity().onBackPressed();
-                        });
-
-                    });
-                } else {
-                    exchangeViewModel.updateExchange(exchange);
-                    exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
-                        getActivity().onBackPressed();
-                    });
-                }
+                exchangeViewModel.updateExchange(exchange);
+                exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
+                    EditExchangeFragment.super.callback.refreshExchanges(exchange);
+                    getActivity().onBackPressed();
+                });
             }
         });
 
@@ -68,6 +54,5 @@ public class EditExchangeFragment extends AddExchangeFragment {
         exchange.setName(username.getText().toString());
         exchange.setDescription(description.getText().toString());
     }
-
 
 }

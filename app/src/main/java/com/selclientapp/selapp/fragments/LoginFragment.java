@@ -1,12 +1,17 @@
 package com.selclientapp.selapp.fragments;
 
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
+
+import androidx.annotation.Nullable;
+
+import com.google.android.material.textfield.TextInputLayout;
+
+import androidx.fragment.app.Fragment;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -20,6 +25,7 @@ import android.widget.Toast;
 import com.selclientapp.selapp.App;
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.activities.HomeActivity;
+import com.selclientapp.selapp.repositories.TokenBody;
 import com.selclientapp.selapp.utils.Tools;
 import com.selclientapp.selapp.view_models.LoginAndSignUpViewModel;
 
@@ -71,21 +77,16 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (Tools.hasInternetConnection()) {
-                    loginModel.getTokenAndSaveIt(usernameInput.getEditText().getText().toString(), passwordInput.getEditText().getText().toString());
-                    loginModel.getSelApiTokenLiveData().observe(getActivity(), selApiToken -> {
-                        loginModel.getUser();
-                        loginModel.getUserLiveData().observe(getActivity(), user -> {
-                            Intent intent = new Intent(getActivity(), HomeActivity.class);
-                            startActivity(intent);
-                        });
-
+                    TokenBody tokenBody = new TokenBody(usernameEditText.getText().toString(), passwordEditText.getText().toString());
+                    loginModel.login(tokenBody);
+                    loginModel.getSelApiTokenLiveData().observe(getActivity(), token -> {
+                        Intent intent = new Intent(getActivity(), HomeActivity.class);
+                        startActivity(intent);
                     });
                 } else {
                     Toast.makeText(App.context, "No internet connetion available !", Toast.LENGTH_LONG).show();
                 }
             }
-
-
         });
 
         linkSignUp.setOnClickListener(new View.OnClickListener() {

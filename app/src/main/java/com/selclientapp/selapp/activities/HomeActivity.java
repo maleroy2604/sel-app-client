@@ -1,24 +1,32 @@
 package com.selclientapp.selapp.activities;
 
 import android.app.Dialog;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
+
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.support.v7.widget.SearchView;
+
+import androidx.appcompat.widget.SearchView;
+
 import android.widget.TextView;
 
 import com.selclientapp.selapp.App;
@@ -29,7 +37,7 @@ import com.selclientapp.selapp.fragments.EditExchangeFragment;
 import com.selclientapp.selapp.fragments.ExchangeManagementOcurence;
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.model.ExchangeOcurence;
-import com.selclientapp.selapp.repositories.ManagementToken;
+import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 import com.selclientapp.selapp.utils.ItemClickSupport;
 import com.selclientapp.selapp.utils.Tools;
 import com.selclientapp.selapp.view_models.ExchangeOcurenceViewModel;
@@ -52,7 +60,7 @@ import dagger.android.AndroidInjection;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public class HomeActivity extends AppCompatActivity implements HasSupportFragmentInjector, ExchangeAdapter.Listener, SearchView.OnQueryTextListener {
+public class HomeActivity extends AppCompatActivity implements HasSupportFragmentInjector, ExchangeAdapter.Listener, SearchView.OnQueryTextListener, EditExchangeFragment.ListenerAddFragment {
 
 
     //FOR DESIGN
@@ -70,7 +78,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     private ExchangeViewModel exchangeViewModel;
     private ExchangeOcurenceViewModel exchangeOcurenceViewModel;
     private LoginAndSignUpViewModel loginAndSignUpViewModel;
-    private List<Exchange> exchanges;
+    private ArrayList<Exchange> exchanges;
     private ExchangeAdapter adapter;
 
     @Inject
@@ -80,7 +88,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         ButterKnife.bind(this);
@@ -117,7 +125,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
                         break;
 
                     case R.id.action_log_out:
-                        ManagementToken.logOut();
+                        ManagementTokenAndUSer.logOut();
                         Intent intent = new Intent(App.context, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
@@ -132,24 +140,23 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
             }
         });
     }
-    // -----------------
-    // CONFIGURATION
-    // -----------------
-
 
     private void configureViewmodel() {
         loginAndSignUpViewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginAndSignUpViewModel.class);
         exchangeViewModel = ViewModelProviders.of(this, viewModelFactory).get(ExchangeViewModel.class);
         exchangeOcurenceViewModel = ViewModelProviders.of(this, viewModelFactory).get(ExchangeOcurenceViewModel.class);
-
-        refreshHours();
         refreshExchanges();
-
+        if (ManagementTokenAndUSer.contains("HOURS")) {
+            counterHours.setText("Hours : " + ManagementTokenAndUSer.getHours());
+        } else {
+            refreshHours();
+        }
     }
 
     private void configureRecyclerView() {
         this.exchanges = new ArrayList<>();
         this.adapter = new ExchangeAdapter(this.exchanges, this);
+        recyclerView.setHasFixedSize(true);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerView.setAdapter(this.adapter);
     }
@@ -159,7 +166,6 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
             @Override
             public void onRefresh() {
                 refreshExchanges();
-
             }
         });
     }
@@ -169,7 +175,6 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 Exchange exchange = adapter.getExchange(position);
-
             }
         });
     }
@@ -182,7 +187,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         TextView textDelete;
         TextView textEdit;
         TextView textManagement;
-        if (exchange.getOwner() == ManagementToken.getCurrentId()) {
+        if (exchange.getOwner() == ManagementTokenAndUSer.getCurrentId()) {
             textDelete = dialog.findViewById(R.id.dialog_option_delete);
             textEdit = dialog.findViewById(R.id.dialog_option_edit);
             textManagement = dialog.findViewById(R.id.dialog_option_management);
@@ -227,9 +232,10 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
             textEnroll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ExchangeOcurence exchangeOcurence = new ExchangeOcurence(0, ManagementToken.getCurrentId(), exchange.getId());
-
+                    ExchangeOcurence exchangeOcurence = new ExchangeOcurence(0, ManagementTokenAndUSer.getCurrentId(), exchange.getId());
                     if (isValidEnroll(exchange)) {
+                        exchange.getExchangeocurence().add(exchangeOcurence);
+                        updateUI(exchanges);
                         addExchangeOcurence(exchangeOcurence);
                         dialog.dismiss();
                     }
@@ -264,7 +270,6 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
-
         searchView.setOnQueryTextListener(this);
         return true;
     }
@@ -276,20 +281,18 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
 
     @Override
     public boolean onQueryTextChange(String newText) {
-
-        newText.toLowerCase();
         List<Exchange> newList = new ArrayList<>();
 
         for (Exchange exchange : exchanges) {
-            if ((exchange.getName().toLowerCase().contains(newText))) {
+            if ((exchange.getName().toLowerCase().contains(newText.toLowerCase()))) {
                 newList.add(exchange);
             }
         }
         swipeRefreshLayout.setRefreshing(false);
         adapter.updateList(newList);
-
         return true;
     }
+
 
     // -------------------
     // UPDATE UI
@@ -303,14 +306,10 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         adapter.notifyDataSetChanged();
     }
 
+
     // -----------------
     // ACTION
     // -----------------
-
-    private void getAllExchanges() {
-        exchangeViewModel.init();
-        exchangeViewModel.getAllExchanges().observe(this, allExchanges -> updateUI(allExchanges));
-    }
 
     private void showEditExchangeFragment(EditExchangeFragment fragment) {
         getSupportFragmentManager().beginTransaction()
@@ -318,49 +317,28 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     }
 
     private void deleteExchangeOcurence(ExchangeOcurence exchangeOcurence) {
-        if (ManagementToken.hasToRefreshToken(new Date())) {
-            exchangeViewModel.getTokenAndSaveIt(ManagementToken.getCurrentTokenBody());
-            exchangeViewModel.getSelApiTokenLiveData().observe(this, token -> {
-                exchangeOcurenceViewModel.deleteExchangeOcurence(exchangeOcurence);
-                exchangeOcurenceViewModel.getExchangeOcurenceLiveData().observe(this, ocurence -> {
-                    refreshExchanges();
-                });
-            });
-        } else {
-            exchangeOcurenceViewModel.deleteExchangeOcurence(exchangeOcurence);
-            exchangeOcurenceViewModel.getExchangeOcurenceLiveData().observe(this, ocurence -> {
-                refreshExchanges();
-            });
-        }
+        exchangeOcurenceViewModel.deleteExchangeOcurence(exchangeOcurence);
+        exchangeOcurenceViewModel.getExchangeOcurenceLiveData().observe(this, ocurence -> {
+            refreshExchanges();
+        });
     }
 
+
     private void deleteExchange(Exchange exchange) {
+        this.exchanges.remove(exchange);
         exchangeViewModel.deleteOneExchange(exchange.getId());
-        exchangeViewModel.getAllExchanges().observe(this, exchanges -> updateUI(exchanges));
+        exchangeViewModel.getExchangeLiveData().observe(this, ex -> {
+            refreshExchanges();
+            adapter.removeExchange(exchange);
+        });
+
+
     }
 
     private void addExchangeOcurence(ExchangeOcurence exchangeOcurence) {
-        if (ManagementToken.hasToRefreshToken(new Date())) {
-            exchangeViewModel.getTokenAndSaveIt(ManagementToken.getCurrentTokenBody());
-            exchangeViewModel.getSelApiTokenLiveData().observe(this, token -> {
-                exchangeOcurenceViewModel.addExchangeOcurence(exchangeOcurence);
-                exchangeOcurenceViewModel.getExchangeOcurenceLiveData().observe(this, ocurence -> {
-                    refreshExchanges();
-                });
-            });
-        } else {
-            exchangeOcurenceViewModel.addExchangeOcurence(exchangeOcurence);
-            exchangeOcurenceViewModel.getExchangeOcurenceLiveData().observe(this, ocurence -> {
-                refreshExchanges();
-            });
-        }
-
-    }
-
-    private void refreshExchanges() {
-        exchangeViewModel.init();
-        exchangeViewModel.getAllExchanges().observe(this,exchanges -> {
-            updateUI(exchanges);
+        exchangeOcurenceViewModel.addExchangeOcurence(exchangeOcurence);
+        exchangeOcurenceViewModel.getExchangeOcurenceLiveData().observe(this, ocurence -> {
+            refreshExchanges();
         });
     }
 
@@ -378,17 +356,13 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     @Override
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();
-
         if (count != 0) {
             getSupportFragmentManager().popBackStack();
-            refreshExchanges();
-            refreshHours();
             bottomNavigationView.setSelectedItemId(R.id.action_home);
             ActionBar actionBar = (this).getSupportActionBar();
             actionBar.show();
             swipeRefreshLayout.setRefreshing(false);
         }
-
     }
 
     private void showAddExchangeFragment(Bundle savedInstanceState) {
@@ -400,21 +374,13 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
 
     }
 
-    private void refreshHours() {
-        loginAndSignUpViewModel.getUser();
-        loginAndSignUpViewModel.getUserLiveData().observe(this, user -> {
-            counterHours.setText("Hours : " + user.getCounterhours());
-        });
-
-    }
-
     // -----------------
     // UTILS
     // -----------------
 
     private ExchangeOcurence findExchangeOcurence(Exchange exchange) {
         for (ExchangeOcurence exchangeOcurence : exchange.getExchangeocurence()) {
-            if (exchangeOcurence.getParticipantId() == ManagementToken.getCurrentId()) {
+            if (exchangeOcurence.getParticipantId() == ManagementTokenAndUSer.getCurrentId()) {
                 return exchangeOcurence;
             }
         }
@@ -455,5 +421,24 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         return exchangeDate.getTime() < new Date().getTime();
     }
 
+    private void refreshHours() {
+        loginAndSignUpViewModel.getUser(ManagementTokenAndUSer.getCurrentTokenBody());
+        loginAndSignUpViewModel.getUserLiveData().observe(this, user -> {
+            counterHours.setText("Hours : " + user.getCounterhours());
+        });
+    }
+
+    private void refreshExchanges() {
+        exchangeViewModel.init();
+        exchangeViewModel.getAllExchanges().observe(this, exchanges -> {
+            updateUI(exchanges);
+        });
+    }
+
+    @Override
+    public void refreshExchanges(Exchange exchange) {
+        refreshExchanges();
+        adapter.setExchange(exchange);
+    }
 }
 

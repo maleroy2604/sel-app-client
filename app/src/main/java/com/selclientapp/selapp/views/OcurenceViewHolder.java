@@ -1,6 +1,6 @@
 package com.selclientapp.selapp.views;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -13,7 +13,6 @@ import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.ExchangeOcurence;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

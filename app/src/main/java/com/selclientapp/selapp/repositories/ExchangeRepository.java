@@ -1,10 +1,9 @@
 package com.selclientapp.selapp.repositories;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.selclientapp.selapp.api.ExchangeWebService;
-import com.selclientapp.selapp.api.TokenWebService;
 import com.selclientapp.selapp.model.Exchange;
 
 import java.util.List;
@@ -30,10 +29,12 @@ public class ExchangeRepository {
     public LiveData<Exchange> saveExchange(Exchange exchange) {
         final MutableLiveData<Exchange> data = new MutableLiveData<>();
         executor.execute(() -> {
-            exchangeWebService.saveExchange(ManagementToken.getToken(), exchange.getId(), exchange).enqueue(new Callback<Exchange>() {
+            exchangeWebService.saveExchange( exchange.getId(), exchange).enqueue(new Callback<Exchange>() {
                 @Override
                 public void onResponse(Call<Exchange> call, Response<Exchange> response) {
-                    data.setValue(response.body());;
+                    if (response.isSuccessful()) {
+                        data.setValue(response.body());
+                    }
                 }
 
                 @Override
@@ -48,7 +49,7 @@ public class ExchangeRepository {
     public LiveData<List<Exchange>> getAllExchanges() {
         final MutableLiveData<List<Exchange>> data = new MutableLiveData<>();
         executor.execute(() -> {
-            exchangeWebService.getAllExchange(ManagementToken.getToken()).enqueue(new Callback<List<Exchange>>() {
+            exchangeWebService.getAllExchange().enqueue(new Callback<List<Exchange>>() {
                 @Override
                 public void onResponse(Call<List<Exchange>> call, Response<List<Exchange>> response) {
                     if (response.isSuccessful()) {
@@ -65,30 +66,32 @@ public class ExchangeRepository {
         return data;
     }
 
-    public LiveData<List<Exchange>> deleteOneExchange(int id) {
-        final MutableLiveData<List<Exchange>> data = new MutableLiveData<>();
+    public LiveData<Exchange> deleteOneExchange(int id) {
+        final MutableLiveData<Exchange> data = new MutableLiveData<>();
         executor.execute(() -> {
-            exchangeWebService.deleteExchange(ManagementToken.getToken(), id).enqueue(new Callback<List<Exchange>>() {
+            exchangeWebService.deleteExchange(id).enqueue(new Callback<Exchange>() {
                 @Override
-                public void onResponse(Call<List<Exchange>> call, Response<List<Exchange>> response) {
+                public void onResponse(Call<Exchange> call, Response<Exchange> response) {
                     if (response.isSuccessful()) {
-                        data.setValue(response.body());
+                        data.postValue(response.body());
                     }
                 }
 
                 @Override
-                public void onFailure(Call<List<Exchange>> call, Throwable t) {
+                public void onFailure(Call<Exchange> call, Throwable t) {
 
                 }
             });
+
         });
+
         return data;
     }
 
     public LiveData<Exchange> updateExchange(Exchange exchange) {
         final MutableLiveData<Exchange> data = new MutableLiveData<>();
         executor.execute(() -> {
-            exchangeWebService.updateExchange(ManagementToken.getToken(),exchange.getId(),exchange).enqueue(new Callback<Exchange>() {
+            exchangeWebService.updateExchange( exchange.getId(), exchange).enqueue(new Callback<Exchange>() {
                 @Override
                 public void onResponse(Call<Exchange> call, Response<Exchange> response) {
                     if (response.isSuccessful()) {

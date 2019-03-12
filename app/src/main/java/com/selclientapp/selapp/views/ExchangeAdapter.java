@@ -1,12 +1,12 @@
 package com.selclientapp.selapp.views;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
@@ -56,11 +56,25 @@ public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> {
         return this.exchanges.get(possition);
     }
 
-    public void updateList(List<Exchange> newList) {
-        exchanges = new ArrayList<>();
-        exchanges.addAll(newList);
+    public void updateList(List<Exchange> filteredListExchanges) {
+        this.exchanges = new ArrayList<>();
+        this.exchanges.addAll(filteredListExchanges);
         notifyDataSetChanged();
     }
 
+    public void setExchange(Exchange exchange) {
+        for (Exchange elem : this.exchanges) {
+            if (elem.getId() == exchange.getId()) {
+                elem = exchange;
+            }
+        }
+    }
 
+    public void removeExchange(Exchange exchange) {
+        this.exchanges.remove(exchange);
+    }
+
+    public List<Exchange> getExchanges() {
+        return exchanges;
+    }
 }

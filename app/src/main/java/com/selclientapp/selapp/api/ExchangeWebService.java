@@ -15,14 +15,14 @@ import retrofit2.http.Path;
 
 public interface ExchangeWebService {
     @POST("exchange/{id}")
-    Call<Exchange> saveExchange(@Header("authorization") String token, @Path("id") int id, @Body Exchange exchange);
+    Call<Exchange> saveExchange(@Path("id") int id, @Body Exchange exchange);
 
     @GET("exchanges")
-    Call<List<Exchange>> getAllExchange(@Header("authorization") String token);
+    Call<List<Exchange>> getAllExchange();
 
     @DELETE("exchange/{id}")
-    Call<List<Exchange>> deleteExchange(@Header("authorization") String token, @Path("id") int id);
+    Call<Exchange> deleteExchange(@Path("id") int id);
 
     @PUT("exchange/{id}")
-    Call <Exchange> updateExchange(@Header("authorization") String token, @Path("id") int id, @Body Exchange exchange);
+    Call<Exchange> updateExchange(@Path("id") int id, @Body Exchange exchange);
 }

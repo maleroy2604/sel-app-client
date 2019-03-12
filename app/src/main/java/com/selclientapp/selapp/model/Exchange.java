@@ -150,16 +150,9 @@ public class Exchange implements Parcelable {
         return currentCapacity;
     }
 
-    public void setCurrentCapacity(Integer currentCapacity) {
-        this.currentCapacity = currentCapacity;
-    }
 
     public Integer getOwner() {
         return owner;
-    }
-
-    public void setOwner(Integer owner) {
-        this.owner = owner;
     }
 
     public List<ExchangeOcurence> getExchangeocurence() {
@@ -168,14 +161,6 @@ public class Exchange implements Parcelable {
 
     public void setExchangeocurence(List<ExchangeOcurence> exchangeocurence) {
         this.exchangeocurence = exchangeocurence;
-    }
-
-    public List<Object> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<Object> messages) {
-        this.messages = messages;
     }
 
     @Override

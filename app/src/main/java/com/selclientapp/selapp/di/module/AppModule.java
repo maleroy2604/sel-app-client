@@ -6,7 +6,6 @@ import com.selclientapp.selapp.api.ExchangeOcurenceWebService;
 import com.selclientapp.selapp.api.ExchangeWebService;
 import com.selclientapp.selapp.api.TokenWebService;
 import com.selclientapp.selapp.api.UserWebService;
-import com.selclientapp.selapp.model.ExchangeOcurence;
 import com.selclientapp.selapp.repositories.ExchangeOcurenceRepository;
 import com.selclientapp.selapp.repositories.ExchangeRepository;
 import com.selclientapp.selapp.repositories.TokenRepository;
@@ -19,6 +18,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -34,13 +34,13 @@ public class AppModule {
 
     @Provides
     @Singleton
-    TokenRepository provideTokenRepository(TokenWebService tokenWebService, Executor executor) {
-        return new TokenRepository(tokenWebService, executor);
+    TokenRepository provideTokenRepository(TokenWebService webservice, Executor executor) {
+        return new TokenRepository(webservice, executor);
     }
 
     @Provides
     @Singleton
-    UserRepository provideUserRepository(UserWebService userWebService, Executor executor,TokenWebService tokenWebService) {
+    UserRepository provideUserRepository(UserWebService userWebService, Executor executor, TokenWebService tokenWebService) {
         return new UserRepository(userWebService, executor, tokenWebService);
     }
 
@@ -56,6 +56,7 @@ public class AppModule {
         return new ExchangeOcurenceRepository(webservice, executor);
     }
 
+
     // --- NETWORK INJECTION ---
 
     @Provides
@@ -65,11 +66,13 @@ public class AppModule {
 
     @Provides
     Retrofit provideRetrofit(Gson gson) {
-        String BASE_URL = "https://sel-app.herokuapp.com/";
+        String BASE_URL = "http://10.0.2.2:5000/" ;
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().addInterceptor(new ServiceInterceptor()).build();
         //"https://sel-app.herokuapp.com/"
         //"http://10.0.2.2:5000/"
         return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(okHttpClient)
                 .baseUrl(BASE_URL)
                 .build();
     }
