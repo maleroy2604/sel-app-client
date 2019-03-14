@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
@@ -15,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> {
+public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> implements Filterable {
 
     public interface Listener {
         void onClickDialog(int position);
@@ -23,6 +25,7 @@ public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> {
 
     //FOR DATA
     private List<Exchange> exchanges;
+    private List<Exchange> exchangesIsFull;
 
 
     //FOR CALLBACK
@@ -31,6 +34,10 @@ public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> {
     public ExchangeAdapter(List<Exchange> exchanges, Listener callback) {
         this.exchanges = exchanges;
         this.callback = callback;
+        this.exchangesIsFull = new ArrayList<>(exchanges);
+        System.out.println("adapter exchanges " + exchanges);
+        System.out.println("exchangesIsFull " + exchangesIsFull);
+
     }
 
     @Override
@@ -56,25 +63,37 @@ public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> {
         return this.exchanges.get(possition);
     }
 
-    public void updateList(List<Exchange> filteredListExchanges) {
-        this.exchanges = new ArrayList<>();
-        this.exchanges.addAll(filteredListExchanges);
-        notifyDataSetChanged();
+    @Override
+    public Filter getFilter() {
+        return exchangeFilter;
     }
 
-    public void setExchange(Exchange exchange) {
-        for (Exchange elem : this.exchanges) {
-            if (elem.getId() == exchange.getId()) {
-                elem = exchange;
+    private Filter exchangeFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Exchange> filteredList = new ArrayList<>();
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(exchangesIsFull);
+            } else {
+                String filterPattern = constraint.toString().toUpperCase().trim();
+
+                for (Exchange item : exchangesIsFull) {
+                    if (item.getName().toUpperCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
             }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
         }
-    }
 
-    public void removeExchange(Exchange exchange) {
-        this.exchanges.remove(exchange);
-    }
-
-    public List<Exchange> getExchanges() {
-        return exchanges;
-    }
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            exchanges.clear();
+            exchanges.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 }

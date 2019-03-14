@@ -84,12 +84,6 @@ public class AddExchangeFragment extends Fragment {
     ViewModelProvider.Factory viewModelFactory;
     protected ExchangeViewModel exchangeViewModel;
     protected ArrayList<Exchange> exchanges;
-    protected ListenerAddFragment callback;
-
-    public interface ListenerAddFragment {
-        void refreshExchanges(Exchange exchange);
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -116,16 +110,6 @@ public class AddExchangeFragment extends Fragment {
 
     private void configureViewmodel() {
         exchangeViewModel = ViewModelProviders.of(this, viewModelFactory).get(ExchangeViewModel.class);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            callback = (ListenerAddFragment) context;
-        } catch (ClassCastException castException) {
-
-        }
     }
 
     private void configureDateListener() {
@@ -236,7 +220,6 @@ public class AddExchangeFragment extends Fragment {
                 Exchange exchange = new Exchange(0, username.getText().toString(), description.getText().toString(), dateExchange + timeExchange + ":00", capa, ManagementTokenAndUSer.getCurrentId());
                 exchangeViewModel.AddExchange(exchange);
                 exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
-                    callback.refreshExchanges(exchange);
                     getActivity().onBackPressed();
                 });
 

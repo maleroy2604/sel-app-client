@@ -61,7 +61,7 @@ import dagger.android.AndroidInjection;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public class HomeActivity extends AppCompatActivity implements HasSupportFragmentInjector, ExchangeAdapter.Listener, SearchView.OnQueryTextListener, EditExchangeFragment.ListenerAddFragment {
+public class HomeActivity extends AppCompatActivity implements HasSupportFragmentInjector, ExchangeAdapter.Listener {
 
 
     //FOR DESIGN
@@ -79,7 +79,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     private ExchangeViewModel exchangeViewModel;
     private ExchangeOcurenceViewModel exchangeOcurenceViewModel;
     private LoginAndSignUpViewModel loginAndSignUpViewModel;
-    private ArrayList<Exchange> exchanges;
+    private ArrayList<Exchange> exchanges = new ArrayList<>();
     private ExchangeAdapter adapter;
 
     @Inject
@@ -99,7 +99,6 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         configOnclickRecyclerView();
         configureViewmodel();
         configureRefreshLayout();
-        configureRecyclerView();
     }
 
     // -----------------
@@ -155,7 +154,6 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     }
 
     private void configureRecyclerView() {
-        this.exchanges = new ArrayList<>();
         this.adapter = new ExchangeAdapter(this.exchanges, this);
         recyclerView.setHasFixedSize(true);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -282,26 +280,22 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setOnQueryTextListener(this);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
         return true;
     }
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        List<Exchange> newList = new ArrayList<>();
-        for (Exchange exchange : exchanges) {
-            if ((exchange.getName().toLowerCase().contains(newText.toLowerCase()))) {
-                newList.add(exchange);
-            }
-        }
-        adapter.updateList(newList);
-        return false;
-    }
 
     // -------------------
     // UPDATE UI
@@ -343,7 +337,6 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         exchangeViewModel.deleteOneExchange(exchange.getId());
         exchangeViewModel.getExchangeLiveData().observe(this, ex -> {
             refreshExchanges();
-            adapter.removeExchange(exchange);
         });
 
 
@@ -445,15 +438,13 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     private void refreshExchanges() {
         exchangeViewModel.init();
         exchangeViewModel.getAllExchanges().observe(this, exchanges -> {
-            System.out.println("exchanges " + exchanges);
+            this.adapter = new ExchangeAdapter(exchanges, this);
+            recyclerView.setHasFixedSize(true);
+            this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            this.recyclerView.setAdapter(this.adapter);
             updateUI(exchanges);
-        });
-    }
 
-    @Override
-    public void refreshExchanges(Exchange exchange) {
-        refreshExchanges();
-        adapter.setExchange(exchange);
+        });
     }
 }
 

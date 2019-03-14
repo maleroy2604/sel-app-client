@@ -1,6 +1,5 @@
 package com.selclientapp.selapp.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +38,6 @@ public class EditExchangeFragment extends AddExchangeFragment {
                 updateExchange();
                 exchangeViewModel.updateExchange(exchange);
                 exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
-                    EditExchangeFragment.super.callback.refreshExchanges(exchange);
                     getActivity().onBackPressed();
                 });
             }
