@@ -8,6 +8,8 @@ import com.selclientapp.selapp.model.User;
 import com.selclientapp.selapp.repositories.TokenBody;
 import com.selclientapp.selapp.repositories.UserRepository;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 
@@ -25,15 +27,19 @@ public class LoginAndSignUpViewModel extends ViewModel {
     // ----
 
     public void login(TokenBody tokenBody) {
-       selApiTokenLiveData = userRepo.login(tokenBody);
+        selApiTokenLiveData = userRepo.login(tokenBody);
     }
 
-    public void getUser(TokenBody tokenBody){
-        userLiveData =userRepo.getUser(tokenBody);
+    public void getUser(TokenBody tokenBody) {
+        userLiveData = userRepo.getUser(tokenBody);
     }
 
     public void saveUser(User user) {
         userLiveData = userRepo.saveUser(user);
+    }
+
+    public void getToken(){
+        selApiTokenLiveData = userRepo.getToken();
     }
 
     public LiveData<User> getUserLiveData() {

@@ -9,6 +9,7 @@ import com.selclientapp.selapp.model.User;
 import com.selclientapp.selapp.utils.Tools;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
@@ -37,9 +38,14 @@ public class UserRepository {
             tokenWebService.getToken(tokenBody).enqueue(new Callback<SelApiToken>() {
                 @Override
                 public void onResponse(Call<SelApiToken> call, Response<SelApiToken> response) {
-                    ManagementTokenAndUSer.saveToken(response.body().getAccessToken());
-                    ManagementTokenAndUSer.saveTokenBody(tokenBody);
-                    data.postValue(response.body());
+                    if(response.isSuccessful()){
+                        ManagementTokenAndUSer.saveToken(response.body().getAccessToken());
+                        ManagementTokenAndUSer.saveTokenBody(tokenBody);
+                        data.postValue(response.body());
+                    }else{
+                        Tools.backgroundThreadShortToast("Wrong username or password !");
+                    }
+
                 }
 
                 @Override
@@ -78,20 +84,13 @@ public class UserRepository {
             userWebService.saveUser(user.getUsername(), user).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
-                    ManagementTokenAndUSer.saveTokenBody(new TokenBody(user.getUsername(), user.getPassword()));
-                    ManagementTokenAndUSer.saveUser(response.body());
-                    data.postValue(response.body());
-                    tokenWebService.getToken(ManagementTokenAndUSer.getCurrentTokenBody()).enqueue(new Callback<SelApiToken>() {
-                        @Override
-                        public void onResponse(Call<SelApiToken> call, Response<SelApiToken> response) {
-                            ManagementTokenAndUSer.saveToken(response.body().getAccessToken());
-                        }
-
-                        @Override
-                        public void onFailure(Call<SelApiToken> call, Throwable t) {
-
-                        }
-                    });
+                    if(response.code() == 201 ){
+                        ManagementTokenAndUSer.saveTokenBody(new TokenBody(user.getUsername(), user.getPassword()));
+                        ManagementTokenAndUSer.saveUser(response.body());
+                        data.postValue(response.body());
+                    }else{
+                        Tools.backgroundThreadShortToast("User already exists ! ");
+                    }
                 }
 
                 @Override
@@ -104,4 +103,25 @@ public class UserRepository {
         return data;
     }
 
+    public MutableLiveData<SelApiToken> getToken() {
+        final MutableLiveData<SelApiToken> data = new MutableLiveData<>();
+        executor.execute(() -> {
+            tokenWebService.getToken(ManagementTokenAndUSer.getCurrentTokenBody()).enqueue(new Callback<SelApiToken>() {
+                @Override
+                public void onResponse(Call<SelApiToken> call, Response<SelApiToken> response) {
+                    ManagementTokenAndUSer.saveToken(response.body().getAccessToken());
+                    data.postValue(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<SelApiToken> call, Throwable t) {
+
+                }
+            });
+        });
+        return data;
+    }
+
 }
+
+

@@ -12,7 +12,7 @@ import javax.inject.Inject;
 
 public class ExchangeViewModel extends ViewModel {
     private ExchangeRepository exchangeRepository;
-    private LiveData<List<Exchange>> allExchanges = null;
+    private LiveData<List<Exchange>> allExchanges;
     private LiveData<Exchange> exchangeLiveData;
 
     @Inject

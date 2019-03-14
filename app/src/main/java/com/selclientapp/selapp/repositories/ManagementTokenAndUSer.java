@@ -1,8 +1,11 @@
 package com.selclientapp.selapp.repositories;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.selclientapp.selapp.App;
+import com.selclientapp.selapp.activities.MainActivity;
 import com.selclientapp.selapp.model.User;
 
 import static com.selclientapp.selapp.App.context;
@@ -24,9 +27,9 @@ public class ManagementTokenAndUSer {
         pref.edit().putInt("HOURS", user.getCounterhours()).apply();
     }
 
-    static void saveTokenBody(TokenBody tokenBody ){
+    static void saveTokenBody(TokenBody tokenBody) {
         pref.edit().putString("CURRENTUSERNAME", tokenBody.getUsername()).apply();
-        pref.edit().putString("PASSWORD",tokenBody.getPassword()).apply();
+        pref.edit().putString("PASSWORD", tokenBody.getPassword()).apply();
     }
 
     // -----------------
@@ -43,6 +46,7 @@ public class ManagementTokenAndUSer {
 
     public static void logOut() {
         pref.edit().clear().apply();
+        App.context.startActivity(new Intent(App.context,MainActivity.class));
     }
 
     public static int getCurrentId() {

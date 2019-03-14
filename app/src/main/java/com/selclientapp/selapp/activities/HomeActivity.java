@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 
 import androidx.appcompat.widget.SearchView;
@@ -95,8 +96,8 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         this.configureDagger();
         this.configureBottomNavBar(savedInstanceState, actionBar);
         counterHours = toolbar.findViewById(R.id.toolbar_hours);
-        configureViewmodel();
         configOnclickRecyclerView();
+        configureViewmodel();
         configureRefreshLayout();
         configureRecyclerView();
     }
@@ -168,6 +169,17 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
                 refreshExchanges();
             }
         });
+
+        swipeRefreshLayout.getViewTreeObserver().addOnScrollChangedListener(
+                new ViewTreeObserver.OnScrollChangedListener() {
+                    @Override
+                    public void onScrollChanged() {
+                        if (recyclerView.getScrollY() == 0)
+                            swipeRefreshLayout.setEnabled(true);
+                        else
+                            swipeRefreshLayout.setEnabled(false);
+                    }
+                });
     }
 
     private void configOnclickRecyclerView() {
@@ -282,28 +294,30 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     @Override
     public boolean onQueryTextChange(String newText) {
         List<Exchange> newList = new ArrayList<>();
-
         for (Exchange exchange : exchanges) {
             if ((exchange.getName().toLowerCase().contains(newText.toLowerCase()))) {
                 newList.add(exchange);
             }
         }
-        swipeRefreshLayout.setRefreshing(false);
         adapter.updateList(newList);
-        return true;
+        return false;
     }
-
 
     // -------------------
     // UPDATE UI
     // -------------------
 
     private void updateUI(List<Exchange> exchanges) {
-        swipeRefreshLayout.setRefreshing(false);
-        this.exchanges.clear();
-        Collections.reverse(exchanges);
-        this.exchanges.addAll(exchanges);
-        adapter.notifyDataSetChanged();
+        if (exchanges != null) {
+            swipeRefreshLayout.setRefreshing(false);
+            this.exchanges.clear();
+            Collections.reverse(exchanges);
+            this.exchanges.addAll(exchanges);
+            adapter.notifyDataSetChanged();
+        } else {
+            Tools.backgroundThreadShortToast("Invalid credentials");
+        }
+
     }
 
 
@@ -361,7 +375,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
             bottomNavigationView.setSelectedItemId(R.id.action_home);
             ActionBar actionBar = (this).getSupportActionBar();
             actionBar.show();
-            swipeRefreshLayout.setRefreshing(false);
+            // swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -431,6 +445,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     private void refreshExchanges() {
         exchangeViewModel.init();
         exchangeViewModel.getAllExchanges().observe(this, exchanges -> {
+            System.out.println("exchanges " + exchanges);
             updateUI(exchanges);
         });
     }

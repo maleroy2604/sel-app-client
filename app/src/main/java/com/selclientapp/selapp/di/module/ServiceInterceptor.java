@@ -18,7 +18,7 @@ public class ServiceInterceptor implements Interceptor {
         //"https://sel-app.herokuapp.com/"
         //"http://10.0.2.2:5000/"
         Request request = chain.request();
-        if (!(request.url().encodedPath().equals("user/{username}") || request.url().encodedPath().equals("/auth"))) {
+        if (!(request.url().encodedPath().equals("/user/{username}") || request.url().encodedPath().equals("/auth"))) {
             request = request.newBuilder().addHeader("authorization", ManagementTokenAndUSer.getToken()).build();
             Response response = chain.proceed(request);
             if (response.code() == 401) {
@@ -28,12 +28,15 @@ public class ServiceInterceptor implements Interceptor {
                         .build();
                 TokenWebService tokenWebService = retrofit.create(TokenWebService.class);
                 retrofit2.Response newToken = tokenWebService.getToken(ManagementTokenAndUSer.getCurrentTokenBody()).execute();
-                ManagementTokenAndUSer.saveToken(newToken.body().toString());
-                Request newRequest = request.newBuilder()
-                        .addHeader("authorization", ManagementTokenAndUSer.getToken())
-                        .build();
-
-                return chain.proceed(newRequest);
+                if(newToken.isSuccessful()){
+                    ManagementTokenAndUSer.saveToken(newToken.body().toString());
+                    Request newRequest = request.newBuilder()
+                            .addHeader("authorization", ManagementTokenAndUSer.getToken())
+                            .build();
+                    return chain.proceed(newRequest);
+                }else{
+                    ManagementTokenAndUSer.logOut();
+                }
             } else {
                 return response;
             }

@@ -3,11 +3,16 @@ package com.selclientapp.selapp.fragments;
 
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+
 import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.fragment.app.Fragment;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -104,10 +109,12 @@ public class SignUpFragment extends Fragment {
                     User user = new User(0, usernameEditText.getText().toString(), passwordEditText.getText().toString(), emailEditText.getText().toString());
                     loginModel.saveUser(user);
                     loginModel.getUserLiveData().observe(getActivity(), userLiveData -> {
-                        Intent intent = new Intent(getActivity(), HomeActivity.class);
-                        startActivity(intent);
+                        loginModel.getToken();
+                        loginModel.getSelApiTokenLiveData().observe(getActivity(), selApiToken -> {
+                            Intent intent = new Intent(getActivity(), HomeActivity.class);
+                            startActivity(intent);
+                        });
                     });
-
                 } else {
                     Toast.makeText(App.context, "No internet connetion available !", Toast.LENGTH_LONG).show();
                 }

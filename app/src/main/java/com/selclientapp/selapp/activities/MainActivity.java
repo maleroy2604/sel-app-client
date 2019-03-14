@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.configureDagger();
-        ManagementTokenAndUSer.logOut();
         if (ManagementTokenAndUSer.contains("TOKEN")) {
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);

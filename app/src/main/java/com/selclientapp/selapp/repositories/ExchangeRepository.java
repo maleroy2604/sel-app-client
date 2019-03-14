@@ -29,7 +29,7 @@ public class ExchangeRepository {
     public LiveData<Exchange> saveExchange(Exchange exchange) {
         final MutableLiveData<Exchange> data = new MutableLiveData<>();
         executor.execute(() -> {
-            exchangeWebService.saveExchange( exchange.getId(), exchange).enqueue(new Callback<Exchange>() {
+            exchangeWebService.saveExchange(exchange.getId(), exchange).enqueue(new Callback<Exchange>() {
                 @Override
                 public void onResponse(Call<Exchange> call, Response<Exchange> response) {
                     if (response.isSuccessful()) {
@@ -52,9 +52,7 @@ public class ExchangeRepository {
             exchangeWebService.getAllExchange().enqueue(new Callback<List<Exchange>>() {
                 @Override
                 public void onResponse(Call<List<Exchange>> call, Response<List<Exchange>> response) {
-                    if (response.isSuccessful()) {
-                        data.postValue(response.body());
-                    }
+                    data.postValue(response.body());
                 }
 
                 @Override
@@ -91,7 +89,7 @@ public class ExchangeRepository {
     public LiveData<Exchange> updateExchange(Exchange exchange) {
         final MutableLiveData<Exchange> data = new MutableLiveData<>();
         executor.execute(() -> {
-            exchangeWebService.updateExchange( exchange.getId(), exchange).enqueue(new Callback<Exchange>() {
+            exchangeWebService.updateExchange(exchange.getId(), exchange).enqueue(new Callback<Exchange>() {
                 @Override
                 public void onResponse(Call<Exchange> call, Response<Exchange> response) {
                     if (response.isSuccessful()) {

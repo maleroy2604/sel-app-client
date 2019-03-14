@@ -66,7 +66,7 @@ public class AppModule {
 
     @Provides
     Retrofit provideRetrofit(Gson gson) {
-        String BASE_URL = "http://10.0.2.2:5000/" ;
+        String BASE_URL = "http://10.0.2.2:5000/";
         OkHttpClient okHttpClient = new OkHttpClient.Builder().addInterceptor(new ServiceInterceptor()).build();
         //"https://sel-app.herokuapp.com/"
         //"http://10.0.2.2:5000/"
