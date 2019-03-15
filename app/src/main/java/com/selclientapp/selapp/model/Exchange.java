@@ -8,6 +8,8 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import androidx.annotation.NonNull;
+
 public class Exchange implements Parcelable {
 
     @SerializedName("id")
@@ -198,5 +200,11 @@ public class Exchange implements Parcelable {
             dest.writeInt(owner);
         }
         dest.writeString(ownerName);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return getName();
     }
 }

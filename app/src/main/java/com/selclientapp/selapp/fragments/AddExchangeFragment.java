@@ -222,7 +222,6 @@ public class AddExchangeFragment extends Fragment {
                 exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
                     getActivity().onBackPressed();
                 });
-
             }
         });
     }

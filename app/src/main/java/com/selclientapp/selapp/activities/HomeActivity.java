@@ -24,6 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 
 import androidx.appcompat.widget.SearchView;
@@ -145,7 +146,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         loginAndSignUpViewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginAndSignUpViewModel.class);
         exchangeViewModel = ViewModelProviders.of(this, viewModelFactory).get(ExchangeViewModel.class);
         exchangeOcurenceViewModel = ViewModelProviders.of(this, viewModelFactory).get(ExchangeOcurenceViewModel.class);
-        refreshExchanges();
+        initRecyclerView();
         if (ManagementTokenAndUSer.contains("HOURS")) {
             counterHours.setText("Hours : " + ManagementTokenAndUSer.getHours());
         } else {
@@ -153,7 +154,8 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         }
     }
 
-    private void configureRecyclerView() {
+    private void configureRecyclerView(List<Exchange> exchanges) {
+        this.exchanges.addAll(exchanges);
         this.adapter = new ExchangeAdapter(this.exchanges, this);
         recyclerView.setHasFixedSize(true);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -277,9 +279,9 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.example_menu, menu);
-
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -289,10 +291,9 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
             @Override
             public boolean onQueryTextChange(String newText) {
                 adapter.getFilter().filter(newText);
-                return false;
+                return true;
             }
         });
-
         return true;
     }
 
@@ -307,7 +308,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
             this.exchanges.clear();
             Collections.reverse(exchanges);
             this.exchanges.addAll(exchanges);
-            adapter.notifyDataSetChanged();
+            adapter.updateList(exchanges);
         } else {
             Tools.backgroundThreadShortToast("Invalid credentials");
         }
@@ -364,11 +365,12 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     public void onBackPressed() {
         int count = getSupportFragmentManager().getBackStackEntryCount();
         if (count != 0) {
+            refreshExchanges();
+            refreshHours();
             getSupportFragmentManager().popBackStack();
             bottomNavigationView.setSelectedItemId(R.id.action_home);
             ActionBar actionBar = (this).getSupportActionBar();
             actionBar.show();
-            // swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -438,13 +440,16 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     private void refreshExchanges() {
         exchangeViewModel.init();
         exchangeViewModel.getAllExchanges().observe(this, exchanges -> {
-            this.adapter = new ExchangeAdapter(exchanges, this);
-            recyclerView.setHasFixedSize(true);
-            this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            this.recyclerView.setAdapter(this.adapter);
             updateUI(exchanges);
+        });
+    }
 
+    private void initRecyclerView() {
+        exchangeViewModel.init();
+        exchangeViewModel.getAllExchanges().observe(this, exchanges -> {
+            configureRecyclerView(exchanges);
         });
     }
 }
+
 

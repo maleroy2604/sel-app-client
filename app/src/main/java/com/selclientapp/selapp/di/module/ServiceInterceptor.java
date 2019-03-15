@@ -28,13 +28,13 @@ public class ServiceInterceptor implements Interceptor {
                         .build();
                 TokenWebService tokenWebService = retrofit.create(TokenWebService.class);
                 retrofit2.Response newToken = tokenWebService.getToken(ManagementTokenAndUSer.getCurrentTokenBody()).execute();
-                if(newToken.isSuccessful()){
+                if (newToken.isSuccessful()) {
                     ManagementTokenAndUSer.saveToken(newToken.body().toString());
                     Request newRequest = request.newBuilder()
                             .addHeader("authorization", ManagementTokenAndUSer.getToken())
                             .build();
                     return chain.proceed(newRequest);
-                }else{
+                } else {
                     ManagementTokenAndUSer.logOut();
                 }
             } else {
