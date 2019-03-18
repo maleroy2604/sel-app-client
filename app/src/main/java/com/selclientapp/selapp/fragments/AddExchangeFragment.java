@@ -19,6 +19,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -121,7 +122,7 @@ public class AddExchangeFragment extends Fragment {
                 int month = c.get(Calendar.MONTH);
                 int day = c.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog dialog = new DatePickerDialog(getActivity(), R.style.DialogTheme, mDateSetListener, year, month, day);
+                DatePickerDialog dialog = new DatePickerDialog(getActivity(), mDateSetListener, year, month, day);
                 dialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 dialog.show();
             }
@@ -135,7 +136,7 @@ public class AddExchangeFragment extends Fragment {
                 int month = c.get(Calendar.MONTH);
                 int day = c.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog dialog = new DatePickerDialog(getActivity(), R.style.DialogTheme, mDateSetListener, year, month, day);
+                DatePickerDialog dialog = new DatePickerDialog(getActivity(), mDateSetListener, year, month, day);
                 dialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 dialog.show();
             }
@@ -173,7 +174,7 @@ public class AddExchangeFragment extends Fragment {
                 int minute = c.get(Calendar.MINUTE);
                 int hour = c.get(Calendar.HOUR_OF_DAY);
 
-                TimePickerDialog dialog = new TimePickerDialog(getActivity(), R.style.DialogTheme, mTimeSetListener, hour, minute, true);
+                TimePickerDialog dialog = new TimePickerDialog(getActivity(), mTimeSetListener, hour, minute, true);
                 dialog.show();
             }
         });
@@ -185,7 +186,7 @@ public class AddExchangeFragment extends Fragment {
                 int minute = c.get(Calendar.MINUTE);
                 int hour = c.get(Calendar.HOUR_OF_DAY);
 
-                TimePickerDialog dialog = new TimePickerDialog(getActivity(), R.style.DialogTheme, mTimeSetListener, hour, minute, true);
+                TimePickerDialog dialog = new TimePickerDialog(getActivity(), mTimeSetListener, hour, minute, true);
                 dialog.show();
             }
         });
@@ -218,6 +219,7 @@ public class AddExchangeFragment extends Fragment {
             public void onClick(View v) {
                 int capa = Integer.parseInt(capacity.getText().toString());
                 Exchange exchange = new Exchange(0, username.getText().toString(), description.getText().toString(), dateExchange + timeExchange + ":00", capa, ManagementTokenAndUSer.getCurrentId());
+                System.out.println("user id " + ManagementTokenAndUSer.getCurrentId());
                 exchangeViewModel.AddExchange(exchange);
                 exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
                     getActivity().onBackPressed();

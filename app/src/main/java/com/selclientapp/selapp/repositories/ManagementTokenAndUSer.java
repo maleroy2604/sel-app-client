@@ -1,5 +1,6 @@
 package com.selclientapp.selapp.repositories;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -7,6 +8,7 @@ import android.preference.PreferenceManager;
 import com.selclientapp.selapp.App;
 import com.selclientapp.selapp.activities.MainActivity;
 import com.selclientapp.selapp.model.User;
+
 
 import static com.selclientapp.selapp.App.context;
 
@@ -46,7 +48,7 @@ public class ManagementTokenAndUSer {
 
     public static void logOut() {
         pref.edit().clear().apply();
-        App.context.startActivity(new Intent(App.context,MainActivity.class));
+        App.context.startActivity(new Intent(App.context, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 
     public static int getCurrentId() {

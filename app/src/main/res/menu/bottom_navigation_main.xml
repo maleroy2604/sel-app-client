@@ -15,5 +15,5 @@
         android:id="@+id/action_log_out"
         android:enabled="true"
         android:icon="@drawable/ic_menu"
-        android:title="LogOut"/>
+        android:title="Sort"/>
 </menu>

@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.selclientapp.selapp.App;
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.activities.HomeActivity;
+import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 import com.selclientapp.selapp.repositories.TokenBody;
 import com.selclientapp.selapp.utils.Tools;
 import com.selclientapp.selapp.view_models.LoginAndSignUpViewModel;
@@ -80,8 +81,11 @@ public class LoginFragment extends Fragment {
                     TokenBody tokenBody = new TokenBody(usernameEditText.getText().toString(), passwordEditText.getText().toString());
                     loginModel.login(tokenBody);
                     loginModel.getSelApiTokenLiveData().observe(getActivity(), token -> {
-                        Intent intent = new Intent(getActivity(), HomeActivity.class);
-                        startActivity(intent);
+                        loginModel.getUser(ManagementTokenAndUSer.getCurrentTokenBody());
+                        loginModel.getUserLiveData().observe(getActivity(), user -> {
+                            Intent intent = new Intent(getActivity(), HomeActivity.class);
+                            startActivity(intent);
+                        });
                     });
                 } else {
                     Toast.makeText(App.context, "No internet connetion available !", Toast.LENGTH_LONG).show();

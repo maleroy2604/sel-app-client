@@ -25,7 +25,7 @@ public class User {
     @Expose
     private Integer counterhours;
 
-    public User(int id, String username, String password, String email) {
+    public User(Integer id, String username, String password, String email) {
         this.id = id;
         this.username = username;
         this.password = password;

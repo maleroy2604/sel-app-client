@@ -35,7 +35,6 @@ public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> im
         this.exchanges = exchanges;
         this.callback = callback;
         this.exchangesIsFull = new ArrayList<>(exchanges);
-        System.out.println("exchanges" + this.exchanges);
     }
 
     @Override
@@ -43,7 +42,6 @@ public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> im
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.fragment_exchange_item, parent, false);
-
         return new ExchangeViewHolder(view);
     }
 
@@ -74,16 +72,14 @@ public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> im
                 filteredList.addAll(exchangesIsFull);
             } else {
                 String filterPattern = constraint.toString().toUpperCase().trim();
-
                 for (Exchange item : exchangesIsFull) {
-                    if (item.getName().toUpperCase().contains(filterPattern)) {
+                    if (item.getName().toUpperCase().contains(filterPattern) || item.getOwnerName().toUpperCase().contains(filterPattern) || item.getDate().toUpperCase().contains(filterPattern)) {
                         filteredList.add(item);
                     }
                 }
             }
             FilterResults results = new FilterResults();
             results.values = filteredList;
-
             return results;
         }
 
@@ -97,9 +93,7 @@ public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> im
 
     public void updateList(List<Exchange> exchanges) {
         this.exchangesIsFull.clear();
-        Collections.reverse(exchanges);
         this.exchangesIsFull.addAll(exchanges);
-        System.out.println("exchangesIsFull "  + this.exchangesIsFull);
         notifyDataSetChanged();
     }
 

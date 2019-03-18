@@ -23,7 +23,7 @@ public class ServiceInterceptor implements Interceptor {
             Response response = chain.proceed(request);
             if (response.code() == 401) {
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("http://10.0.2.2:5000/")
+                        .baseUrl("https://sel-app.herokuapp.com/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 TokenWebService tokenWebService = retrofit.create(TokenWebService.class);

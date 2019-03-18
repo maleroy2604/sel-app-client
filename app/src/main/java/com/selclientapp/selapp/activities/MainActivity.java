@@ -12,6 +12,8 @@ import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.fragments.LoginFragment;
 import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
@@ -55,5 +57,15 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     private void configureDagger() {
         AndroidInjection.inject(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+        if (count != 0) {
+            getSupportFragmentManager().popBackStack();
+        }else{
+            super.onBackPressed();
+        }
     }
 }

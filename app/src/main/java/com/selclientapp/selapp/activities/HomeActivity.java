@@ -5,7 +5,6 @@ import android.app.Dialog;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 
@@ -24,14 +23,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 
 import androidx.appcompat.widget.SearchView;
 
 import android.widget.TextView;
 
-import com.selclientapp.selapp.App;
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.fragments.AddExchangeFragment;
 import com.selclientapp.selapp.fragments.EditExchangeFragment;
@@ -96,7 +93,6 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         ButterKnife.bind(this);
         this.configureDagger();
         this.configureBottomNavBar(savedInstanceState, actionBar);
-        counterHours = toolbar.findViewById(R.id.toolbar_hours);
         configOnclickRecyclerView();
         configureViewmodel();
         configureRefreshLayout();
@@ -127,9 +123,6 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
 
                     case R.id.action_log_out:
                         ManagementTokenAndUSer.logOut();
-                        Intent intent = new Intent(App.context, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
                         break;
 
                     case R.id.action_home:
@@ -147,14 +140,10 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         exchangeViewModel = ViewModelProviders.of(this, viewModelFactory).get(ExchangeViewModel.class);
         exchangeOcurenceViewModel = ViewModelProviders.of(this, viewModelFactory).get(ExchangeOcurenceViewModel.class);
         initRecyclerView();
-        if (ManagementTokenAndUSer.contains("HOURS")) {
-            counterHours.setText("Hours : " + ManagementTokenAndUSer.getHours());
-        } else {
-            refreshHours();
-        }
     }
 
     private void configureRecyclerView(List<Exchange> exchanges) {
+        Collections.reverse(exchanges);
         this.exchanges.addAll(exchanges);
         this.adapter = new ExchangeAdapter(this.exchanges, this);
         recyclerView.setHasFixedSize(true);
@@ -278,10 +267,10 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.example_menu, menu);
+        inflater.inflate(R.menu.search_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -291,7 +280,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
             @Override
             public boolean onQueryTextChange(String newText) {
                 adapter.getFilter().filter(newText);
-                return true;
+                return false;
             }
         });
         return true;
@@ -366,7 +355,6 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         int count = getSupportFragmentManager().getBackStackEntryCount();
         if (count != 0) {
             refreshExchanges();
-            refreshHours();
             getSupportFragmentManager().popBackStack();
             bottomNavigationView.setSelectedItemId(R.id.action_home);
             ActionBar actionBar = (this).getSupportActionBar();
@@ -430,12 +418,12 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         return exchangeDate.getTime() < new Date().getTime();
     }
 
-    private void refreshHours() {
+    /*private void refreshHours() {
         loginAndSignUpViewModel.getUser(ManagementTokenAndUSer.getCurrentTokenBody());
         loginAndSignUpViewModel.getUserLiveData().observe(this, user -> {
             counterHours.setText("Hours : " + user.getCounterhours());
         });
-    }
+    }*/
 
     private void refreshExchanges() {
         exchangeViewModel.init();

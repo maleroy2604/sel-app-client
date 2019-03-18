@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/custom_background"
         android:orientation="vertical"
         android:padding="15dp">
@@ -109,7 +109,8 @@
         <LinearLayout
             android:layout_width="309dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="25dp"
             android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
@@ -144,6 +145,7 @@
             android:id="@+id/fragment_exchange_add_input_capacity"
             android:layout_width="157dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:imeOptions="flagNoExtractUi"
             app:errorTextAppearance="@color/colorError"
             app:theme="@style/TextInputLayoutAppearance">
