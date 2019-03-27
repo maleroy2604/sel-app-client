@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.fragment.app.Fragment;
@@ -19,7 +21,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -35,7 +37,6 @@ import com.selclientapp.selapp.view_models.ExchangeViewModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -84,7 +85,13 @@ public class AddExchangeFragment extends Fragment {
     @Inject
     ViewModelProvider.Factory viewModelFactory;
     protected ExchangeViewModel exchangeViewModel;
-    protected ArrayList<Exchange> exchanges;
+    protected AddExchangeListener callback;
+
+    public interface AddExchangeListener {
+        void addExchange(Exchange exchange);
+
+        void updateExchange(Exchange exchange);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -97,6 +104,8 @@ public class AddExchangeFragment extends Fragment {
         this.configureTimeListener();
         this.configureBtnCreate();
         this.configureElemView();
+        BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.home_activity_bottom_navigation);
+        bottomNavigationView.setVisibility(View.GONE);
         return view;
     }
 
@@ -218,11 +227,19 @@ public class AddExchangeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int capa = Integer.parseInt(capacity.getText().toString());
-                Exchange exchange = new Exchange(0, username.getText().toString(), description.getText().toString(), dateExchange + timeExchange + ":00", capa, ManagementTokenAndUSer.getCurrentId());
-                System.out.println("user id " + ManagementTokenAndUSer.getCurrentId());
+                Exchange exchange = new Exchange(0,
+                        username.getText().toString(),
+                        description.getText().toString(),
+                        ManagementTokenAndUSer.getCurrentTokenBody().getUsername(),
+                        dateExchange + timeExchange + ":00",
+                        capa,
+                        ManagementTokenAndUSer.getCurrentId());
+                callback.addExchange(exchange);
                 exchangeViewModel.AddExchange(exchange);
                 exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
                     getActivity().onBackPressed();
+                    final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
                 });
             }
         });
@@ -342,12 +359,6 @@ public class AddExchangeFragment extends Fragment {
 
         }
     };
-
-
-    // -----------------
-    // ACTION
-    // -----------------
-
     // -----------------
     // UTILS
     // -----------------
@@ -402,8 +413,6 @@ public class AddExchangeFragment extends Fragment {
         } else {
             return false;
         }
-
-
     }
 
     private boolean validBtnCreate() {
@@ -412,7 +421,18 @@ public class AddExchangeFragment extends Fragment {
         String capa = capacity.getText().toString().trim();
         String date = datePicker.getText().toString().trim();
         String time = timePicker.getText().toString().trim();
-
         return (hasToSetError(name, usernameInput) && hasToSetError(desc, descriptionInput) && hasToSetError(date, dateInput) && hasToSetErrorTime(time, timeInput) && hasToSetErrorCapacity(capa, capacityInput));
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        callback = (AddExchangeListener) context;
+    }
+
+    @Override
+    public void onDetach() {
+        callback = null;
+        super.onDetach();
     }
 }

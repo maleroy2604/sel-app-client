@@ -7,6 +7,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.fragments.LoginFragment;
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         if (savedInstanceState == null) {
             LoginFragment fragment = new LoginFragment();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, fragment, null)
+                    .add(R.id.fragment_container, fragment, null)
                     .commit();
         }
     }
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         int count = getSupportFragmentManager().getBackStackEntryCount();
         if (count != 0) {
             getSupportFragmentManager().popBackStack();
-        }else{
+        } else {
             super.onBackPressed();
         }
     }

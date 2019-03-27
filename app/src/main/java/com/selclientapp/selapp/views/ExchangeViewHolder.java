@@ -60,17 +60,5 @@ public class ExchangeViewHolder extends RecyclerView.ViewHolder {
             }
         });
     }
-
-   /* private boolean checkDate(Exchange exchange) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date exchangeDate = null;
-        try {
-            exchangeDate = format.parse(exchange.getDate());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return exchangeDate.getTime() < new Date().getTime();
-    }*/
-
 }
 

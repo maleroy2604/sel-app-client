@@ -1,6 +1,7 @@
 package com.selclientapp.selapp.views;
 
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -46,7 +47,8 @@ public class OcurenceViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void configElemView(ExchangeOcurence exchangeOcurence) {
-        sendHours.addTextChangedListener(watchBtnSenHours);
+        sendHours.setEnabled(false);
+       hours.addTextChangedListener(watchHours);
         sendHours.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,14 +65,14 @@ public class OcurenceViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 OcurenceAdapter.Listener callback = callbackWeakRef.get();
-                if(callback != null){
+                if (callback != null) {
                     callback.onClickRemoveParticipant(getAdapterPosition());
                 }
             }
         });
     }
 
-    TextWatcher watchBtnSenHours = new TextWatcher() {
+    TextWatcher watchHours = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -79,7 +81,7 @@ public class OcurenceViewHolder extends RecyclerView.ViewHolder {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String hour = hours.getText().toString().trim();
-            sendHours.setEnabled(!hour.isEmpty());
+            sendHours.setEnabled(!(hour.isEmpty()));
         }
 
         @Override

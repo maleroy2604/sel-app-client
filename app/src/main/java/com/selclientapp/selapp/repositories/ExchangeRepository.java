@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.selclientapp.selapp.api.ExchangeWebService;
+import com.selclientapp.selapp.fragments.ExchangeFragment;
 import com.selclientapp.selapp.model.Exchange;
 
 import java.util.List;
@@ -46,10 +47,10 @@ public class ExchangeRepository {
         return data;
     }
 
-    public LiveData<List<Exchange>> getAllExchanges() {
+    public LiveData<List<Exchange>> getAllExchanges(int numberLimit) {
         final MutableLiveData<List<Exchange>> data = new MutableLiveData<>();
         executor.execute(() -> {
-            exchangeWebService.getAllExchange().enqueue(new Callback<List<Exchange>>() {
+            exchangeWebService.getAllExchange(numberLimit).enqueue(new Callback<List<Exchange>>() {
                 @Override
                 public void onResponse(Call<List<Exchange>> call, Response<List<Exchange>> response) {
                     data.postValue(response.body());

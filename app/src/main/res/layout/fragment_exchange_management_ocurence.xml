@@ -28,7 +28,7 @@
         android:layout_margin="2dp"
         android:layout_weight="1"
         android:background="@color/colorExchangeItem"
-        android:src="@drawable/ic_close" />
+        android:src="@drawable/ic_close_ocurence" />
 
     <Button
         android:id="@+id/fragment_management_send_hours"

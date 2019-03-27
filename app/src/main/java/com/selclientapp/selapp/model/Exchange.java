@@ -3,6 +3,7 @@ package com.selclientapp.selapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
@@ -46,19 +47,21 @@ public class Exchange implements Parcelable {
 
     @SerializedName("exchangeocurence")
     @Expose
-    private List<ExchangeOcurence> exchangeocurence = null;
+    private List<ExchangeOcurence> exchangeocurences = null;
 
     @SerializedName("messages")
     @Expose
     private List<Object> messages = null;
 
-    public Exchange(Integer id, String name, String description, String date, Integer capacity, Integer owner) {
+    public Exchange(Integer id, String name, String description, String ownerName, String date, Integer capacity, Integer owner) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.date = date;
         this.capacity = capacity;
+        this.currentCapacity = 0;
         this.owner = owner;
+        this.ownerName = ownerName;
     }
 
     protected Exchange(Parcel in) {
@@ -104,10 +107,6 @@ public class Exchange implements Parcelable {
         return ownerName;
     }
 
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
-    }
-
     public Integer getId() {
         return id;
     }
@@ -149,7 +148,11 @@ public class Exchange implements Parcelable {
     }
 
     public Integer getCurrentCapacity() {
-        return currentCapacity;
+        if (exchangeocurences == null || exchangeocurences.isEmpty()) {
+            return 0;
+        } else {
+            return this.exchangeocurences.size();
+        }
     }
 
 
@@ -158,11 +161,15 @@ public class Exchange implements Parcelable {
     }
 
     public List<ExchangeOcurence> getExchangeocurence() {
-        return exchangeocurence;
+        return exchangeocurences;
     }
 
-    public void setExchangeocurence(List<ExchangeOcurence> exchangeocurence) {
-        this.exchangeocurence = exchangeocurence;
+    public void removeExchangeOcurecne(ExchangeOcurence exchangeOcurence) {
+        exchangeocurences.remove(exchangeOcurence);
+    }
+
+    public void addExchangeOcurence(ExchangeOcurence exchangeOcurence) {
+        exchangeocurences.add(exchangeOcurence);
     }
 
     @Override

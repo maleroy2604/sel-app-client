@@ -15,7 +15,7 @@
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/view2"
+            android:id="@+id/card_view"
             android:layout_width="50dp"
             android:layout_height="45dp"
             android:layout_gravity="center"
@@ -26,7 +26,7 @@
             app:cardCornerRadius="20dp">
 
             <ImageView
-                android:id="@+id/imageView1"
+                android:id="@+id/image_view_profile"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:src="@drawable/sel" />

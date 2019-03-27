@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:padding="5dp"
-    android:background="@drawable/backgroundnitem">
+    android:background="@drawable/backgroundnitem"
+    android:padding="5dp">
 
     <ImageButton
         android:id="@+id/dialog_option_close"
@@ -19,33 +19,17 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="100dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/dialog_option_enroll"
+            android:id="@+id/dialog_option_inscription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="Enroll"
-            android:textColor="@color/colorText" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:layout_alignParentTop="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="5dp"
-            android:background="@color/colorText" />
-
-        <TextView
-            android:id="@+id/dialog_option_withdraw"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:text="Withdraw"
             android:textColor="@color/colorText" />
 
         <View

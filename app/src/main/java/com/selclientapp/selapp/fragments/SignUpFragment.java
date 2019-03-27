@@ -232,7 +232,7 @@ public class SignUpFragment extends Fragment {
     private void showLoginFragment() {
         LoginFragment fragment = new LoginFragment();
         getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment, null).addToBackStack("fragment_sign_up").commit();
+                .add(R.id.fragment_container, fragment, null).addToBackStack("fragment_sign_up").commit();
     }
     // -----------------
     // UTILS

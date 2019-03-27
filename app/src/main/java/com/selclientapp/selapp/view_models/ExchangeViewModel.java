@@ -20,8 +20,8 @@ public class ExchangeViewModel extends ViewModel {
         this.exchangeRepository = exchangeRepository;
     }
 
-    public void init() {
-        allExchanges = exchangeRepository.getAllExchanges();
+    public void init(int numberLimit) {
+        allExchanges = exchangeRepository.getAllExchanges(numberLimit);
     }
 
     public void AddExchange(Exchange exchange) {

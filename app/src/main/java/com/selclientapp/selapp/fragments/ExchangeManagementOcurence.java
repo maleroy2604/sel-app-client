@@ -75,6 +75,7 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
     public void onClickSendHours(int position) {
         ExchangeOcurence exchangeOcurence = ocurenceAdapter.getExchangeOcurence(position);
         updateExchangeOcurence(exchangeOcurence);
+
     }
 
     @Override
@@ -106,6 +107,7 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
         exchangeOcurenceViewModel.updateExchangeOcurence(exchangeOcurence);
         exchangeOcurenceViewModel.getExchangeOcurenceLiveData().observe(this, ocurence -> {
             refreshExchangeOcurence(id);
+            getActivity().onBackPressed();
         });
     }
 
@@ -113,6 +115,7 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
         exchangeOcurenceViewModel.deleteExchangeOcurence(exchangeOcurence);
         exchangeOcurenceViewModel.getExchangeOcurenceLiveData().observe(this, ocurence -> {
             refreshExchangeOcurence(exchangeOcurence.getExchangeId());
+            getActivity().onBackPressed();
         });
     }
 

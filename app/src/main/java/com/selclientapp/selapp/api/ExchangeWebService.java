@@ -17,8 +17,8 @@ public interface ExchangeWebService {
     @POST("exchange/{id}")
     Call<Exchange> saveExchange(@Path("id") int id, @Body Exchange exchange);
 
-    @GET("exchanges")
-    Call<List<Exchange>> getAllExchange();
+    @GET("exchanges/{numberlimit}")
+    Call<List<Exchange>> getAllExchange(@Path("numberlimit") int numberLimit);
 
     @DELETE("exchange/{id}")
     Call<Exchange> deleteExchange(@Path("id") int id);

@@ -16,4 +16,10 @@
     <style name="MyEditText" parent="TextInputLayoutAppearance">
 
     </style>
+
+    <style name="DrawerTheme">
+        <item name="itemTextColor">@color/colorText</item>
+        <item name="itemIconTint">@color/colorText</item>
+    </style>
+
 </resources>
