@@ -8,7 +8,7 @@ import com.selclientapp.selapp.api.TokenWebService;
 import com.selclientapp.selapp.api.UserWebService;
 import com.selclientapp.selapp.repositories.ExchangeOcurenceRepository;
 import com.selclientapp.selapp.repositories.ExchangeRepository;
-import com.selclientapp.selapp.repositories.TokenRepository;
+import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 import com.selclientapp.selapp.repositories.UserRepository;
 
 import java.util.concurrent.Executor;
@@ -34,14 +34,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    TokenRepository provideTokenRepository(TokenWebService webservice, Executor executor) {
-        return new TokenRepository(webservice, executor);
-    }
-
-    @Provides
-    @Singleton
-    UserRepository provideUserRepository(UserWebService userWebService, Executor executor, TokenWebService tokenWebService) {
-        return new UserRepository(userWebService, executor, tokenWebService);
+    UserRepository provideUserRepository(UserWebService userWebService, Executor executor, TokenWebService tokenWebService, ManagementTokenAndUSer managementTokenAndUSer) {
+        return new UserRepository(userWebService, executor, tokenWebService, managementTokenAndUSer);
     }
 
     @Provides
@@ -66,7 +60,7 @@ public class AppModule {
 
     @Provides
     Retrofit provideRetrofit(Gson gson) {
-        String BASE_URL = "https://sel-app.herokuapp.com/";
+        String BASE_URL = "http://10.0.2.2:5000/";
         OkHttpClient okHttpClient = new OkHttpClient.Builder().addInterceptor(new ServiceInterceptor()).build();
         //"https://sel-app.herokuapp.com/"
         //"http://10.0.2.2:5000/"
@@ -75,6 +69,16 @@ public class AppModule {
                 .client(okHttpClient)
                 .baseUrl(BASE_URL)
                 .build();
+    }
+
+    @Provides
+    @Singleton
+        ManagementTokenAndUSer provideManagerTokenAndUser() {
+        return new ManagementTokenAndUSer();
+    }
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     @Provides

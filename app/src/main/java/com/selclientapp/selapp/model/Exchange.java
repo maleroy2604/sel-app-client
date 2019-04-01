@@ -209,9 +209,19 @@ public class Exchange implements Parcelable {
         dest.writeString(ownerName);
     }
 
-    @NonNull
     @Override
     public String toString() {
-        return getName();
+        return "Exchange{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", date='" + date + '\'' +
+                ", capacity=" + capacity +
+                ", currentCapacity=" + currentCapacity +
+                ", owner=" + owner +
+                ", ownerName='" + ownerName + '\'' +
+                ", exchangeocurences=" + exchangeocurences +
+                ", messages=" + messages +
+                '}';
     }
 }

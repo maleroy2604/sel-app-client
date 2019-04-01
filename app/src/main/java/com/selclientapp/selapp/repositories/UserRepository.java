@@ -23,26 +23,27 @@ public class UserRepository {
     private final UserWebService userWebService;
     private final TokenWebService tokenWebService;
     private final Executor executor;
+    private ManagementTokenAndUSer managementTokenAndUSer;
 
     @Inject
-    public UserRepository(UserWebService userWebService, Executor executor, TokenWebService tokenWebService) {
+    public UserRepository(UserWebService userWebService, Executor executor, TokenWebService tokenWebService, ManagementTokenAndUSer managementTokenAndUSer) {
         this.userWebService = userWebService;
         this.executor = executor;
         this.tokenWebService = tokenWebService;
+        this.managementTokenAndUSer = managementTokenAndUSer;
     }
 
 
-    public MutableLiveData<SelApiToken> login(TokenBody tokenBody) {
-        final MutableLiveData<SelApiToken> data = new MutableLiveData<>();
+    public MutableLiveData<User> login(TokenBody tokenBody) {
+        final MutableLiveData<User> data = new MutableLiveData<>();
         executor.execute(() -> {
-            tokenWebService.getToken(tokenBody).enqueue(new Callback<SelApiToken>() {
+            tokenWebService.authenticate(tokenBody).enqueue(new Callback<SelApiToken>() {
                 @Override
                 public void onResponse(Call<SelApiToken> call, Response<SelApiToken> response) {
-                    if(response.isSuccessful()){
-                        ManagementTokenAndUSer.saveToken(response.body().getAccessToken());
-                        ManagementTokenAndUSer.saveTokenBody(tokenBody);
-                        data.postValue(response.body());
-                    }else{
+                    if (response.isSuccessful()) {
+                        managementTokenAndUSer.saveSelApiToken(response.body());
+                        data.postValue(response.body().getUser());
+                    } else {
                         Tools.backgroundThreadShortToast("Wrong username or password !");
                     }
 
@@ -58,13 +59,12 @@ public class UserRepository {
         return data;
     }
 
-    public MutableLiveData<User> getUser(TokenBody tokenBody) {
+    public MutableLiveData<User> getUser(int id) {
         final MutableLiveData<User> data = new MutableLiveData<>();
         executor.execute(() -> {
-            userWebService.getUser(tokenBody.getUsername()).enqueue(new Callback<User>() {
+            userWebService.getUser(id).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
-                    ManagementTokenAndUSer.saveUser(response.body());
                     data.postValue(response.body());
                 }
 
@@ -81,36 +81,16 @@ public class UserRepository {
     public MutableLiveData<User> saveUser(User user) {
         final MutableLiveData<User> data = new MutableLiveData<>();
         executor.execute(() -> {
-            userWebService.saveUser(user.getUsername(), user).enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    if(response.code() == 201 ){
-                        ManagementTokenAndUSer.saveTokenBody(new TokenBody(user.getUsername(), user.getPassword()));
-                        ManagementTokenAndUSer.saveUser(response.body());
-                        data.postValue(response.body());
-                    }else{
-                        Tools.backgroundThreadShortToast("User already exists ! ");
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-
-                }
-            });
-        });
-
-        return data;
-    }
-
-    public MutableLiveData<SelApiToken> getToken() {
-        final MutableLiveData<SelApiToken> data = new MutableLiveData<>();
-        executor.execute(() -> {
-            tokenWebService.getToken(ManagementTokenAndUSer.getCurrentTokenBody()).enqueue(new Callback<SelApiToken>() {
+            userWebService.saveUser(user).enqueue(new Callback<SelApiToken>() {
                 @Override
                 public void onResponse(Call<SelApiToken> call, Response<SelApiToken> response) {
-                    ManagementTokenAndUSer.saveToken(response.body().getAccessToken());
-                    data.postValue(response.body());
+                    if (response.code() == 201) {
+                        managementTokenAndUSer.saveSelApiToken(response.body());
+                        System.out.println("user " + response.body().getUser().toString());
+                        data.postValue(response.body().getUser());
+                    } else {
+                        Tools.backgroundThreadShortToast("User already exists ! ");
+                    }
                 }
 
                 @Override
@@ -119,9 +99,9 @@ public class UserRepository {
                 }
             });
         });
+
         return data;
     }
-
 }
 
 

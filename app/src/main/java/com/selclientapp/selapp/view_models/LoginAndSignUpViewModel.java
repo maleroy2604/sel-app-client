@@ -1,14 +1,12 @@
 package com.selclientapp.selapp.view_models;
 
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.selclientapp.selapp.model.SelApiToken;
 import com.selclientapp.selapp.model.User;
 import com.selclientapp.selapp.repositories.TokenBody;
 import com.selclientapp.selapp.repositories.UserRepository;
-
-import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -16,8 +14,6 @@ import javax.inject.Inject;
 public class LoginAndSignUpViewModel extends ViewModel {
     private final UserRepository userRepo;
     private LiveData<User> userLiveData;
-    private LiveData<SelApiToken> selApiTokenLiveData;
-
 
     @Inject
     public LoginAndSignUpViewModel(UserRepository userRepo) {
@@ -26,27 +22,19 @@ public class LoginAndSignUpViewModel extends ViewModel {
 
     // ----
 
-    public void login(TokenBody tokenBody) {
-        selApiTokenLiveData = userRepo.login(tokenBody);
+    public void getUser(int id) {
+        userLiveData = userRepo.getUser(id);
     }
 
-    public void getUser(TokenBody tokenBody) {
-        userLiveData = userRepo.getUser(tokenBody);
+    public void login(TokenBody tokenBody) {
+        userLiveData = userRepo.login(tokenBody);
     }
 
     public void saveUser(User user) {
         userLiveData = userRepo.saveUser(user);
     }
 
-    public void getToken(){
-        selApiTokenLiveData = userRepo.getToken();
-    }
-
     public LiveData<User> getUserLiveData() {
         return userLiveData;
-    }
-
-    public LiveData<SelApiToken> getSelApiTokenLiveData() {
-        return selApiTokenLiveData;
     }
 }

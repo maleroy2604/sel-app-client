@@ -43,6 +43,7 @@ public class LoginFragment extends Fragment {
     @Inject
     ViewModelProvider.Factory viewModelFactory;
     private LoginAndSignUpViewModel loginModel;
+    //private ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
 
     // FOR DESIGN
     @BindView(R.id.fragment_login_input_username)
@@ -80,13 +81,11 @@ public class LoginFragment extends Fragment {
                 if (Tools.hasInternetConnection()) {
                     TokenBody tokenBody = new TokenBody(usernameEditText.getText().toString(), passwordEditText.getText().toString());
                     loginModel.login(tokenBody);
-                    loginModel.getSelApiTokenLiveData().observe(getActivity(), token -> {
-                        loginModel.getUser(ManagementTokenAndUSer.getCurrentTokenBody());
-                        loginModel.getUserLiveData().observe(getActivity(), user -> {
-                            Intent intent = new Intent(getActivity(), HomeActivity.class);
-                            startActivity(intent);
-                        });
+                    loginModel.getUserLiveData().observe(getActivity(), user -> {
+                        Intent intent = new Intent(getActivity(), HomeActivity.class);
+                        startActivity(intent);
                     });
+
                 } else {
                     Toast.makeText(App.context, "No internet connetion available !", Toast.LENGTH_LONG).show();
                 }

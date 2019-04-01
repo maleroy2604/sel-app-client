@@ -5,9 +5,13 @@ import com.selclientapp.selapp.repositories.TokenBody;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 public interface TokenWebService {
-    @POST("auth")
-    Call<SelApiToken> getToken(@Body TokenBody tokenBody);
+    @POST("authenticate")
+    Call<SelApiToken> authenticate(@Body TokenBody tokenBody);
+
+    @POST("tokenrefresh")
+    Call<SelApiToken> refreshToken(@Header("authorization")String tokenRefresh);
 }

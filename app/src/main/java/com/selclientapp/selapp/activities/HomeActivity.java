@@ -33,6 +33,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.fragments.AddExchangeFragment;
 
+import com.selclientapp.selapp.fragments.EditProfileFragment;
 import com.selclientapp.selapp.fragments.ExchangeFragment;
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
@@ -95,7 +96,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
                         break;
 
                     case R.id.action_log_out:
-                        //ManagementTokenAndUSer.logOut();
+                        //:ManagementTokenAndUSer.logOut();
                         break;
 
                     case R.id.action_home:
@@ -159,12 +160,13 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
         switch (item.getItemId()) {
             case R.id.nav_logout:
-                ManagementTokenAndUSer.logOut();
+                managementTokenAndUSer.logOut();
                 break;
             case R.id.nav_edit_profile:
-                Tools.backgroundThreadShortToast("click edit profile");
+                showEditProfileFragment();
                 break;
         }
 
@@ -208,6 +210,12 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
                     .add(R.id.fragment_home_container, fragment, "fragment_exchange")
                     .commit();
         }
+    }
+
+    private void showEditProfileFragment() {
+        EditProfileFragment fragment = new EditProfileFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_home_container, fragment, "fragment_edit_profile").addToBackStack("fragment_edit_profile").commit();
     }
 
     public void refreshExchanges() {

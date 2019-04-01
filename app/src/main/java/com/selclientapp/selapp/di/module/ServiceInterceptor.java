@@ -1,6 +1,7 @@
 package com.selclientapp.selapp.di.module;
 
 import com.selclientapp.selapp.api.TokenWebService;
+import com.selclientapp.selapp.model.SelApiToken;
 import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 
 import java.io.IOException;
@@ -18,24 +19,25 @@ public class ServiceInterceptor implements Interceptor {
         //"https://sel-app.herokuapp.com/"
         //"http://10.0.2.2:5000/"
         Request request = chain.request();
-        if (!(request.url().encodedPath().equals("/user/{username}") || request.url().encodedPath().equals("/auth"))) {
-            request = request.newBuilder().addHeader("authorization", ManagementTokenAndUSer.getToken()).build();
+        ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
+        if (!(request.url().encodedPath().equals("/register") || request.url().encodedPath().equals("/authenticate"))) {
+            request = request.newBuilder().addHeader("Authorization", managementTokenAndUSer.getAccessToken()).build();
             Response response = chain.proceed(request);
             if (response.code() == 401) {
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("https://sel-app.herokuapp.com/")
+                        .baseUrl("http://10.0.2.2:5000/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 TokenWebService tokenWebService = retrofit.create(TokenWebService.class);
-                retrofit2.Response newToken = tokenWebService.getToken(ManagementTokenAndUSer.getCurrentTokenBody()).execute();
+                retrofit2.Response newToken = tokenWebService.refreshToken(managementTokenAndUSer.getRefreshToken()).execute();
                 if (newToken.isSuccessful()) {
-                    ManagementTokenAndUSer.saveToken(newToken.body().toString());
+                    managementTokenAndUSer.saveAcessToken(newToken.body().toString());
                     Request newRequest = request.newBuilder()
-                            .addHeader("authorization", ManagementTokenAndUSer.getToken())
+                            .addHeader("Authorization", managementTokenAndUSer.getAccessToken())
                             .build();
                     return chain.proceed(newRequest);
                 } else {
-                    ManagementTokenAndUSer.logOut();
+                    managementTokenAndUSer.logOut();
                 }
             } else {
                 return response;

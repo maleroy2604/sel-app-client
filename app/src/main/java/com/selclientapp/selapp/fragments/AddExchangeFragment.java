@@ -1,5 +1,6 @@
 package com.selclientapp.selapp.fragments;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 
@@ -7,10 +8,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.fragment.app.Fragment;
@@ -24,7 +25,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -52,11 +52,11 @@ public class AddExchangeFragment extends Fragment {
     @BindView(R.id.fragment_exchange_add_input_username)
     TextInputLayout usernameInput;
     @BindView(R.id.fragment_exchange_add_username)
-    EditText username;
+    TextInputEditText username;
     @BindView(R.id.fragment_exchange_add_input_description)
     TextInputLayout descriptionInput;
     @BindView(R.id.fragment_exchange_add_description)
-    EditText description;
+    TextInputEditText description;
     @BindView(R.id.fragment_exchange_add_date)
     TextView datePicker;
     @BindView(R.id.fragment_exchange_add_input_date)
@@ -65,6 +65,8 @@ public class AddExchangeFragment extends Fragment {
     TextInputLayout timeInput;
     @BindView(R.id.fragment_exchange_add_time)
     TextView timePicker;
+    @BindView(R.id.fragment_title_header)
+    TextView titleHeader;
     @BindView(R.id.fragment_exchange_add_image_btn_date)
     ImageButton imgDate;
     @BindView(R.id.fragment_exchange_add_image_btn_time)
@@ -74,7 +76,9 @@ public class AddExchangeFragment extends Fragment {
     @BindView(R.id.fragment_exchange_add_input_capacity)
     TextInputLayout capacityInput;
     @BindView(R.id.fragment_exchange_add_capacity)
-    EditText capacity;
+    TextInputEditText capacity;
+    @BindView(R.id.fragment_arrow)
+    ImageButton imgArrowBack;
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private TimePickerDialog.OnTimeSetListener mTimeSetListener;
@@ -86,6 +90,7 @@ public class AddExchangeFragment extends Fragment {
     ViewModelProvider.Factory viewModelFactory;
     protected ExchangeViewModel exchangeViewModel;
     protected AddExchangeListener callback;
+    protected ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
 
     public interface AddExchangeListener {
         void addExchange(Exchange exchange);
@@ -103,12 +108,12 @@ public class AddExchangeFragment extends Fragment {
         this.configureDateListener();
         this.configureTimeListener();
         this.configureBtnCreate();
+        this.configureArrowBack();
         this.configureElemView();
         BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.home_activity_bottom_navigation);
         bottomNavigationView.setVisibility(View.GONE);
         return view;
     }
-
 
     // -----------------
     // CONFIGURATION
@@ -230,10 +235,10 @@ public class AddExchangeFragment extends Fragment {
                 Exchange exchange = new Exchange(0,
                         username.getText().toString(),
                         description.getText().toString(),
-                        ManagementTokenAndUSer.getCurrentTokenBody().getUsername(),
+                        managementTokenAndUSer.getCurrentUser().getUsername(),
                         dateExchange + timeExchange + ":00",
                         capa,
-                        ManagementTokenAndUSer.getCurrentId());
+                        managementTokenAndUSer.getCurrentUser().getId());
                 callback.addExchange(exchange);
                 exchangeViewModel.AddExchange(exchange);
                 exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
@@ -246,7 +251,9 @@ public class AddExchangeFragment extends Fragment {
     }
 
     private void configureElemView() {
+
         btnCreate.setEnabled(false);
+        titleHeader.setText("New Exchange.");
         usernameInput.setError("Field can't be empty.");
         username.addTextChangedListener(usernameWatcher);
         descriptionInput.setError("Field can't be empty.");
@@ -359,6 +366,18 @@ public class AddExchangeFragment extends Fragment {
 
         }
     };
+
+    private void configureArrowBack() {
+        imgArrowBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+                final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+            }
+        });
+
+    }
     // -----------------
     // UTILS
     // -----------------

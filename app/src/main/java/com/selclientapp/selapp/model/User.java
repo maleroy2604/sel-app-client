@@ -17,6 +17,10 @@ public class User {
     @Expose
     private String password;
 
+    @SerializedName("confirmpassword")
+    @Expose
+    private String confirmpassword;
+
     @SerializedName("email")
     @Expose
     private String email;
@@ -25,11 +29,32 @@ public class User {
     @Expose
     private Integer counterhours;
 
-    public User(Integer id, String username, String password, String email) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
+
+    public User(Integer id, String username, String email, int counterhours) {
+        setId(id);
+        setUsername(username);
+        setEmail(email);
+        setCounterhours(counterhours);
+    }
+
+    public User(String username, String password, String confirmpassword, String email) {
+        setUsername(username);
+        setPassword(password);
+        setEmail(email);
+        setConfirmpassword(confirmpassword);
+    }
+
+    public User() {
+
+    }
+
+
+    public User(User user) {
+        user.setId(user.getId());
+        user.setUsername(user.getUsername());
+        user.setPassword(user.getPassword());
+        user.setEmail(user.getEmail());
+        user.setCounterhours(user.getCounterhours());
     }
 
     public Integer getId() {
@@ -72,5 +97,17 @@ public class User {
         this.password = password;
     }
 
+    public void setConfirmpassword(String confirmpassword) {
+        this.confirmpassword = confirmpassword;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }
 

@@ -106,14 +106,12 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (Tools.hasInternetConnection()) {
-                    User user = new User(0, usernameEditText.getText().toString(), passwordEditText.getText().toString(), emailEditText.getText().toString());
+                    User user = new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(), passwordConfirmEditText.getText().toString(), emailEditText.getText().toString());
+                    System.out.println("user " + user.toString());
                     loginModel.saveUser(user);
                     loginModel.getUserLiveData().observe(getActivity(), userLiveData -> {
-                        loginModel.getToken();
-                        loginModel.getSelApiTokenLiveData().observe(getActivity(), selApiToken -> {
-                            Intent intent = new Intent(getActivity(), HomeActivity.class);
-                            startActivity(intent);
-                        });
+                        Intent intent = new Intent(getActivity(), HomeActivity.class);
+                        startActivity(intent);
                     });
                 } else {
                     Toast.makeText(App.context, "No internet connetion available !", Toast.LENGTH_LONG).show();

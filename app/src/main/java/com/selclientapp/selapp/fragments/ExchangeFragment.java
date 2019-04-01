@@ -61,6 +61,7 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
     private ExchangeAdapter adapter;
     private int numberLimit = 15;
     private static final int LIMIT = 15;
+    private ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
 
     public ExchangeFragment() {
     }
@@ -100,7 +101,7 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (numberLimit <= exchanges.size() + LIMIT) {
+                if (numberLimit <= exchanges.size() + LIMIT ) {
                     numberLimit += LIMIT;
                     refreshExchanges();
                 }
@@ -135,7 +136,7 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
         TextView textEdit;
         TextView textManagement;
 
-        if (exchange.getOwner() == ManagementTokenAndUSer.getCurrentId()) {
+        if (exchange.getOwner() == managementTokenAndUSer.getCurrentUser().getId()) {
             textDelete = dialog.findViewById(R.id.dialog_option_delete);
             textEdit = dialog.findViewById(R.id.dialog_option_edit);
             textManagement = dialog.findViewById(R.id.dialog_option_management);
@@ -211,7 +212,7 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
         textInscription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExchangeOcurence exchangeOcurence = new ExchangeOcurence(0, ManagementTokenAndUSer.getCurrentId(), ex.getId());
+                ExchangeOcurence exchangeOcurence = new ExchangeOcurence(0, managementTokenAndUSer.getCurrentUser().getId(), ex.getId());
                 if (isValid(ex)) {
                     ex.addExchangeOcurence(exchangeOcurence);
                     adapter.notifyDataSetChanged();
@@ -304,7 +305,7 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
 
     private ExchangeOcurence findExchangeOcurence(Exchange exchange) {
         for (ExchangeOcurence exchangeOcurence : exchange.getExchangeocurence()) {
-            if (exchangeOcurence.getParticipantId() == ManagementTokenAndUSer.getCurrentId()) {
+            if (exchangeOcurence.getParticipantId() == managementTokenAndUSer.getCurrentUser().getId()) {
                 return exchangeOcurence;
             }
         }
@@ -355,7 +356,7 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
 
     public void updateExchangeToList(Exchange exchange) {
         for (Exchange ex : this.exchanges) {
-            if (ex.getOwner() == ManagementTokenAndUSer.getCurrentId()) {
+            if (ex.getOwner() == managementTokenAndUSer.getCurrentUser().getId()) {
                 ex = exchange;
             }
         }

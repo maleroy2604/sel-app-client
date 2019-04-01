@@ -6,6 +6,15 @@
         <item name="colorPrimary">@color/colorExchangeItem</item>
     </style>
 
+    <style name="headerStyle">
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+
+    <style name="buttonStyle">
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+
+
     <style name="TextInputLayoutAppearance">
         <item name="colorControlNormal">@color/colorExchangeItem</item>
         <item name="colorControlActivated">@color/colorExchangeItem</item>

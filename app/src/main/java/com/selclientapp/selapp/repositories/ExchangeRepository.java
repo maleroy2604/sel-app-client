@@ -34,7 +34,7 @@ public class ExchangeRepository {
                 @Override
                 public void onResponse(Call<Exchange> call, Response<Exchange> response) {
                     if (response.isSuccessful()) {
-                        data.setValue(response.body());
+                        data.postValue(response.body());
                     }
                 }
 
