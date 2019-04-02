@@ -13,5 +13,5 @@ public interface TokenWebService {
     Call<SelApiToken> authenticate(@Body TokenBody tokenBody);
 
     @POST("tokenrefresh")
-    Call<SelApiToken> refreshToken(@Header("authorization")String tokenRefresh);
+    Call<SelApiToken> refreshToken(@Header("Authorization")String tokenRefresh);
 }

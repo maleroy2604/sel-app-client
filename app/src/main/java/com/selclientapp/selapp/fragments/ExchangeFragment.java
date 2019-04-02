@@ -60,7 +60,7 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
     private ArrayList<Exchange> exchanges = new ArrayList<>();
     private ExchangeAdapter adapter;
     private int numberLimit = 15;
-    private static final int LIMIT = 15;
+    private static final int LIMIT =15;
     private ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
 
     public ExchangeFragment() {
@@ -101,7 +101,7 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (numberLimit <= exchanges.size() + LIMIT ) {
+                if (numberLimit - 1 == exchanges.size()) {
                     numberLimit += LIMIT;
                     refreshExchanges();
                 }

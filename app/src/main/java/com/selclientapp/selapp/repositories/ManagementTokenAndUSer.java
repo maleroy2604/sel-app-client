@@ -66,10 +66,12 @@ public class ManagementTokenAndUSer {
 
     public void saveAcessToken(String accessToken) {
         editor.putString("ACCESSTOKEN", "Bearer " + accessToken);
+        editor.apply();
     }
 
     public void saveRefreshToken(String refreshToken) {
-        editor.putString("REFRESHTOKEN", "Bearer" + refreshToken);
+        editor.putString("REFRESHTOKEN", "Bearer " + refreshToken);
+        editor.apply();
     }
 
 }
