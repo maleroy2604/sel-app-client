@@ -1,6 +1,7 @@
 package com.selclientapp.selapp.api;
 
 import com.selclientapp.selapp.model.Exchange;
+import com.selclientapp.selapp.utils.NumberLimits;
 
 import java.util.List;
 
@@ -17,8 +18,8 @@ public interface ExchangeWebService {
     @POST("exchange/{id}")
     Call<Exchange> saveExchange(@Path("id") int id, @Body Exchange exchange);
 
-    @GET("exchanges/{numberlimit}")
-    Call<List<Exchange>> getAllExchange(@Path("numberlimit") int numberLimit);
+    @POST("exchanges")
+    Call<List<Exchange>> getAllExchange(@Body NumberLimits numberLimit);
 
     @DELETE("exchange/{id}")
     Call<Exchange> deleteExchange(@Path("id") int id);

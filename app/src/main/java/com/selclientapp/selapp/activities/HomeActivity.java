@@ -6,8 +6,6 @@ import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -19,8 +17,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
@@ -37,11 +33,12 @@ import com.selclientapp.selapp.fragments.EditProfileFragment;
 import com.selclientapp.selapp.fragments.ExchangeFragment;
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
-import com.selclientapp.selapp.utils.Tools;
-
+import com.selclientapp.selapp.view_models.LoginAndSignUpViewModel;
 
 import javax.inject.Inject;
 
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
 import dagger.android.DispatchingAndroidInjector;
@@ -52,6 +49,11 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     // FOR DESIGN
     BottomNavigationView bottomNavigationView;
     private DrawerLayout drawer;
+
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
+    private LoginAndSignUpViewModel loginModel;
+
 
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
@@ -70,6 +72,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         this.configureDagger();
         this.configureBottomNavBar(actionBar);
         this.showExchangeFragment(savedInstanceState);
+        this.configViewModel();
     }
 
     // -----------------
@@ -96,7 +99,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
                         break;
 
                     case R.id.action_log_out:
-                        //:ManagementTokenAndUSer.logOut();
+                        //ManagementTokenAndUSer.logOut();
                         break;
 
                     case R.id.action_home:
@@ -163,7 +166,10 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
         switch (item.getItemId()) {
             case R.id.nav_logout:
-                managementTokenAndUSer.logOut();
+                loginModel.logout();
+                loginModel.getUserLiveData().observe(this, user -> {
+                    managementTokenAndUSer.logOut();
+                });
                 break;
             case R.id.nav_edit_profile:
                 showEditProfileFragment();
@@ -172,6 +178,10 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void configViewModel() {
+        loginModel = ViewModelProviders.of(this, viewModelFactory).get(LoginAndSignUpViewModel.class);
     }
 
     // -----------------
@@ -183,7 +193,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         int count = getSupportFragmentManager().getBackStackEntryCount();
         if (count != 0) {
             ExchangeFragment exchangeFragment = (ExchangeFragment) getSupportFragmentManager().findFragmentByTag("fragment_exchange");
-            exchangeFragment.setNumberLimit(15);
+            exchangeFragment.restartLoader();
             getSupportFragmentManager().popBackStack();
             this.refreshExchanges();
             bottomNavigationView.setSelectedItemId(R.id.action_home);

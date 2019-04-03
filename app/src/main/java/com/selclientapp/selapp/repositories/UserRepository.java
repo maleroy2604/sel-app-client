@@ -6,10 +6,9 @@ import com.selclientapp.selapp.api.TokenWebService;
 import com.selclientapp.selapp.api.UserWebService;
 import com.selclientapp.selapp.model.SelApiToken;
 import com.selclientapp.selapp.model.User;
+import com.selclientapp.selapp.utils.TokenBody;
 import com.selclientapp.selapp.utils.Tools;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
@@ -56,6 +55,24 @@ public class UserRepository {
             });
         });
 
+        return data;
+    }
+
+    public MutableLiveData<User> logout() {
+        MutableLiveData<User> data = new MutableLiveData<>();
+        executor.execute(() -> {
+            userWebService.logOut().enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    data.postValue(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+
+                }
+            });
+        });
         return data;
     }
 

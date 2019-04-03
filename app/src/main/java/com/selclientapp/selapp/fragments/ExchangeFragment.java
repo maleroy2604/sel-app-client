@@ -1,12 +1,11 @@
 package com.selclientapp.selapp.fragments;
 
 import android.app.Dialog;
-import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -17,22 +16,22 @@ import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.model.ExchangeOcurence;
 import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 import com.selclientapp.selapp.utils.ItemClickSupport;
+import com.selclientapp.selapp.utils.NumberLimits;
 import com.selclientapp.selapp.utils.Tools;
 import com.selclientapp.selapp.view_models.ExchangeOcurenceViewModel;
 import com.selclientapp.selapp.view_models.ExchangeViewModel;
 import com.selclientapp.selapp.views.ExchangeAdapter;
 
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -59,9 +58,9 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
     private ExchangeOcurenceViewModel exchangeOcurenceViewModel;
     private ArrayList<Exchange> exchanges = new ArrayList<>();
     private ExchangeAdapter adapter;
-    private int numberLimit = 15;
-    private static final int LIMIT =15;
     private ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
+    private NumberLimits numberLimits = new NumberLimits();
+    private static final int LIMIT = 15;
 
     public ExchangeFragment() {
     }
@@ -75,8 +74,6 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
         this.configureViewmodel();
         return view;
     }
-
-
     // -----------------
     // CONFIGURATION
     // -----------------
@@ -95,15 +92,18 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
         this.exchanges.addAll(exchanges);
         this.adapter = new ExchangeAdapter(this.exchanges, this);
         recyclerView.setHasFixedSize(true);
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager mLayoutManager;
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        this.recyclerView.setLayoutManager(mLayoutManager);
         this.recyclerView.setAdapter(this.adapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (numberLimit - 1 == exchanges.size()) {
-                    numberLimit += LIMIT;
-                    refreshExchanges();
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (!recyclerView.canScrollVertically(1)) {
+                    if (numberLimits.getNumberLimitMax() == mLayoutManager.getItemCount()) {
+                        numberLimits.increaseLimit(LIMIT);
+                        refreshExchanges();
+                    }
                 }
             }
         });
@@ -113,6 +113,7 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                restartLoader();
                 refreshExchanges();
             }
         });
@@ -246,8 +247,7 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
     private void updateUI(List<Exchange> exchanges) {
         if (exchanges != null) {
             swipeRefreshLayout.setRefreshing(false);
-            this.exchanges.clear();
-            this.exchanges.addAll(exchanges);
+            this.exchanges.addAll(recyclerView.getLayoutManager().getItemCount(), exchanges);
             adapter.updateList(exchanges);
         } else {
             Tools.backgroundThreadShortToast("Invalid credentials");
@@ -332,14 +332,14 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
     }
 
     public void refreshExchanges() {
-        exchangeViewModel.init(numberLimit);
+        exchangeViewModel.init(numberLimits);
         exchangeViewModel.getAllExchanges().observe(this, exchanges -> {
             updateUI(exchanges);
         });
     }
 
     private void initRecyclerView() {
-        exchangeViewModel.init(numberLimit);
+        exchangeViewModel.init(numberLimits);
         exchangeViewModel.getAllExchanges().observe(this, exchanges -> {
             configureRecyclerView(exchanges);
         });
@@ -363,9 +363,8 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
         this.adapter.notifyDataSetChanged();
     }
 
-    public void setNumberLimit(int numberLimit) {
-        if (numberLimit == LIMIT) {
-            this.numberLimit = numberLimit;
-        }
+    public void restartLoader(){
+        numberLimits.decreaseLimit();
+        this.exchanges.clear();
     }
 }

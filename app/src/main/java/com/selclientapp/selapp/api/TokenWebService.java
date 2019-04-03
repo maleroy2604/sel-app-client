@@ -1,7 +1,7 @@
 package com.selclientapp.selapp.api;
 
 import com.selclientapp.selapp.model.SelApiToken;
-import com.selclientapp.selapp.repositories.TokenBody;
+import com.selclientapp.selapp.utils.TokenBody;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

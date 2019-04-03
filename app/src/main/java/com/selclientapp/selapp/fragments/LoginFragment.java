@@ -25,8 +25,7 @@ import android.widget.Toast;
 import com.selclientapp.selapp.App;
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.activities.HomeActivity;
-import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
-import com.selclientapp.selapp.repositories.TokenBody;
+import com.selclientapp.selapp.utils.TokenBody;
 import com.selclientapp.selapp.utils.Tools;
 import com.selclientapp.selapp.view_models.LoginAndSignUpViewModel;
 
@@ -43,7 +42,6 @@ public class LoginFragment extends Fragment {
     @Inject
     ViewModelProvider.Factory viewModelFactory;
     private LoginAndSignUpViewModel loginModel;
-    //private ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
 
     // FOR DESIGN
     @BindView(R.id.fragment_login_input_username)

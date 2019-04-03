@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         setContentView(R.layout.activity_main);
         ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
         this.configureDagger();
-        if (managementTokenAndUSer.contains("SELAPITOKEN")) {
+        if (managementTokenAndUSer.contains("ACCESSTOKEN")) {
             Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
         } else {

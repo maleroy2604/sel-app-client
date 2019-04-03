@@ -1,4 +1,4 @@
-package com.selclientapp.selapp.repositories;
+package com.selclientapp.selapp.utils;
 
 public class TokenBody {
     private String username;

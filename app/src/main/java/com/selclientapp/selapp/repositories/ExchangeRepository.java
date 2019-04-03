@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.selclientapp.selapp.api.ExchangeWebService;
 import com.selclientapp.selapp.fragments.ExchangeFragment;
 import com.selclientapp.selapp.model.Exchange;
+import com.selclientapp.selapp.utils.NumberLimits;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -47,7 +48,7 @@ public class ExchangeRepository {
         return data;
     }
 
-    public LiveData<List<Exchange>> getAllExchanges(int numberLimit) {
+    public LiveData<List<Exchange>> getAllExchanges(NumberLimits numberLimit) {
         final MutableLiveData<List<Exchange>> data = new MutableLiveData<>();
         executor.execute(() -> {
             exchangeWebService.getAllExchange(numberLimit).enqueue(new Callback<List<Exchange>>() {

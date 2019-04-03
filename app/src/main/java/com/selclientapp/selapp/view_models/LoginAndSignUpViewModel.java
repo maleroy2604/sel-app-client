@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.selclientapp.selapp.model.User;
-import com.selclientapp.selapp.repositories.TokenBody;
+import com.selclientapp.selapp.utils.TokenBody;
 import com.selclientapp.selapp.repositories.UserRepository;
 
 import javax.inject.Inject;
@@ -28,6 +28,10 @@ public class LoginAndSignUpViewModel extends ViewModel {
 
     public void login(TokenBody tokenBody) {
         userLiveData = userRepo.login(tokenBody);
+    }
+
+    public void logout() {
+        userLiveData =  userRepo.logout();
     }
 
     public void saveUser(User user) {

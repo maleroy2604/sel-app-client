@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.repositories.ExchangeRepository;
+import com.selclientapp.selapp.utils.NumberLimits;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class ExchangeViewModel extends ViewModel {
         this.exchangeRepository = exchangeRepository;
     }
 
-    public void init(int numberLimit) {
+    public void init(NumberLimits numberLimit) {
         allExchanges = exchangeRepository.getAllExchanges(numberLimit);
     }
 

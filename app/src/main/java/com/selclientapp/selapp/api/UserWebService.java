@@ -18,4 +18,7 @@ public interface UserWebService {
 
     @GET("user/{id}")
     Call<User> getUser(@Path("id") int id);
+
+    @POST("userlogout")
+    Call<User> logOut();
 }
