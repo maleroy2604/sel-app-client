@@ -7,8 +7,8 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
-
 import com.selclientapp.selapp.App;
+
 
 public class Tools {
 

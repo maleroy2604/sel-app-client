@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.ExchangeOcurence;
+import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
+import com.selclientapp.selapp.utils.Tools;
 
 import java.lang.ref.WeakReference;
 
@@ -33,6 +35,7 @@ public class OcurenceViewHolder extends RecyclerView.ViewHolder {
     Button sendHours;
 
     private WeakReference<OcurenceAdapter.Listener> callbackWeakRef;
+    private ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
 
 
     public OcurenceViewHolder(View itemView) {
@@ -41,23 +44,26 @@ public class OcurenceViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void updateWithOcurence(ExchangeOcurence exchangeOcurence, OcurenceAdapter.Listener callback) {
-        userName.setText(exchangeOcurence.getParticipant());
+        userName.setText(exchangeOcurence.getParticipantName());
         this.callbackWeakRef = new WeakReference<>(callback);
         configElemView(exchangeOcurence);
     }
 
     private void configElemView(ExchangeOcurence exchangeOcurence) {
         sendHours.setEnabled(false);
-       hours.addTextChangedListener(watchHours);
+        hours.addTextChangedListener(watchHours);
         sendHours.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 OcurenceAdapter.Listener callback = callbackWeakRef.get();
-                exchangeOcurence.setHours(Integer.parseInt(hours.getText().toString()));
-                if (callback != null) {
-                    callback.onClickSendHours(getAdapterPosition());
+                if( managementTokenAndUSer.getCurrentUser().getCounterhours() == 0 ||  managementTokenAndUSer.getCurrentUser().getCounterhours() < Integer.parseInt(hours.getText().toString().trim())){
+                    Tools.backgroundThreadShortToast("Not enough hours !");
+                }else{
+                    exchangeOcurence.setHours(Integer.parseInt(hours.getText().toString()));
+                    if (callback != null) {
+                        callback.onClickSendHours(getAdapterPosition());
+                    }
                 }
-
             }
         });
 
@@ -65,8 +71,9 @@ public class OcurenceViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 OcurenceAdapter.Listener callback = callbackWeakRef.get();
+
                 if (callback != null) {
-                    callback.onClickRemoveParticipant(getAdapterPosition());
+                        callback.onClickRemoveParticipant(getAdapterPosition());
                 }
             }
         });

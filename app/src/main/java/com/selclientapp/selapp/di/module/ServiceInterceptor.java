@@ -1,7 +1,6 @@
 package com.selclientapp.selapp.di.module;
 
 import com.selclientapp.selapp.api.TokenWebService;
-import com.selclientapp.selapp.model.SelApiToken;
 import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 
 import java.io.IOException;
@@ -16,8 +15,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ServiceInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
-        //"https://sel-app.herokuapp.com/"
-        //"http://10.0.2.2:5000/"
         Request request = chain.request();
         ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
         if (!(request.url().encodedPath().equals("/register") || request.url().encodedPath().equals("/authenticate"))) {
@@ -25,7 +22,7 @@ public class ServiceInterceptor implements Interceptor {
             Response response = chain.proceed(request);
             if (response.code() == 401) {
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("http://10.0.2.2:5000/")
+                        .baseUrl("https://sel-app.herokuapp.com/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 TokenWebService tokenWebService = retrofit.create(TokenWebService.class);
@@ -46,3 +43,5 @@ public class ServiceInterceptor implements Interceptor {
         return chain.proceed(request);
     }
 }
+//"https://sel-app.herokuapp.com/"
+//"http://10.0.2.2:5000/"

@@ -28,7 +28,7 @@ public class ExchangeOcurenceRepository {
     public LiveData<ExchangeOcurence> addExchangeOcurence(ExchangeOcurence exchangeOcurence) {
         final MutableLiveData<ExchangeOcurence> data = new MutableLiveData<>();
         executor.execute(() -> {
-            exchangeOcurenceWebService.addExchangeOcurence(exchangeOcurence.getId(), exchangeOcurence).enqueue(new Callback<ExchangeOcurence>() {
+            exchangeOcurenceWebService.addExchangeOcurence(0, exchangeOcurence).enqueue(new Callback<ExchangeOcurence>() {
                 @Override
                 public void onResponse(Call<ExchangeOcurence> call, Response<ExchangeOcurence> response) {
                     if (response.isSuccessful()) {
@@ -50,7 +50,7 @@ public class ExchangeOcurenceRepository {
     public LiveData<ExchangeOcurence> deleteExchangeOcurence(ExchangeOcurence exchangeOcurence) {
         final MutableLiveData<ExchangeOcurence> data = new MutableLiveData<>();
         executor.execute(() -> {
-            exchangeOcurenceWebService.deleteExchangeOcurence( exchangeOcurence.getId()).enqueue(new Callback<ExchangeOcurence>() {
+            exchangeOcurenceWebService.deleteExchangeOcurence(exchangeOcurence.getId()).enqueue(new Callback<ExchangeOcurence>() {
                 @Override
                 public void onResponse(Call<ExchangeOcurence> call, Response<ExchangeOcurence> response) {
                     if (response.isSuccessful()) {
@@ -70,7 +70,7 @@ public class ExchangeOcurenceRepository {
     public LiveData<ExchangeOcurence> updateExchangeOcurence(ExchangeOcurence exchangeOcurence) {
         final MutableLiveData<ExchangeOcurence> data = new MutableLiveData<>();
         executor.execute(() -> {
-            exchangeOcurenceWebService.updateExchangeOcurence( exchangeOcurence.getId(), exchangeOcurence).enqueue(new Callback<ExchangeOcurence>() {
+            exchangeOcurenceWebService.updateExchangeOcurence(exchangeOcurence.getId(), exchangeOcurence).enqueue(new Callback<ExchangeOcurence>() {
                 @Override
                 public void onResponse(Call<ExchangeOcurence> call, Response<ExchangeOcurence> response) {
                     if (response.isSuccessful()) {
@@ -90,7 +90,7 @@ public class ExchangeOcurenceRepository {
     public LiveData<List<ExchangeOcurence>> getAllExchangeOcurence(Integer exchangeId) {
         final MutableLiveData<List<ExchangeOcurence>> data = new MutableLiveData<>();
         executor.execute(() -> {
-            exchangeOcurenceWebService.getAllExchangeOcurence( exchangeId).enqueue(new Callback<List<ExchangeOcurence>>() {
+            exchangeOcurenceWebService.getAllExchangeOcurence(exchangeId).enqueue(new Callback<List<ExchangeOcurence>>() {
                 @Override
                 public void onResponse(Call<List<ExchangeOcurence>> call, Response<List<ExchangeOcurence>> response) {
                     if (response.isSuccessful()) {

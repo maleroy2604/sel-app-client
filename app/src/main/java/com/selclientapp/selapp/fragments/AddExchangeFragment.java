@@ -1,6 +1,5 @@
 package com.selclientapp.selapp.fragments;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 
@@ -32,6 +31,7 @@ import android.widget.TimePicker;
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
+import com.selclientapp.selapp.utils.ExchangeListener;
 import com.selclientapp.selapp.view_models.ExchangeViewModel;
 
 
@@ -89,7 +89,8 @@ public class AddExchangeFragment extends Fragment {
     @Inject
     ViewModelProvider.Factory viewModelFactory;
     protected ExchangeViewModel exchangeViewModel;
-    protected AddExchangeListener callback;
+    protected AddExchangeListener callbackAddListener;
+    protected ExchangeListener callbackExchangeListener;
     protected ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
 
     public interface AddExchangeListener {
@@ -232,17 +233,19 @@ public class AddExchangeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int capa = Integer.parseInt(capacity.getText().toString());
-                Exchange exchange = new Exchange(0,
+                Exchange exchange = new Exchange(
                         username.getText().toString(),
                         description.getText().toString(),
                         managementTokenAndUSer.getCurrentUser().getUsername(),
                         dateExchange + timeExchange + ":00",
                         capa,
-                        managementTokenAndUSer.getCurrentUser().getId());
-                callback.addExchange(exchange);
+                        managementTokenAndUSer.getCurrentUser().getId(), managementTokenAndUSer.getCurrentUser().getAvatarurl());
+                callbackAddListener.addExchange(exchange);
                 exchangeViewModel.AddExchange(exchange);
                 exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
                     getActivity().onBackPressed();
+                    callbackExchangeListener.restartLoader();
+                    callbackExchangeListener.refreshExchange();
                     final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
                 });
@@ -446,12 +449,14 @@ public class AddExchangeFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        callback = (AddExchangeListener) context;
+        callbackAddListener = (AddExchangeListener) context;
+        callbackExchangeListener = (ExchangeListener) context;
     }
 
     @Override
     public void onDetach() {
-        callback = null;
+        callbackAddListener = null;
+        callbackExchangeListener = null;
         super.onDetach();
     }
 }

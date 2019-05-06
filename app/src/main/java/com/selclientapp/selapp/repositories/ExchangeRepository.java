@@ -31,7 +31,7 @@ public class ExchangeRepository {
     public LiveData<Exchange> saveExchange(Exchange exchange) {
         final MutableLiveData<Exchange> data = new MutableLiveData<>();
         executor.execute(() -> {
-            exchangeWebService.saveExchange(exchange.getId(), exchange).enqueue(new Callback<Exchange>() {
+            exchangeWebService.saveExchange(0, exchange).enqueue(new Callback<Exchange>() {
                 @Override
                 public void onResponse(Call<Exchange> call, Response<Exchange> response) {
                     if (response.isSuccessful()) {

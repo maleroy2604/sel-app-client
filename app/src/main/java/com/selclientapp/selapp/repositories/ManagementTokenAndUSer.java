@@ -39,6 +39,12 @@ public class ManagementTokenAndUSer {
         editor.apply();
     }
 
+    public void saveUser(User user) {
+        String userSave = gson.toJson(user);
+        editor.putString("USER", userSave);
+        editor.apply();
+    }
+
     public User getCurrentUser() {
         String json = pref.getString("USER", null);
         Type type = new TypeToken<User>() {

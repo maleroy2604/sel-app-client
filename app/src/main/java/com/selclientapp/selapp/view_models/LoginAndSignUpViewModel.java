@@ -8,12 +8,15 @@ import com.selclientapp.selapp.model.User;
 import com.selclientapp.selapp.utils.TokenBody;
 import com.selclientapp.selapp.repositories.UserRepository;
 
+import java.io.File;
+
 import javax.inject.Inject;
 
 
 public class LoginAndSignUpViewModel extends ViewModel {
     private final UserRepository userRepo;
     private LiveData<User> userLiveData;
+    private LiveData<File> fileLiveData;
 
     @Inject
     public LoginAndSignUpViewModel(UserRepository userRepo) {
@@ -31,11 +34,15 @@ public class LoginAndSignUpViewModel extends ViewModel {
     }
 
     public void logout() {
-        userLiveData =  userRepo.logout();
+        userLiveData = userRepo.logout();
     }
 
     public void saveUser(User user) {
         userLiveData = userRepo.saveUser(user);
+    }
+
+    public void uploadImage(File file, String imageProfileName) {
+        userRepo.uploadImageTest(file, imageProfileName);
     }
 
     public LiveData<User> getUserLiveData() {

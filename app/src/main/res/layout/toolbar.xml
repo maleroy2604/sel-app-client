@@ -29,7 +29,8 @@
                 android:id="@+id/image_view_profile"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:src="@drawable/sel" />
+                android:src="@drawable/sel"
+                android:scaleType="centerCrop"/>
         </androidx.cardview.widget.CardView>
     </LinearLayout>
 

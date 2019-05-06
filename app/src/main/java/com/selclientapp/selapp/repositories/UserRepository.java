@@ -2,6 +2,7 @@ package com.selclientapp.selapp.repositories;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.selclientapp.selapp.api.ImageWebService;
 import com.selclientapp.selapp.api.TokenWebService;
 import com.selclientapp.selapp.api.UserWebService;
 import com.selclientapp.selapp.model.SelApiToken;
@@ -9,10 +10,15 @@ import com.selclientapp.selapp.model.User;
 import com.selclientapp.selapp.utils.TokenBody;
 import com.selclientapp.selapp.utils.Tools;
 
+import java.io.File;
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,13 +29,15 @@ public class UserRepository {
     private final TokenWebService tokenWebService;
     private final Executor executor;
     private ManagementTokenAndUSer managementTokenAndUSer;
+    private final ImageWebService imageWebService;
 
     @Inject
-    public UserRepository(UserWebService userWebService, Executor executor, TokenWebService tokenWebService, ManagementTokenAndUSer managementTokenAndUSer) {
+    public UserRepository(UserWebService userWebService, Executor executor, TokenWebService tokenWebService, ManagementTokenAndUSer managementTokenAndUSer, ImageWebService imageWebService) {
         this.userWebService = userWebService;
         this.executor = executor;
         this.tokenWebService = tokenWebService;
         this.managementTokenAndUSer = managementTokenAndUSer;
+        this.imageWebService = imageWebService;
     }
 
 
@@ -103,7 +111,6 @@ public class UserRepository {
                 public void onResponse(Call<SelApiToken> call, Response<SelApiToken> response) {
                     if (response.code() == 201) {
                         managementTokenAndUSer.saveSelApiToken(response.body());
-                        System.out.println("user " + response.body().getUser().toString());
                         data.postValue(response.body().getUser());
                     } else {
                         Tools.backgroundThreadShortToast("User already exists ! ");
@@ -119,6 +126,37 @@ public class UserRepository {
 
         return data;
     }
+
+    public void uploadImageTest(File file, String avatarUrl) {
+        if(avatarUrl != null){
+            int lastIndex = avatarUrl.lastIndexOf("/");
+            String subString = avatarUrl.substring(lastIndex + 1);
+            executor.execute(()->{
+                imageWebService.deleteImage(subString).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    }
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    }
+                });
+            });
+        }
+       MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file));
+        executor.execute(() -> {
+            imageWebService.uploadImage(filePart).enqueue(new Callback<RequestBody>() {
+                @Override
+                public void onResponse(Call<RequestBody> call, Response<RequestBody> response) {
+                }
+                @Override
+                public void onFailure(Call<RequestBody> call, Throwable t) {
+                }
+            });
+        });
+    }
+
+
+
 }
 
 

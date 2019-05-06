@@ -1,12 +1,17 @@
 package com.selclientapp.selapp.views;
 
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.selclientapp.selapp.App;
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
+import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 
 import java.lang.ref.WeakReference;
 
@@ -31,7 +36,12 @@ public class ExchangeViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.fragment_exchange_item_horiz)
     ImageButton imageButtonHoriz;
 
+    @BindView(R.id.image_view_profile)
+    ImageView imageProfile;
+
+
     private WeakReference<ExchangeAdapter.Listener> callbackWeakRef;
+    private ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
 
     public ExchangeViewHolder(View itemView) {
         super(itemView);
@@ -43,10 +53,11 @@ public class ExchangeViewHolder extends RecyclerView.ViewHolder {
         String timeExchange = exchange.getDate().substring(10, 16);
 
         this.textViewName.setText(String.format(exchange.getName()).toUpperCase());
-        this.textViewAuthor.setText(String.format("by " + exchange.getOwnerName()));
-        this.textViewDate.setText(String.format(dateExchange + " at " + timeExchange ));
+        this.textViewAuthor.setText(String.format(exchange.getOwnerName()));
+        this.textViewDate.setText(String.format(dateExchange + " at " + timeExchange));
         this.textViewCapacity.setText(String.format(exchange.getCurrentCapacity() + "/" + exchange.getCapacity()));
         this.callbackWeakRef = new WeakReference<>(callback);
+        Glide.with(App.context).load(exchange.getAvatarUrl()).into(imageProfile);
         configHoriz();
     }
 

@@ -38,7 +38,7 @@ public class EditExchangeFragment extends AddExchangeFragment {
             @Override
             public void onClick(View v) {
                 updateExchange();
-                callback.updateExchange(exchange);
+                callbackAddListener.updateExchange(exchange);
                 exchangeViewModel.updateExchange(exchange);
                 exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
                     getActivity().onBackPressed();

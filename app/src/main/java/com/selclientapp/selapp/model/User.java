@@ -25,29 +25,22 @@ public class User {
     @Expose
     private String email;
 
-    @SerializedName("counterhours")
+    @SerializedName("counterHours")
     @Expose
     private Integer counterhours;
 
+    @SerializedName("avatarurl")
+    @Expose
+    private String avatarurl;
 
-    public User(Integer id, String username, String email, int counterhours) {
-        setId(id);
-        setUsername(username);
-        setEmail(email);
-        setCounterhours(counterhours);
-    }
 
-    public User(String username, String password, String confirmpassword, String email) {
+    public User(String username, String password, String confirmpassword, String email, int counterhours) {
         setUsername(username);
         setPassword(password);
         setEmail(email);
         setConfirmpassword(confirmpassword);
+        setCounterhours(counterhours);
     }
-
-    public User() {
-
-    }
-
 
     public User(User user) {
         user.setId(user.getId());
@@ -99,6 +92,14 @@ public class User {
 
     public void setConfirmpassword(String confirmpassword) {
         this.confirmpassword = confirmpassword;
+    }
+
+    public String getAvatarurl() {
+        return avatarurl;
+    }
+
+    public void setAvatarurl(String avatarurl) {
+        this.avatarurl = avatarurl;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.selclientapp.selapp.fragments;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,16 +15,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.model.ExchangeOcurence;
-import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
+import com.selclientapp.selapp.utils.ExchangeListener;
 import com.selclientapp.selapp.view_models.ExchangeOcurenceViewModel;
 import com.selclientapp.selapp.views.OcurenceAdapter;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -38,6 +41,13 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
     @BindView(R.id.fragment_exchange_management_recycler_view)
     RecyclerView recyclerView;
 
+    @BindView(R.id.fragment_arrow)
+    ImageButton imgArrowBack;
+
+
+    @BindView(R.id.fragment_title_header)
+    TextView titleHeader;
+
 
     //FOR DATA
     @Inject
@@ -45,6 +55,7 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
     private ExchangeOcurenceViewModel exchangeOcurenceViewModel;
     private List<ExchangeOcurence> exchangeOcurences;
     private OcurenceAdapter ocurenceAdapter;
+    private ExchangeListener callback;
 
     public ExchangeManagementOcurence() {
 
@@ -58,7 +69,11 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
         actionBar.hide();
         this.configureRecyclerView();
         this.configureDagger();
+        this.configureArrowBack();
+        this.configElemView();
         configureViewmodel();
+        BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.home_activity_bottom_navigation);
+        bottomNavigationView.setVisibility(View.GONE);
         return view;
     }
 
@@ -75,7 +90,6 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
     public void onClickSendHours(int position) {
         ExchangeOcurence exchangeOcurence = ocurenceAdapter.getExchangeOcurence(position);
         updateExchangeOcurence(exchangeOcurence);
-
     }
 
     @Override
@@ -107,7 +121,6 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
         exchangeOcurenceViewModel.updateExchangeOcurence(exchangeOcurence);
         exchangeOcurenceViewModel.getExchangeOcurenceLiveData().observe(this, ocurence -> {
             refreshExchangeOcurence(id);
-            getActivity().onBackPressed();
         });
     }
 
@@ -115,7 +128,6 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
         exchangeOcurenceViewModel.deleteExchangeOcurence(exchangeOcurence);
         exchangeOcurenceViewModel.getExchangeOcurenceLiveData().observe(this, ocurence -> {
             refreshExchangeOcurence(exchangeOcurence.getExchangeId());
-            getActivity().onBackPressed();
         });
     }
 
@@ -130,6 +142,34 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
         this.exchangeOcurences.clear();
         this.exchangeOcurences.addAll(exchangeOcurences);
         ocurenceAdapter.notifyDataSetChanged();
+    }
+
+    private void configureArrowBack() {
+        imgArrowBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+                callback.refreshExchange();
+                callback.restartLoader();
+            }
+        });
+    }
+
+    private void configElemView(){
+        titleHeader.setText(" Validate Exchange");
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        callback = (ExchangeListener) context;
+    }
+
+    @Override
+    public void onDetach() {
+        callback = null;
+        super.onDetach();
     }
 
 

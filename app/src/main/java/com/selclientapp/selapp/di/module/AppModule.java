@@ -4,13 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.selclientapp.selapp.api.ExchangeOcurenceWebService;
 import com.selclientapp.selapp.api.ExchangeWebService;
+import com.selclientapp.selapp.api.ImageWebService;
 import com.selclientapp.selapp.api.TokenWebService;
 import com.selclientapp.selapp.api.UserWebService;
 import com.selclientapp.selapp.repositories.ExchangeOcurenceRepository;
 import com.selclientapp.selapp.repositories.ExchangeRepository;
 import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 import com.selclientapp.selapp.repositories.UserRepository;
-
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -34,8 +34,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    UserRepository provideUserRepository(UserWebService userWebService, Executor executor, TokenWebService tokenWebService, ManagementTokenAndUSer managementTokenAndUSer) {
-        return new UserRepository(userWebService, executor, tokenWebService, managementTokenAndUSer);
+    UserRepository provideUserRepository(UserWebService userWebService, Executor executor, TokenWebService tokenWebService, ManagementTokenAndUSer managementTokenAndUSer, ImageWebService imageWebService) {
+        return new UserRepository(userWebService, executor, tokenWebService, managementTokenAndUSer,imageWebService);
     }
 
     @Provides
@@ -60,7 +60,7 @@ public class AppModule {
 
     @Provides
     Retrofit provideRetrofit(Gson gson) {
-        String BASE_URL = "http://10.0.2.2:5000/";
+        String BASE_URL = "https://sel-app.herokuapp.com/";
         OkHttpClient okHttpClient = new OkHttpClient.Builder().addInterceptor(new ServiceInterceptor()).build();
         //"https://sel-app.herokuapp.com/"
         //"http://10.0.2.2:5000/"
@@ -73,12 +73,19 @@ public class AppModule {
 
     @Provides
     @Singleton
-        ManagementTokenAndUSer provideManagerTokenAndUser() {
+    ManagementTokenAndUSer provideManagerTokenAndUser() {
         return new ManagementTokenAndUSer();
     }
+
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    @Provides
+    @Singleton
+    ImageWebService provideImageWebservice(Retrofit restAdapter) {
+        return restAdapter.create(ImageWebService.class);
     }
 
     @Provides
@@ -104,6 +111,15 @@ public class AppModule {
     ExchangeOcurenceWebService provideExchangeOcurenceWebservice(Retrofit restAdapter) {
         return restAdapter.create(ExchangeOcurenceWebService.class);
     }
+
+    // --- ASYNC INJECTION ---
+
+    /*@Provides
+    @Singleton
+    CompressImage provideCompressImage(File image) {
+        return new CompressImage(image);
+    }*/
+
 
 
 }

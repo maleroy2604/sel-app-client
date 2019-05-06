@@ -213,7 +213,7 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
         textInscription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExchangeOcurence exchangeOcurence = new ExchangeOcurence(0, managementTokenAndUSer.getCurrentUser().getId(), ex.getId());
+                ExchangeOcurence exchangeOcurence = new ExchangeOcurence( managementTokenAndUSer.getCurrentUser().getId(), ex.getId(), managementTokenAndUSer.getCurrentUser().getUsername());
                 if (isValid(ex)) {
                     ex.addExchangeOcurence(exchangeOcurence);
                     adapter.notifyDataSetChanged();
@@ -245,14 +245,9 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
     // -------------------
 
     private void updateUI(List<Exchange> exchanges) {
-        if (exchanges != null) {
             swipeRefreshLayout.setRefreshing(false);
-            this.exchanges.addAll(recyclerView.getLayoutManager().getItemCount(), exchanges);
+            this.exchanges.addAll(exchanges);
             adapter.updateList(exchanges);
-        } else {
-            Tools.backgroundThreadShortToast("Invalid credentials");
-        }
-
     }
     // -----------------
     // ACTION
@@ -267,9 +262,6 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
 
     private void deleteExchangeOcurence(ExchangeOcurence exchangeOcurence) {
         exchangeOcurenceViewModel.deleteExchangeOcurence(exchangeOcurence);
-        exchangeOcurenceViewModel.getExchangeOcurenceLiveData().observe(this, ocurence -> {
-            refreshExchanges();
-        });
     }
 
 
@@ -277,15 +269,12 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
         this.exchanges.remove(exchange);
         adapter.notifyDataSetChanged();
         exchangeViewModel.deleteOneExchange(exchange.getId());
-        exchangeViewModel.getExchangeLiveData().observe(this, ex -> {
-            refreshExchanges();
-        });
     }
 
     private void addExchangeOcurence(ExchangeOcurence exchangeOcurence) {
         exchangeOcurenceViewModel.addExchangeOcurence(exchangeOcurence);
-        exchangeOcurenceViewModel.getExchangeOcurenceLiveData().observe(this, ocurence -> {
-            refreshExchanges();
+        exchangeOcurenceViewModel.getExchangeOcurenceLiveData().observe(getActivity(), exchangeOcur -> {
+            exchangeOcurence.setId(exchangeOcur.getId());
         });
     }
 
@@ -368,3 +357,4 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
         this.exchanges.clear();
     }
 }
+
