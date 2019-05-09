@@ -2,4 +2,16 @@
     <string name="app_name">SelApp</string>
     <string name="todo">TODO</string>
     <string name="enter_the_fields_to_create_an_exchange">Enter the fields to create an exchange.</string>
+    <string name="toolbar_txt_counter_hours">Hours : %1$d </string>
+    <string name="edit_the_fields">Edit the fields.</string>
+    <string name="old_password">Old password</string>
+    <string name="username">Username</string>
+    <string name="new_password"> New Password</string>
+    <string name="email">Email</string>
+    <string name="update_profile">update profile</string>
+    <string-array name="category_array">
+        <item>no category selected</item>
+        <item> bricolage </item>
+        <item> cuisine </item>
+    </string-array>
 </resources>

@@ -1,5 +1,6 @@
 package com.selclientapp.selapp.di.module;
 
+import com.selclientapp.selapp.App;
 import com.selclientapp.selapp.api.TokenWebService;
 import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 
@@ -22,7 +23,7 @@ public class ServiceInterceptor implements Interceptor {
             Response response = chain.proceed(request);
             if (response.code() == 401) {
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("https://sel-app.herokuapp.com/")
+                        .baseUrl(App.URL_SERVER)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 TokenWebService tokenWebService = retrofit.create(TokenWebService.class);

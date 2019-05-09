@@ -16,7 +16,7 @@ import javax.inject.Inject;
 public class LoginAndSignUpViewModel extends ViewModel {
     private final UserRepository userRepo;
     private LiveData<User> userLiveData;
-    private LiveData<File> fileLiveData;
+
 
     @Inject
     public LoginAndSignUpViewModel(UserRepository userRepo) {
@@ -41,8 +41,12 @@ public class LoginAndSignUpViewModel extends ViewModel {
         userLiveData = userRepo.saveUser(user);
     }
 
+    public  void updateUser(User user){
+        userLiveData = userRepo.updateUser(user);
+    }
+
     public void uploadImage(File file, String imageProfileName) {
-        userRepo.uploadImageTest(file, imageProfileName);
+        userLiveData = userRepo.uploadImageTest(file, imageProfileName);
     }
 
     public LiveData<User> getUserLiveData() {

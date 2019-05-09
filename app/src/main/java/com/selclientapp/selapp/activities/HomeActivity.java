@@ -46,8 +46,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 
-
-
 import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
 import dagger.android.DispatchingAndroidInjector;
@@ -59,10 +57,12 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     private BottomNavigationView bottomNavigationView;
     private DrawerLayout drawer;
     ImageView imageViewProfile;
+    TextView counterHours;
     NavigationView navigationView;
     View headerLayout;
     ImageView imgHeaderDrawer;
     TextView profileName;
+    TextView profileHours;
 
     //FOR DATA
     @Inject
@@ -81,7 +81,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        configureImageViewProfile(toolbar);
+        configureElemToolbar(toolbar);
         configDrawer();
         //managementTokenAndUSer.logOut();
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -117,7 +117,6 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
                         break;
 
                     case R.id.action_log_out:
-                        //ManagementTokenAndUSer.logOut();
                         break;
 
                     case R.id.action_home:
@@ -168,8 +167,9 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         return true;
     }
 
-    private void configureImageViewProfile(Toolbar toolbar) {
+    private void configureElemToolbar(Toolbar toolbar) {
         imageViewProfile = toolbar.findViewById(R.id.image_view_profile);
+        counterHours = toolbar.findViewById(R.id.txt_counter_hours);
     }
 
     @Override
@@ -193,7 +193,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
 
     private void configViewModel() {
         loginModel = ViewModelProviders.of(this, viewModelFactory).get(LoginAndSignUpViewModel.class);
-        setProfile();
+        setElemProfile();
     }
 
     private void configDrawer() {
@@ -201,11 +201,22 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         navigationView = findViewById(R.id.nav_view);
         headerLayout = navigationView.getHeaderView(0);
         imgHeaderDrawer = headerLayout.findViewById(R.id.image_view_profile);
+        configImgHeaderDrawer();
         profileName = headerLayout.findViewById(R.id.profile_name);
+        profileHours = headerLayout.findViewById(R.id.hours_profile);
         imageViewProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 drawer.openDrawer(GravityCompat.START);
+            }
+        });
+    }
+
+    public void configImgHeaderDrawer(){
+        imgHeaderDrawer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawer.closeDrawer(GravityCompat.START);
             }
         });
     }
@@ -222,7 +233,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
             bottomNavigationView.setSelectedItemId(R.id.action_home);
             ActionBar actionBar = (this).getSupportActionBar();
             actionBar.show();
-            setProfile();
+            setElemProfile();
             animeSlideUp();
         }
 
@@ -247,6 +258,12 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     }
 
     private void showEditProfileFragment() {
+        EditProfileFragment fragment = new EditProfileFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_home_container, fragment, "fragment_edit_profile").addToBackStack("fragment_edit_profile").commit();
+    }
+
+    private void showEditImageFragment() {
         EditProfileFragment fragment = new EditProfileFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_home_container, fragment, "fragment_edit_profile").addToBackStack("fragment_edit_profile").commit();
@@ -288,15 +305,15 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         bottomNavigationView.setVisibility(View.VISIBLE);
     }
 
-    private void setProfile() {
+    private void setElemProfile() {
         loginModel.getUser(managementTokenAndUSer.getCurrentUser().getId());
         loginModel.getUserLiveData().observe(this, user -> {
-            System.out.println("avatarUrl from server" + user.getAvatarurl());
-            managementTokenAndUSer.saveUser(user);
-            System.out.println("avatarurl " + managementTokenAndUSer.getCurrentUser().getAvatarurl());
-            Glide.with(this).load(user.getAvatarurl()).into(imageViewProfile);
+            String hours = getString(R.string.toolbar_txt_counter_hours, user.getCounterhours());
             Glide.with(this).load(user.getAvatarurl()).into(imgHeaderDrawer);
+            Glide.with(this).load(user.getAvatarurl()).into(imageViewProfile);
+            counterHours.setText(hours);
             profileName.setText(user.getUsername());
+            profileHours.setText(hours);
         });
     }
 }

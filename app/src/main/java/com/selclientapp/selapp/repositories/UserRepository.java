@@ -51,7 +51,10 @@ public class UserRepository {
                         managementTokenAndUSer.saveSelApiToken(response.body());
                         data.postValue(response.body().getUser());
                     } else {
-                        Tools.backgroundThreadShortToast("Wrong username or password !");
+                        if(response.body() == null){
+                            data.postValue(null);
+                        }
+
                     }
 
                 }
@@ -127,36 +130,73 @@ public class UserRepository {
         return data;
     }
 
-    public void uploadImageTest(File file, String avatarUrl) {
-        if(avatarUrl != null){
+    public MutableLiveData<User> uploadImageTest(File file, String avatarUrl) {
+        final MutableLiveData<User> data = new MutableLiveData<>();
+        if (avatarUrl != null) {
             int lastIndex = avatarUrl.lastIndexOf("/");
             String subString = avatarUrl.substring(lastIndex + 1);
-            executor.execute(()->{
+            executor.execute(() -> {
                 imageWebService.deleteImage(subString).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        MultipartBody.Part filePart = MultipartBody.Part.createFormData("image",
+                                file.getName(),
+                                RequestBody.create(MediaType.parse("multipart/form-data"), file));
+                        executor.execute(() -> {
+                            imageWebService.uploadImage(filePart).enqueue(new Callback<User>() {
+                                @Override
+                                public void onResponse(Call<User> call, Response<User> response) {
+                                    data.postValue(response.body());
+                                }
+
+                                @Override
+                                public void onFailure(Call<User> call, Throwable t) {
+                                }
+                            });
+                        });
                     }
+
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                     }
                 });
             });
+
+        } else {
+            MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file));
+            executor.execute(() -> {
+                imageWebService.uploadImage(filePart).enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        data.postValue(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+                    }
+                });
+            });
         }
-       MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file));
+        return data;
+    }
+
+    public MutableLiveData<User> updateUser(User user) {
+        final MutableLiveData<User> data = new MutableLiveData<>();
         executor.execute(() -> {
-            imageWebService.uploadImage(filePart).enqueue(new Callback<RequestBody>() {
+            userWebService.updateUser(managementTokenAndUSer.getCurrentUser().getId(), user).enqueue(new Callback<User>() {
                 @Override
-                public void onResponse(Call<RequestBody> call, Response<RequestBody> response) {
+                public void onResponse(Call<User> call, Response<User> response) {
+                    data.postValue(response.body());
                 }
+
                 @Override
-                public void onFailure(Call<RequestBody> call, Throwable t) {
+                public void onFailure(Call<User> call, Throwable t) {
+
                 }
             });
         });
+        return data;
     }
-
-
-
 }
 
 

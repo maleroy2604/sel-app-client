@@ -73,7 +73,7 @@ public class OcurenceViewHolder extends RecyclerView.ViewHolder {
                 OcurenceAdapter.Listener callback = callbackWeakRef.get();
 
                 if (callback != null) {
-                        callback.onClickRemoveParticipant(getAdapterPosition());
+                    callback.onClickRemoveParticipant(getAdapterPosition());
                 }
             }
         });
@@ -99,3 +99,4 @@ public class OcurenceViewHolder extends RecyclerView.ViewHolder {
 
 
 }
+

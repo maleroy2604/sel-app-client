@@ -16,6 +16,7 @@
         android:elevation="12dp">
 
         <ImageView
+            android:id="@+id/image_bck_exchange"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"

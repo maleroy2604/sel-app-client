@@ -1,25 +1,28 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/custom_background"
-    android:fillViewport="true">
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
         <include
             android:id="@+id/header_view"
             layout="@layout/header_view" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:fillViewport="true">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="40dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -27,6 +30,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:text="@string/enter_the_fields_to_create_an_exchange"
+                android:textAlignment="center"
                 android:textColor="@color/colorText"
                 android:textSize="18dp" />
 
@@ -77,7 +81,7 @@
 
 
             <LinearLayout
-                android:layout_width="309dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
@@ -114,7 +118,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="309dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="25dp"
@@ -150,9 +154,8 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/fragment_exchange_add_input_capacity"
-                android:layout_width="157dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
                 android:imeOptions="flagNoExtractUi"
                 app:errorTextAppearance="@color/colorError"
                 app:theme="@style/TextInputLayoutAppearance">
@@ -168,20 +171,32 @@
                     android:textSize="14dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinner_ex_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown"
+                android:popupBackground="@color/colorBackgroundExchange" />
+
             <Button
                 android:id="@+id/fragment_exchange_add_btn_create"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"
                 android:background="@drawable/shadow"
                 android:text="Create"
-                android:textColor="@color/colorExchangeItem" />
+                android:textColor="@color/colorExchangeItem"
+                android:layout_marginTop="20dp"/>
 
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 
-</ScrollView>
+
+</LinearLayout>
+
+
+
+
 
 
 

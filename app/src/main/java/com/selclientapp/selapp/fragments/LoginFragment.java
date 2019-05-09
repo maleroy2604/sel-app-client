@@ -80,8 +80,12 @@ public class LoginFragment extends Fragment {
                     TokenBody tokenBody = new TokenBody(usernameEditText.getText().toString(), passwordEditText.getText().toString());
                     loginModel.login(tokenBody);
                     loginModel.getUserLiveData().observe(getActivity(), user -> {
-                        Intent intent = new Intent(getActivity(), HomeActivity.class);
-                        startActivity(intent);
+                        if(user != null){
+                            Intent intent = new Intent(getActivity(), HomeActivity.class);
+                            startActivity(intent);
+                        }else{
+                          Tools.backgroundThreadShortToast("Wrong password or username !");
+                        }
                     });
 
                 } else {

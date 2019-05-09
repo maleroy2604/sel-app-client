@@ -57,9 +57,12 @@ public class Exchange implements Parcelable {
     @Expose
     private List<Object> messages = null;
 
+    @SerializedName("category")
+    @Expose
+    private String category;
 
 
-    public Exchange(String name, String description, String ownerName, String date, Integer capacity, Integer owner, String avatarUrl) {
+    public Exchange(String name, String description, String ownerName, String date, Integer capacity, Integer owner, String avatarUrl, String category) {
         this.name = name;
         this.description = description;
         this.date = date;
@@ -67,6 +70,7 @@ public class Exchange implements Parcelable {
         this.owner = owner;
         this.ownerName = ownerName;
         this.avatarUrl = avatarUrl;
+        this.category = category;
     }
 
     protected Exchange(Parcel in) {
@@ -148,6 +152,14 @@ public class Exchange implements Parcelable {
         return capacity;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category){
+        this.category = category;
+    }
+
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
@@ -164,7 +176,7 @@ public class Exchange implements Parcelable {
         return owner;
     }
 
-    public String getAvatarUrl(){
+    public String getAvatarUrl() {
         return avatarUrl;
     }
 

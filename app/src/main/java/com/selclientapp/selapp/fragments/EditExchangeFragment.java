@@ -1,15 +1,18 @@
 package com.selclientapp.selapp.fragments;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 
+import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
 
-public class EditExchangeFragment extends AddExchangeFragment {
+public class EditExchangeFragment extends AddExchangeFragment  {
 
     private Exchange exchange;
 
@@ -30,7 +33,9 @@ public class EditExchangeFragment extends AddExchangeFragment {
         timePicker.setText(timeExchange);
         capacity.setText(Integer.toString(exchange.getCapacity()));
         btnCreate.setText("Update");
+        titleHeader.setText("Edit Exchange");
         configurBtnUpdate();
+        configureSpinnerTest();
     }
 
     private void configurBtnUpdate() {
@@ -42,6 +47,8 @@ public class EditExchangeFragment extends AddExchangeFragment {
                 exchangeViewModel.updateExchange(exchange);
                 exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
                     getActivity().onBackPressed();
+                    callbackExchangeListener.restartLoader();
+                    callbackExchangeListener.refreshExchange();
                     final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
                 });
@@ -56,7 +63,14 @@ public class EditExchangeFragment extends AddExchangeFragment {
         exchange.setDate(dateExchange + timeExchange);
         exchange.setName(username.getText().toString());
         exchange.setDescription(description.getText().toString());
+        exchange.setCategory(category.toLowerCase());
     }
 
+    private void configureSpinnerTest() {
+        ArrayAdapter myAdap = (ArrayAdapter) spinner.getAdapter();
+        int spinnerPosition = myAdap.getPosition(exchange.getCategory());
+        System.out.println("pos " + spinnerPosition);
+        spinner.setSelection(spinnerPosition);
+    }
 
 }

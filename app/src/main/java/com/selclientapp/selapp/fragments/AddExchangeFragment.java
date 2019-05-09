@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -22,9 +23,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -33,7 +37,6 @@ import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 import com.selclientapp.selapp.utils.ExchangeListener;
 import com.selclientapp.selapp.view_models.ExchangeViewModel;
-
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,7 +49,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.AndroidSupportInjection;
 
-public class AddExchangeFragment extends Fragment {
+public class AddExchangeFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     //FOR DESIGN
     @BindView(R.id.fragment_exchange_add_input_username)
@@ -79,11 +82,14 @@ public class AddExchangeFragment extends Fragment {
     TextInputEditText capacity;
     @BindView(R.id.fragment_arrow)
     ImageButton imgArrowBack;
+    @BindView(R.id.spinner_ex_edit)
+    Spinner spinner;
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private TimePickerDialog.OnTimeSetListener mTimeSetListener;
     protected static String dateExchange;
     protected static String timeExchange;
+    protected String category;
 
     //FOR DATA
     @Inject
@@ -92,6 +98,7 @@ public class AddExchangeFragment extends Fragment {
     protected AddExchangeListener callbackAddListener;
     protected ExchangeListener callbackExchangeListener;
     protected ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
+
 
     public interface AddExchangeListener {
         void addExchange(Exchange exchange);
@@ -109,7 +116,6 @@ public class AddExchangeFragment extends Fragment {
         this.configureDateListener();
         this.configureTimeListener();
         this.configureBtnCreate();
-        this.configureArrowBack();
         this.configureElemView();
         BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.home_activity_bottom_navigation);
         bottomNavigationView.setVisibility(View.GONE);
@@ -239,7 +245,9 @@ public class AddExchangeFragment extends Fragment {
                         managementTokenAndUSer.getCurrentUser().getUsername(),
                         dateExchange + timeExchange + ":00",
                         capa,
-                        managementTokenAndUSer.getCurrentUser().getId(), managementTokenAndUSer.getCurrentUser().getAvatarurl());
+                        managementTokenAndUSer.getCurrentUser().getId(),
+                        managementTokenAndUSer.getCurrentUser().getAvatarurl(),
+                        category);
                 callbackAddListener.addExchange(exchange);
                 exchangeViewModel.AddExchange(exchange);
                 exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
@@ -254,7 +262,6 @@ public class AddExchangeFragment extends Fragment {
     }
 
     private void configureElemView() {
-
         btnCreate.setEnabled(false);
         titleHeader.setText("New Exchange.");
         usernameInput.setError("Field can't be empty.");
@@ -267,6 +274,8 @@ public class AddExchangeFragment extends Fragment {
         timePicker.addTextChangedListener(timeWatcher);
         capacityInput.setError("Field can't be empty.");
         capacity.addTextChangedListener(capacityWatcher);
+        this.configureArrowBack();
+        this.configureSpinner();
     }
 
     private final TextWatcher usernameWatcher = new TextWatcher() {
@@ -381,9 +390,27 @@ public class AddExchangeFragment extends Fragment {
         });
 
     }
+
+    private void configureSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.category_array, R.layout.cunstom_spinner);
+        spinner.getBackground().setColorFilter(getResources().getColor(R.color.colorText), PorterDuff.Mode.SRC_ATOP);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+    }
     // -----------------
     // UTILS
     // -----------------
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        category = parent.getItemAtPosition(position).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        category = null;
+    }
 
     private boolean hasToSetError(String editText, TextInputLayout textInputLayout) {
         if (editText.isEmpty()) {

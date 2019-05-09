@@ -2,6 +2,7 @@ package com.selclientapp.selapp.di.module;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.selclientapp.selapp.App;
 import com.selclientapp.selapp.api.ExchangeOcurenceWebService;
 import com.selclientapp.selapp.api.ExchangeWebService;
 import com.selclientapp.selapp.api.ImageWebService;
@@ -60,10 +61,8 @@ public class AppModule {
 
     @Provides
     Retrofit provideRetrofit(Gson gson) {
-        String BASE_URL = "https://sel-app.herokuapp.com/";
+        String BASE_URL = App.URL_SERVER;
         OkHttpClient okHttpClient = new OkHttpClient.Builder().addInterceptor(new ServiceInterceptor()).build();
-        //"https://sel-app.herokuapp.com/"
-        //"http://10.0.2.2:5000/"
         return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(okHttpClient)

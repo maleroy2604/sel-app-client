@@ -33,7 +33,6 @@ public class User {
     @Expose
     private String avatarurl;
 
-
     public User(String username, String password, String confirmpassword, String email, int counterhours) {
         setUsername(username);
         setPassword(password);
@@ -42,12 +41,25 @@ public class User {
         setCounterhours(counterhours);
     }
 
+    public User(String username, String password, String confirmpassword, String email) {
+        setUsername(username);
+        setPassword(password);
+        setEmail(email);
+        setConfirmpassword(confirmpassword);
+    }
+
+    public User(String username, String email) {
+        setUsername(username);
+        setEmail(email);
+    }
+
     public User(User user) {
         user.setId(user.getId());
         user.setUsername(user.getUsername());
         user.setPassword(user.getPassword());
         user.setEmail(user.getEmail());
         user.setCounterhours(user.getCounterhours());
+        user.setAvatarurl(user.avatarurl);
     }
 
     public Integer getId() {

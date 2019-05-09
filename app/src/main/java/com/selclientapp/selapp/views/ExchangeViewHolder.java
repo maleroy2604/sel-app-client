@@ -11,7 +11,6 @@ import com.bumptech.glide.Glide;
 import com.selclientapp.selapp.App;
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
-import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 
 import java.lang.ref.WeakReference;
 
@@ -39,9 +38,12 @@ public class ExchangeViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.image_view_profile)
     ImageView imageProfile;
 
+    @BindView(R.id.image_bck_exchange)
+    ImageView imageBck;
+
 
     private WeakReference<ExchangeAdapter.Listener> callbackWeakRef;
-    private ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
+
 
     public ExchangeViewHolder(View itemView) {
         super(itemView);
@@ -51,13 +53,20 @@ public class ExchangeViewHolder extends RecyclerView.ViewHolder {
     public void updateWithExchange(Exchange exchange, ExchangeAdapter.Listener callback) {
         String dateExchange = exchange.getDate().substring(0, 10);
         String timeExchange = exchange.getDate().substring(10, 16);
+        String shortcuts[] = App.context.getResources().getStringArray(R.array.category_array);
 
         this.textViewName.setText(String.format(exchange.getName()).toUpperCase());
         this.textViewAuthor.setText(String.format(exchange.getOwnerName()));
         this.textViewDate.setText(String.format(dateExchange + " at " + timeExchange));
         this.textViewCapacity.setText(String.format(exchange.getCurrentCapacity() + "/" + exchange.getCapacity()));
         this.callbackWeakRef = new WeakReference<>(callback);
+        System.out.println("avatarUrl " + exchange.getAvatarUrl());
         Glide.with(App.context).load(exchange.getAvatarUrl()).into(imageProfile);
+        if (exchange.getCategory().equals(shortcuts[0].toLowerCase())) {
+            imageBck.setImageResource(R.drawable.sel);
+        } else {
+            Glide.with(App.context).load(App.URL_SERVER + "imageexchange/" + exchange.getCategory().toLowerCase() + ".jpg").into(imageBck);
+        }
         configHoriz();
     }
 

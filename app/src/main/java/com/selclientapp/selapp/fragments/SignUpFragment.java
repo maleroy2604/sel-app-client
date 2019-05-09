@@ -107,7 +107,6 @@ public class SignUpFragment extends Fragment {
             public void onClick(View v) {
                 if (Tools.hasInternetConnection()) {
                     User user = new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(), passwordConfirmEditText.getText().toString(), emailEditText.getText().toString(),2);
-                    System.out.println("user " + user.toString());
                     loginModel.saveUser(user);
                     loginModel.getUserLiveData().observe(getActivity(), userLiveData -> {
                         Intent intent = new Intent(getActivity(), HomeActivity.class);
