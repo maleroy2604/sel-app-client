@@ -33,6 +33,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.fragments.AddExchangeFragment;
 
+import com.selclientapp.selapp.fragments.EditImageProfileFragment;
 import com.selclientapp.selapp.fragments.EditProfileFragment;
 import com.selclientapp.selapp.fragments.ExchangeFragment;
 import com.selclientapp.selapp.model.Exchange;
@@ -212,10 +213,11 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         });
     }
 
-    public void configImgHeaderDrawer(){
+    public void configImgHeaderDrawer() {
         imgHeaderDrawer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showEditImageFragment();
                 drawer.closeDrawer(GravityCompat.START);
             }
         });
@@ -264,9 +266,9 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     }
 
     private void showEditImageFragment() {
-        EditProfileFragment fragment = new EditProfileFragment();
+        EditImageProfileFragment fragment = new EditImageProfileFragment();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_home_container, fragment, "fragment_edit_profile").addToBackStack("fragment_edit_profile").commit();
+                .add(R.id.fragment_home_container, fragment, "fragment_edit_image_profile").addToBackStack("fragment_edit_image_profile").commit();
     }
 
     @Override

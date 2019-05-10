@@ -2,6 +2,7 @@ package com.selclientapp.selapp.di.module;
 
 import com.selclientapp.selapp.fragments.AddExchangeFragment;
 import com.selclientapp.selapp.fragments.EditExchangeFragment;
+import com.selclientapp.selapp.fragments.EditImageProfileFragment;
 import com.selclientapp.selapp.fragments.EditProfileFragment;
 import com.selclientapp.selapp.fragments.ExchangeFragment;
 import com.selclientapp.selapp.fragments.ExchangeManagementOcurence;
@@ -21,6 +22,9 @@ public abstract class FragmentModule {
 
     @ContributesAndroidInjector
     abstract EditProfileFragment contributeEditProfile();
+
+    @ContributesAndroidInjector
+    abstract EditImageProfileFragment contributeEditImageProfileFragment();
 
     @ContributesAndroidInjector
     abstract ExchangeFragment contributeExchangeFragment();

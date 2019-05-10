@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
 
-public class EditExchangeFragment extends AddExchangeFragment  {
+public class EditExchangeFragment extends AddExchangeFragment {
 
     private Exchange exchange;
 
@@ -69,7 +69,6 @@ public class EditExchangeFragment extends AddExchangeFragment  {
     private void configureSpinnerTest() {
         ArrayAdapter myAdap = (ArrayAdapter) spinner.getAdapter();
         int spinnerPosition = myAdap.getPosition(exchange.getCategory());
-        System.out.println("pos " + spinnerPosition);
         spinner.setSelection(spinnerPosition);
     }
 

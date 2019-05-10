@@ -60,7 +60,6 @@ public class ExchangeViewHolder extends RecyclerView.ViewHolder {
         this.textViewDate.setText(String.format(dateExchange + " at " + timeExchange));
         this.textViewCapacity.setText(String.format(exchange.getCurrentCapacity() + "/" + exchange.getCapacity()));
         this.callbackWeakRef = new WeakReference<>(callback);
-        System.out.println("avatarUrl " + exchange.getAvatarUrl());
         Glide.with(App.context).load(exchange.getAvatarUrl()).into(imageProfile);
         if (exchange.getCategory().equals(shortcuts[0].toLowerCase())) {
             imageBck.setImageResource(R.drawable.sel);

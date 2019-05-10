@@ -9,9 +9,13 @@
     <string name="new_password"> New Password</string>
     <string name="email">Email</string>
     <string name="update_profile">update profile</string>
+    <string name="image_profile">Image profile.</string>
+    <string name="choose_a_picture">Choose a picture .</string>
+    <string name="update_image">update image</string>
     <string-array name="category_array">
         <item>no category selected</item>
         <item> bricolage </item>
         <item> cuisine </item>
+        <item> jardinage </item>
     </string-array>
 </resources>

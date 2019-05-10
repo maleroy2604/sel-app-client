@@ -1,198 +1,190 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/custom_background"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
+
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="21dp">
+
+
         <include
             android:id="@+id/header_view"
             layout="@layout/header_view" />
-    </LinearLayout>
 
-    <ScrollView
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:fillViewport="true">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/enter_the_fields_to_create_an_exchange"
+            android:textAlignment="center"
+            android:textColor="@color/colorText"
+            android:textSize="18dp" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fragment_exchange_add_input_username"
+            android:layout_width="308dp"
+            android:layout_height="wrap_content"
+            android:imeOptions="flagNoExtractUi"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@color/colorExchangeItem"
+            app:theme="@style/TextInputLayoutAppearance">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/fragment_exchange_add_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Name"
+                android:imeOptions="flagNoExtractUi"
+                android:textColor="@color/colorExchangeItem"
+                android:textSize="14dp"
+                app:theme="@style/MyEditText" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fragment_exchange_add_input_description"
+            android:layout_width="309dp"
+            android:layout_height="wrap_content"
+            android:imeOptions="flagNoExtractUi"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@color/colorExchangeItem"
+            app:theme="@style/TextInputLayoutAppearance">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/fragment_exchange_add_description"
+                android:layout_width="311dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|left"
+                android:hint="Description"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="textMultiLine"
+                android:maxLines="4"
+                android:textColor="@color/colorExchangeItem"
+                android:textSize="14dp"
+                app:theme="@style/MyEditText" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingHorizontal="40dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:text="@string/enter_the_fields_to_create_an_exchange"
-                android:textAlignment="center"
-                android:textColor="@color/colorText"
-                android:textSize="18dp" />
-
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/fragment_exchange_add_input_username"
-                android:layout_width="308dp"
-                android:layout_height="wrap_content"
+                android:id="@+id/fragment_exchange_add_input_date"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_weight="8"
                 android:imeOptions="flagNoExtractUi"
-                app:errorEnabled="true"
-                app:errorTextAppearance="@color/colorExchangeItem"
-                app:theme="@style/TextInputLayoutAppearance">
+                app:errorTextAppearance="@color/colorExchangeItem">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/fragment_exchange_add_username"
+                <TextView
+                    android:id="@+id/fragment_exchange_add_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Name"
-                    android:imeOptions="flagNoExtractUi"
-                    android:textColor="@color/colorExchangeItem"
-                    android:textSize="14dp"
-                    app:theme="@style/MyEditText" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/fragment_exchange_add_input_description"
-                android:layout_width="309dp"
-                android:layout_height="wrap_content"
-                android:imeOptions="flagNoExtractUi"
-                app:errorEnabled="true"
-                app:errorTextAppearance="@color/colorExchangeItem"
-                app:theme="@style/TextInputLayoutAppearance">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/fragment_exchange_add_description"
-                    android:layout_width="311dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top|left"
-                    android:hint="Description"
-                    android:imeOptions="flagNoExtractUi"
-                    android:inputType="textMultiLine"
-                    android:maxLines="4"
-                    android:textColor="@color/colorExchangeItem"
-                    android:textSize="14dp"
-                    app:theme="@style/MyEditText" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fragment_exchange_add_input_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:layout_weight="8"
-                    android:imeOptions="flagNoExtractUi"
-                    app:errorTextAppearance="@color/colorExchangeItem">
-
-                    <TextView
-                        android:id="@+id/fragment_exchange_add_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Select Date"
-                        android:inputType="number"
-                        android:paddingLeft="4dp"
-                        android:textColor="@color/colorText"
-                        android:textColorHint="@color/colorText"
-                        android:textSize="14dp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageButton
-                    android:id="@+id/fragment_exchange_add_image_btn_date"
-                    android:layout_width="@dimen/button_image_width"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/ic_date_range"
-                    android:padding="2dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="25dp"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fragment_exchange_add_input_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:layout_weight="8"
-                    android:imeOptions="flagNoExtractUi"
-                    app:errorTextAppearance="@color/colorError">
-
-                    <TextView
-                        android:id="@+id/fragment_exchange_add_time"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Select Time"
-                        android:paddingLeft="4dp"
-                        android:textColor="@color/colorText"
-                        android:textColorHint="@color/colorText"
-                        android:textSize="14dp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageButton
-                    android:id="@+id/fragment_exchange_add_image_btn_time"
-                    android:layout_width="@dimen/button_image_width"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/ic_alarm"
-                    android:padding="2dp" />
-            </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/fragment_exchange_add_input_capacity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:imeOptions="flagNoExtractUi"
-                app:errorTextAppearance="@color/colorError"
-                app:theme="@style/TextInputLayoutAppearance">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/fragment_exchange_add_capacity"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:hint="Select Capacity"
-                    android:imeOptions="flagNoExtractUi"
+                    android:hint="Select Date"
                     android:inputType="number"
-                    android:textColor="@color/colorExchangeItem"
+                    android:paddingLeft="4dp"
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorText"
                     android:textSize="14dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/spinner_ex_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:spinnerMode="dropdown"
-                android:popupBackground="@color/colorBackgroundExchange" />
-
-            <Button
-                android:id="@+id/fragment_exchange_add_btn_create"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/shadow"
-                android:text="Create"
-                android:textColor="@color/colorExchangeItem"
-                android:layout_marginTop="20dp"/>
+            <ImageButton
+                android:id="@+id/fragment_exchange_add_image_btn_date"
+                android:layout_width="@dimen/button_image_width"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/ic_date_range"
+                android:padding="2dp" />
 
         </LinearLayout>
-    </ScrollView>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="25dp"
+            android:orientation="horizontal">
 
-</LinearLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/fragment_exchange_add_input_time"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_weight="8"
+                android:imeOptions="flagNoExtractUi"
+                app:errorTextAppearance="@color/colorError">
+
+                <TextView
+                    android:id="@+id/fragment_exchange_add_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Select Time"
+                    android:paddingLeft="4dp"
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorText"
+                    android:textSize="14dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ImageButton
+                android:id="@+id/fragment_exchange_add_image_btn_time"
+                android:layout_width="@dimen/button_image_width"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/ic_alarm"
+                android:padding="2dp" />
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fragment_exchange_add_input_capacity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:imeOptions="flagNoExtractUi"
+            app:errorTextAppearance="@color/colorError"
+            app:theme="@style/TextInputLayoutAppearance">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/fragment_exchange_add_capacity"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:hint="Select Capacity"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="number"
+                android:textColor="@color/colorExchangeItem"
+                android:textSize="14dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spinner_ex_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:popupBackground="@color/colorBackgroundExchange"
+            android:spinnerMode="dropdown" />
+
+        <Button
+            android:id="@+id/fragment_exchange_add_btn_create"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shadow"
+            android:text="Create"
+            android:textColor="@color/colorExchangeItem" />
+
+    </LinearLayout>
+</ScrollView>
+
 
 
 

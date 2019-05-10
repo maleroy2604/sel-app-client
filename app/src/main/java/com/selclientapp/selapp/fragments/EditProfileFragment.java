@@ -13,6 +13,7 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -27,6 +28,7 @@ import com.selclientapp.selapp.model.User;
 import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 import com.selclientapp.selapp.utils.ExchangeListener;
 import com.selclientapp.selapp.utils.TokenBody;
+import com.selclientapp.selapp.utils.Tools;
 import com.selclientapp.selapp.utils.WriteIntoFile;
 import com.selclientapp.selapp.view_models.LoginAndSignUpViewModel;
 
@@ -138,7 +140,6 @@ public class EditProfileFragment extends Fragment {
 
     private void configureViewModel() {
         this.loginAndSignUpViewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginAndSignUpViewModel.class);
-        loginAndSignUpViewModel.getUser(managementTokenAndUSer.getCurrentUser().getId());
     }
 
     private void configureBtnUpdateProfile() {
@@ -157,13 +158,14 @@ public class EditProfileFragment extends Fragment {
                 } else {
                     updateUserInfo();
                 }
+                backToActivity();
             }
         });
 
     }
 
     private void updateImageOnly() {
-        loginAndSignUpViewModel.uploadImage(image, managementTokenAndUSer.getCurrentUser().getAvatarurl());
+        loginAndSignUpViewModel.uploadImage(image);
         loginAndSignUpViewModel.getUserLiveData().observe(getActivity(), user2 -> {
             managementTokenAndUSer.saveUser(user2);
         });
@@ -201,11 +203,17 @@ public class EditProfileFragment extends Fragment {
         imgArrowBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
-                callback.refreshExchange();
-                callback.restartLoader();
+                backToActivity();
             }
         });
+    }
+
+    private void backToActivity() {
+        getActivity().onBackPressed();
+        callback.refreshExchange();
+        callback.restartLoader();
+        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }
 
     private final TextWatcher watcherUsername = new TextWatcher() {
@@ -283,7 +291,7 @@ public class EditProfileFragment extends Fragment {
                     && getContext().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 mImageUri = data.getData();
                 fotoHint.setText("");
-                this.image = new File("data/data/com.selclientapp.selapp/" + getSingleName(mImageUri) + ".JPEG");
+                this.image = new File("data/data/com.selclientapp.selapp/" + getSingleName() + ".JPEG");
                 WriteIntoFile writeIntoFile = new WriteIntoFile(image, mImageUri);
                 executorService.execute(writeIntoFile);
                 Glide.with(this).load(mImageUri).into(imageProfile);
@@ -329,10 +337,20 @@ public class EditProfileFragment extends Fragment {
     // -----------------
     // UTILS
     // -----------------
-    public String getSingleName(Uri uri) {
-        int lastindex = uri.toString().lastIndexOf("/");
-        String singleName = uri.toString().substring(lastindex);
-        return singleName;
+    public String getSingleName() {
+        String randomString = Tools.randomAlphaNumeric(6);
+        if (managementTokenAndUSer.getCurrentUser().getAvatarurl() == null) {
+            return randomString;
+        } else {
+            String avatarUrl = managementTokenAndUSer.getCurrentUser().getAvatarurl();
+            int lastindex = avatarUrl.lastIndexOf("/");
+            String singleName = avatarUrl.substring(lastindex);
+
+            while (singleName.equals(randomString)) {
+                randomString = Tools.randomAlphaNumeric(6);
+            }
+            return randomString;
+        }
     }
 
     private boolean validField(EditText editText, TextInputLayout input, Pattern PTN, String msg) {
