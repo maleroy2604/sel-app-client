@@ -2,7 +2,6 @@ package com.selclientapp.selapp.fragments;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import com.selclientapp.selapp.view_models.ExchangeOcurenceViewModel;
 import com.selclientapp.selapp.view_models.ExchangeViewModel;
 import com.selclientapp.selapp.views.ExchangeAdapter;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,12 +30,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.AndroidSupportInjection;
@@ -48,8 +48,8 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
     // FOR DESIGN
     @BindView(R.id.fragment_exchange_recycler_view)
     RecyclerView recyclerView;
-    @BindView(R.id.fragment_exchange_swipe_container)
-    SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.sorting_option_close)
+    ImageButton imgBtnCloseSorting;
 
     // FOR DATA
     @Inject
@@ -70,10 +70,16 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
         View view = inflater.inflate(R.layout.fragment_exchange, container, false);
         ButterKnife.bind(this, view);
         this.configureDagger();
-        this.configureRefreshLayout();
-        this.configureViewmodel();
+        this.configOnclickRecyclerView();
         return view;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.configureViewmodel();
+    }
+
     // -----------------
     // CONFIGURATION
     // -----------------
@@ -109,57 +115,56 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
         });
     }
 
-    private void configureRefreshLayout() {
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                restartLoader();
-                refreshExchanges();
-            }
-        });
-    }
-
     private void configOnclickRecyclerView() {
         ItemClickSupport.addTo(recyclerView, R.layout.fragment_exchange_item).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                Exchange exchange = adapter.getExchange(position);
+                DetailExchangeFragment fragment = new DetailExchangeFragment();
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("exchange", adapter.getExchange(position));
+                fragment.setArguments(bundle);
+                showDetailExchangeFragment(fragment);
             }
         });
     }
 
     @Override
     public void onClickDialog(int position) {
-        Dialog dialog = new Dialog(getActivity());
-        Exchange exchange = adapter.getExchange(position);
-        dialog.setContentView(R.layout.dialog_options);
-        TextView textDelete;
-        TextView textEdit;
-        TextView textManagement;
+        if (Tools.hasInternetConnection()) {
+            Dialog dialog = new Dialog(getActivity());
+            Exchange exchange = adapter.getExchange(position);
+            dialog.setContentView(R.layout.dialog_options);
+            TextView textDelete;
+            TextView textEdit;
+            TextView textManagement;
 
-        if (exchange.getOwner() == managementTokenAndUSer.getCurrentUser().getId()) {
-            textDelete = dialog.findViewById(R.id.dialog_option_delete);
-            textEdit = dialog.findViewById(R.id.dialog_option_edit);
-            textManagement = dialog.findViewById(R.id.dialog_option_management);
+            if (exchange.getOwner() == managementTokenAndUSer.getCurrentUser().getId()) {
+                textDelete = dialog.findViewById(R.id.dialog_option_delete);
+                textEdit = dialog.findViewById(R.id.dialog_option_edit);
+                textManagement = dialog.findViewById(R.id.dialog_option_management);
 
-            configTextDelete(textDelete, exchange, dialog);
-            configTextEdit(textEdit, exchange, dialog);
-            configTextManagement(textManagement, exchange, dialog, position);
+                configTextDelete(textDelete, exchange, dialog);
+                configTextEdit(textEdit, exchange, dialog);
+                configTextManagement(textManagement, exchange, dialog, position);
 
-        } else {
-            dialog.setContentView(R.layout.dialog_options_user);
-            TextView textInscription = dialog.findViewById(R.id.dialog_option_inscription);
-            configTextInscription(textInscription, exchange, dialog);
-        }
-        TextView discussion = dialog.findViewById(R.id.dialog_option_discussion);
-        ImageButton imageButtonClose = dialog.findViewById(R.id.dialog_option_close);
-        imageButtonClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
+            } else {
+                dialog.setContentView(R.layout.dialog_options_user);
+                TextView textInscription = dialog.findViewById(R.id.dialog_option_inscription);
+                configTextInscription(textInscription, exchange, dialog);
             }
-        });
-        dialog.show();
+            TextView discussion = dialog.findViewById(R.id.dialog_option_discussion);
+            ImageButton imageButtonClose = dialog.findViewById(R.id.dialog_option_close);
+            imageButtonClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        } else {
+            showNoConnexionFragment();
+        }
+
     }
 
     private void configTextDelete(TextView textDel, Exchange ex, Dialog dialog) {
@@ -186,7 +191,8 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
         });
     }
 
-    private void configTextManagement(TextView textManagement, Exchange ex, Dialog dialog, int position) {
+    private void configTextManagement(TextView textManagement, Exchange ex, Dialog dialog,
+                                      int position) {
         textManagement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,7 +219,7 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
         textInscription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExchangeOcurence exchangeOcurence = new ExchangeOcurence( managementTokenAndUSer.getCurrentUser().getId(), ex.getId(), managementTokenAndUSer.getCurrentUser().getUsername());
+                ExchangeOcurence exchangeOcurence = new ExchangeOcurence(managementTokenAndUSer.getCurrentUser().getId(), ex.getId(), managementTokenAndUSer.getCurrentUser().getUsername());
                 if (isValid(ex)) {
                     ex.addExchangeOcurence(exchangeOcurence);
                     adapter.notifyDataSetChanged();
@@ -245,9 +251,8 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
     // -------------------
 
     private void updateUI(List<Exchange> exchanges) {
-            swipeRefreshLayout.setRefreshing(false);
-            this.exchanges.addAll(exchanges);
-            adapter.updateList(exchanges);
+        this.exchanges.addAll(exchanges);
+        adapter.updateList(exchanges);
     }
     // -----------------
     // ACTION
@@ -286,6 +291,19 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
         fragment.setArguments(bundle);
         getFragmentManager().beginTransaction()
                 .add(R.id.fragment_home_container, fragment, null).addToBackStack("fragment_management").commit();
+    }
+
+    private void showDetailExchangeFragment(DetailExchangeFragment fragment) {
+        getFragmentManager().beginTransaction()
+                .add(R.id.fragment_home_container, fragment, null).addToBackStack("fragment_exchange_detail").commit();
+    }
+
+    private void showNoConnexionFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        NoConnexionFragment fragment = new NoConnexionFragment();
+        getFragmentManager().beginTransaction()
+                .add(R.id.fragment_home_container, fragment, "fragment_no_connexion").addToBackStack("fragment_no_connexion").commit();
     }
 
     // -----------------
@@ -338,9 +356,18 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
         return adapter.getFilter();
     }
 
+    public ExchangeAdapter getAdapter() {
+        return adapter;
+    }
+
+
     public void addExchangeToList(Exchange exchange) {
         this.exchanges.add(0, exchange);
         this.adapter.notifyDataSetChanged();
+    }
+
+    public List<Exchange> getExchanges() {
+        return this.adapter.getExchanges();
     }
 
     public void updateExchangeToList(Exchange exchange) {
@@ -352,9 +379,14 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
         this.adapter.notifyDataSetChanged();
     }
 
-    public void restartLoader(){
+    public void restartLoader() {
         numberLimits.decreaseLimit();
         this.exchanges.clear();
     }
+
+    public ImageButton getBtnCloseSorting() {
+        return imgBtnCloseSorting;
+    }
+
 }
 

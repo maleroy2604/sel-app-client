@@ -130,37 +130,33 @@ public class UserRepository {
         return data;
     }
 
-    public MutableLiveData<User> uploadImageTest(File file) {
+    public MutableLiveData<User> uploadImageTest(File file, String avatarUrl) {
         final MutableLiveData<User> data = new MutableLiveData<>();
-
-        MultipartBody.Part filePart = MultipartBody.Part.createFormData("image",
-                file.getName(),
-                RequestBody.create(MediaType.parse("multipart/form-data"), file));
-        executor.execute(() -> {
-            imageWebService.uploadImage(filePart).enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    data.postValue(response.body());
-                }
-
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                }
-            });
-        });
-
-
-        return data;
-    }
-
-    /* if (avatarUrl != null) {
+        if (avatarUrl != null) {
             int lastIndex = avatarUrl.lastIndexOf("/");
             String subString = avatarUrl.substring(lastIndex + 1);
             executor.execute(() -> {
                 imageWebService.deleteImage(subString).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                         @Override
+                        MultipartBody.Part filePart = MultipartBody.Part.createFormData("image",
+                                file.getName(),
+                                RequestBody.create(MediaType.parse("multipart/form-data"), file));
+                        executor.execute(() -> {
+                            imageWebService.uploadImage(filePart).enqueue(new Callback<User>() {
+                                @Override
+                                public void onResponse(Call<User> call, Response<User> response) {
+                                    data.postValue(response.body());
+                                }
+
+                                @Override
+                                public void onFailure(Call<User> call, Throwable t) {
+                                }
+                            });
+                        });
+                    }
+
+                    @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                     }
                 });
@@ -180,7 +176,10 @@ public class UserRepository {
                     }
                 });
             });
-        }*/
+        }
+        return data;
+    }
+
 
     public MutableLiveData<User> updateUser(User user) {
         final MutableLiveData<User> data = new MutableLiveData<>();

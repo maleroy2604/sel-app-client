@@ -10,4 +10,5 @@
     <color name="colorShadow">#5F9EA0</color>
     <color name="colorText">#FFFF</color>
     <color name="colorBackgroundExchange">#20B2AA</color>
+    <color name="black">#66000000</color>
 </resources>

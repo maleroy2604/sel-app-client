@@ -20,7 +20,8 @@
             android:id="@+id/fragment_home_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="9" />
+            android:layout_weight="9"
+            android:background="@color/colorText"/>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/home_activity_bottom_navigation"

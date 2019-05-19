@@ -12,7 +12,7 @@
         android:icon="@drawable/ic_add"
         android:title="Add"/>
     <item
-        android:id="@+id/action_log_out"
+        android:id="@+id/action_sorting"
         android:enabled="true"
         android:icon="@drawable/ic_menu"
         android:title="Sort"/>

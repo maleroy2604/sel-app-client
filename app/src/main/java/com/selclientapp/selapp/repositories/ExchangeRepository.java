@@ -7,6 +7,7 @@ import com.selclientapp.selapp.api.ExchangeWebService;
 import com.selclientapp.selapp.fragments.ExchangeFragment;
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.utils.NumberLimits;
+import com.selclientapp.selapp.utils.Tools;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -36,6 +37,8 @@ public class ExchangeRepository {
                 public void onResponse(Call<Exchange> call, Response<Exchange> response) {
                     if (response.isSuccessful()) {
                         data.postValue(response.body());
+                    } else {
+
                     }
                 }
 
@@ -54,7 +57,13 @@ public class ExchangeRepository {
             exchangeWebService.getAllExchange(numberLimit).enqueue(new Callback<List<Exchange>>() {
                 @Override
                 public void onResponse(Call<List<Exchange>> call, Response<List<Exchange>> response) {
-                    data.postValue(response.body());
+                    if (response.isSuccessful()) {
+                        data.postValue(response.body());
+                    } else {
+                        data.postValue(null);
+                        Tools.backgroundThreadShortToast("Unable to load the exchanges ! ");
+                    }
+
                 }
 
                 @Override

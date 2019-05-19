@@ -6,11 +6,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.selclientapp.selapp.App;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 
@@ -19,15 +23,20 @@ public class Tools {
     // -----------------
     // ACTION FOR ALL-APP
     // -----------------
-    public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyymmddhhmmss", Locale.getDefault());
 
     public static boolean hasInternetConnection() {
-        ConnectivityManager cm =
-                (ConnectivityManager) App.context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
+        ConnectivityManager cm = (ConnectivityManager) App.context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
+        if (activeNetwork != null) {
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                return true;
+            } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                return true;
+            }
+        } else {
+            return false;
+        }
+        return false;
     }
 
     public static void backgroundThreadShortToast(final String msg) {
@@ -54,4 +63,15 @@ public class Tools {
         return builder.toString();
     }
 
+    public static Date getDate(String stringDate) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = format.parse(stringDate);
+        } catch (
+                ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
 }

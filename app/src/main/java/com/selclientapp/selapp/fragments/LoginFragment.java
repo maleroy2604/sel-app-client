@@ -77,6 +77,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (Tools.hasInternetConnection()) {
+                    System.out.println("pass1");
                     TokenBody tokenBody = new TokenBody(usernameEditText.getText().toString(), passwordEditText.getText().toString());
                     loginModel.login(tokenBody);
                     loginModel.getUserLiveData().observe(getActivity(), user -> {
@@ -89,6 +90,7 @@ public class LoginFragment extends Fragment {
                     });
 
                 } else {
+                    System.out.println("pass2");
                     Toast.makeText(App.context, "No internet connetion available !", Toast.LENGTH_LONG).show();
                 }
             }

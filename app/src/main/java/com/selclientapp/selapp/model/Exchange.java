@@ -156,7 +156,7 @@ public class Exchange implements Parcelable {
         return category;
     }
 
-    public void setCategory(String category){
+    public void setCategory(String category) {
         this.category = category;
     }
 

@@ -45,8 +45,8 @@ public class LoginAndSignUpViewModel extends ViewModel {
         userLiveData = userRepo.updateUser(user);
     }
 
-    public void uploadImage(File file) {
-        userLiveData = userRepo.uploadImageTest(file);
+    public void uploadImage(File file,String avatarUrl) {
+        userLiveData = userRepo.uploadImageTest(file, avatarUrl);
     }
 
     public LiveData<User> getUserLiveData() {

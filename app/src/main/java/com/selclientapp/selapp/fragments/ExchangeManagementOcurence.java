@@ -150,8 +150,6 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
-                callback.refreshExchange();
-                callback.restartLoader();
                 final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
             }

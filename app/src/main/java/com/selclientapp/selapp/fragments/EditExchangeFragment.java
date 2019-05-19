@@ -1,7 +1,6 @@
 package com.selclientapp.selapp.fragments;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 
-import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
 
 public class EditExchangeFragment extends AddExchangeFragment {
@@ -47,8 +45,6 @@ public class EditExchangeFragment extends AddExchangeFragment {
                 exchangeViewModel.updateExchange(exchange);
                 exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
                     getActivity().onBackPressed();
-                    callbackExchangeListener.restartLoader();
-                    callbackExchangeListener.refreshExchange();
                     final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
                 });

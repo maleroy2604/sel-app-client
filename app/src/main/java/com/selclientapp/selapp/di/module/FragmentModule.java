@@ -1,12 +1,13 @@
 package com.selclientapp.selapp.di.module;
 
 import com.selclientapp.selapp.fragments.AddExchangeFragment;
+import com.selclientapp.selapp.fragments.DetailExchangeFragment;
 import com.selclientapp.selapp.fragments.EditExchangeFragment;
-import com.selclientapp.selapp.fragments.EditImageProfileFragment;
 import com.selclientapp.selapp.fragments.EditProfileFragment;
 import com.selclientapp.selapp.fragments.ExchangeFragment;
 import com.selclientapp.selapp.fragments.ExchangeManagementOcurence;
 import com.selclientapp.selapp.fragments.LoginFragment;
+import com.selclientapp.selapp.fragments.NoConnexionFragment;
 import com.selclientapp.selapp.fragments.SignUpFragment;
 
 import dagger.Module;
@@ -24,9 +25,6 @@ public abstract class FragmentModule {
     abstract EditProfileFragment contributeEditProfile();
 
     @ContributesAndroidInjector
-    abstract EditImageProfileFragment contributeEditImageProfileFragment();
-
-    @ContributesAndroidInjector
     abstract ExchangeFragment contributeExchangeFragment();
 
     @ContributesAndroidInjector
@@ -37,4 +35,10 @@ public abstract class FragmentModule {
 
     @ContributesAndroidInjector
     abstract EditExchangeFragment contributeEditExchange();
+
+    @ContributesAndroidInjector
+    abstract NoConnexionFragment contributeNoConnexionFragment();
+
+    @ContributesAndroidInjector
+    abstract DetailExchangeFragment contributeDetailExchangeFragment();
 }

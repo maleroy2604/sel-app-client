@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -151,23 +152,20 @@ public class EditProfileFragment extends Fragment {
                         oldPasswordEdit.getText().toString(),
                         emailEdit.getText().toString()
                 );
-
                 if (!(image == null)) {
                     updateImageOnly();
-                    updateUserInfo();
                 } else {
                     updateUserInfo();
                 }
-                backToActivity();
             }
         });
 
     }
 
     private void updateImageOnly() {
-        loginAndSignUpViewModel.uploadImage(image);
-        loginAndSignUpViewModel.getUserLiveData().observe(getActivity(), user2 -> {
-            managementTokenAndUSer.saveUser(user2);
+        loginAndSignUpViewModel.uploadImage(image, managementTokenAndUSer.getCurrentUser().getAvatarurl());
+        loginAndSignUpViewModel.getUserLiveData().observe(getActivity(), user -> {
+            updateUserInfo();
         });
     }
 
@@ -186,6 +184,7 @@ public class EditProfileFragment extends Fragment {
         loginAndSignUpViewModel.updateUser(userEdited);
         loginAndSignUpViewModel.getUserLiveData().observe(getActivity(), user1 -> {
             managementTokenAndUSer.saveUser(user1);
+            backToActivity();
         });
     }
 
@@ -210,8 +209,6 @@ public class EditProfileFragment extends Fragment {
 
     private void backToActivity() {
         getActivity().onBackPressed();
-        callback.refreshExchange();
-        callback.restartLoader();
         final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }
@@ -403,6 +400,4 @@ public class EditProfileFragment extends Fragment {
         callback = null;
         super.onDetach();
     }
-
-
 }

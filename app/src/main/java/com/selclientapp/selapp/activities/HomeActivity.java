@@ -33,15 +33,19 @@ import com.google.android.material.navigation.NavigationView;
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.fragments.AddExchangeFragment;
 
-import com.selclientapp.selapp.fragments.EditImageProfileFragment;
 import com.selclientapp.selapp.fragments.EditProfileFragment;
 import com.selclientapp.selapp.fragments.ExchangeFragment;
+import com.selclientapp.selapp.fragments.NoConnexionFragment;
+import com.selclientapp.selapp.fragments.SortingBottomSheetFragment;
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 import com.selclientapp.selapp.utils.ExchangeListener;
+import com.selclientapp.selapp.utils.Tools;
 import com.selclientapp.selapp.view_models.LoginAndSignUpViewModel;
 
 import javax.inject.Inject;
+
+import androidx.fragment.app.FragmentManager;
 
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -90,7 +94,12 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         ButterKnife.bind(this);
         this.configureDagger();
         this.configureBottomNavBar(actionBar);
-        this.showExchangeFragment(savedInstanceState);
+        if (Tools.hasInternetConnection()) {
+            this.showExchangeFragment();
+        } else {
+            this.showNoConnexionFragment();
+        }
+
         this.configViewModel();
     }
 
@@ -114,15 +123,27 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
             public boolean onNavigationItemSelected(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_add:
-                        showAddExchangeFragment();
+                        if (Tools.hasInternetConnection()) {
+                            showAddExchangeFragment();
+                        } else {
+                            showNoConnexionFragment();
+                        }
+
                         break;
 
-                    case R.id.action_log_out:
+                    case R.id.action_sorting:
+                        SortingBottomSheetFragment bottomSheet = new SortingBottomSheetFragment();
+                        bottomSheet.show(getSupportFragmentManager(), "sortingBottomSheet");
                         break;
 
                     case R.id.action_home:
-                        getSupportFragmentManager().popBackStack();
-                        actionBar.show();
+                        if (Tools.hasInternetConnection()) {
+                            getSupportFragmentManager().popBackStack();
+                            actionBar.show();
+                        } else {
+                            showNoConnexionFragment();
+                        }
+
                         break;
                 }
                 return true;
@@ -136,11 +157,19 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         inflater.inflate(R.menu.search_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
+        ExchangeFragment exchangeFragment = (ExchangeFragment) getSupportFragmentManager().findFragmentByTag("fragment_exchange");
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                animeSlideDown();
+                if (exchangeFragment.getBtnCloseSorting().getVisibility() == View.VISIBLE) {
+                    searchView.setIconified(true);
+                    SortingBottomSheetFragment bottomSheet = new SortingBottomSheetFragment();
+                    bottomSheet.show(getSupportFragmentManager(), "sortingBottomSheet");
+                } else {
+                    animeSlideDown();
+                }
             }
+
         });
 
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
@@ -184,7 +213,12 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
                 });
                 break;
             case R.id.nav_edit_profile:
-                showEditProfileFragment();
+                if (Tools.hasInternetConnection()) {
+                    showEditProfileFragment();
+                } else {
+                    showNoConnexionFragment();
+                }
+
                 break;
         }
 
@@ -202,7 +236,6 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         navigationView = findViewById(R.id.nav_view);
         headerLayout = navigationView.getHeaderView(0);
         imgHeaderDrawer = headerLayout.findViewById(R.id.image_view_profile);
-        configImgHeaderDrawer();
         profileName = headerLayout.findViewById(R.id.profile_name);
         profileHours = headerLayout.findViewById(R.id.hours_profile);
         imageViewProfile.setOnClickListener(new View.OnClickListener() {
@@ -213,32 +246,19 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         });
     }
 
-    public void configImgHeaderDrawer() {
-        imgHeaderDrawer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showEditImageFragment();
-                drawer.closeDrawer(GravityCompat.START);
-            }
-        });
-    }
-
     // -----------------
     // ACTION
     // -----------------
 
     @Override
     public void onBackPressed() {
-        int count = getSupportFragmentManager().getBackStackEntryCount();
-        if (count != 0) {
-            getSupportFragmentManager().popBackStack();
-            bottomNavigationView.setSelectedItemId(R.id.action_home);
-            ActionBar actionBar = (this).getSupportActionBar();
-            actionBar.show();
-            setElemProfile();
-            animeSlideUp();
-        }
-
+        restartLoader();
+        refreshExchange();
+        setElemProfile();
+        bottomNavigationView.setSelectedItemId(R.id.action_home);
+        ActionBar actionBar = (this).getSupportActionBar();
+        actionBar.show();
+        animeSlideUp();
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
@@ -250,13 +270,11 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
                 .add(R.id.fragment_home_container, fragment, "fragment_add_exchange").addToBackStack("fragment_add_exchange").commit();
     }
 
-    private void showExchangeFragment(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            ExchangeFragment fragment = new ExchangeFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_home_container, fragment, "fragment_exchange")
-                    .commit();
-        }
+    private void showExchangeFragment() {
+        ExchangeFragment fragment = new ExchangeFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_home_container, fragment, "fragment_exchange")
+                .commit();
     }
 
     private void showEditProfileFragment() {
@@ -265,22 +283,25 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
                 .add(R.id.fragment_home_container, fragment, "fragment_edit_profile").addToBackStack("fragment_edit_profile").commit();
     }
 
-    private void showEditImageFragment() {
-        EditImageProfileFragment fragment = new EditImageProfileFragment();
+    private void showNoConnexionFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        NoConnexionFragment fragment = new NoConnexionFragment();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_home_container, fragment, "fragment_edit_image_profile").addToBackStack("fragment_edit_image_profile").commit();
+                .add(R.id.fragment_home_container, fragment, "fragment_no_connexion").addToBackStack("fragment_no_connexion").commit();
     }
+
 
     @Override
     public void restartLoader() {
         ExchangeFragment exchangeFragment = (ExchangeFragment) getSupportFragmentManager().findFragmentByTag("fragment_exchange");
-        exchangeFragment.refreshExchanges();
+        exchangeFragment.restartLoader();
     }
 
     @Override
     public void refreshExchange() {
         ExchangeFragment exchangeFragment = (ExchangeFragment) getSupportFragmentManager().findFragmentByTag("fragment_exchange");
-        exchangeFragment.restartLoader();
+        exchangeFragment.refreshExchanges();
     }
 
     @Override

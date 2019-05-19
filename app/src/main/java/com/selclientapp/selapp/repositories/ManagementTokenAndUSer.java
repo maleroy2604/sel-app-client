@@ -14,7 +14,6 @@ import com.selclientapp.selapp.model.User;
 
 import java.lang.reflect.Type;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.selclientapp.selapp.App.context;
 
 public class ManagementTokenAndUSer {
@@ -23,7 +22,6 @@ public class ManagementTokenAndUSer {
     private SharedPreferences.Editor editor;
     private Gson gson;
     private User user;
-
 
     public ManagementTokenAndUSer() {
         pref = PreferenceManager.getDefaultSharedPreferences(context);

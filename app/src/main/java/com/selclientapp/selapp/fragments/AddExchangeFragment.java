@@ -3,6 +3,7 @@ package com.selclientapp.selapp.fragments;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -252,8 +253,6 @@ public class AddExchangeFragment extends Fragment implements AdapterView.OnItemS
                 exchangeViewModel.AddExchange(exchange);
                 exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
                     getActivity().onBackPressed();
-                    callbackExchangeListener.restartLoader();
-                    callbackExchangeListener.refreshExchange();
                     final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
                 });

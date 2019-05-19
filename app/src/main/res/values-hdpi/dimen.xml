@@ -2,4 +2,5 @@
 <resources>
     <dimen name="button_image_height">24dip</dimen>
     <dimen name="button_image_width">@dimen/button_image_height</dimen>
+    <dimen name="linear_container_btn_detail_exchange">200dip</dimen>
 </resources>

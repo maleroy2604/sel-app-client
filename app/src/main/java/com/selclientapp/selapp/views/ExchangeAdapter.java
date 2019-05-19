@@ -55,14 +55,19 @@ public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> im
         return this.exchanges.size();
     }
 
-    public Exchange getExchange(int possition) {
-        return this.exchanges.get(possition);
+    public Exchange getExchange(int position) {
+        return this.exchanges.get(position);
+    }
+
+    public List<Exchange> getExchanges() {
+        return this.exchangesIsFull;
     }
 
     @Override
     public Filter getFilter() {
         return exchangeFilter;
     }
+
 
     private Filter exchangeFilter = new Filter() {
         @Override
@@ -92,9 +97,14 @@ public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> im
     };
 
     public void updateList(List<Exchange> exchanges) {
-        this.exchangesIsFull.clear();
-        this.exchangesIsFull.addAll(exchanges);
+        this.exchanges.clear();
+        this.exchanges.addAll(exchanges);
         notifyDataSetChanged();
+    }
+
+    // method test
+    public void testResetList() {
+        updateList(exchangesIsFull);
     }
 
 }

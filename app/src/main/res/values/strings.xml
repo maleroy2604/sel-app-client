@@ -12,6 +12,14 @@
     <string name="image_profile">Image profile.</string>
     <string name="choose_a_picture">Choose a picture .</string>
     <string name="update_image">update image</string>
+    <string name="end_date">End Date</string>
+    <string name="start_date">Start Date</string>
+    <string name="search">Search</string>
+    <string name="no_internet_connexion_available">No internet connexion available</string>
+    <string name="retry">Retry</string>
+    <string name="enroll">Enroll</string>
+    <string name="withdraw">Withdraw</string>
+
     <string-array name="category_array">
         <item>no category selected</item>
         <item> bricolage </item>
