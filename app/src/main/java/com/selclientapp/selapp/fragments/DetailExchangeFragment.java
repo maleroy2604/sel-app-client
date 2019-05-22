@@ -67,6 +67,7 @@ public class DetailExchangeFragment extends Fragment {
     private ExchangeOcurenceViewModel exchangeOcurenceViewModel;
     private Exchange exchange;
     ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
+    ExchangeFragment exchangeFragment;
 
 
     @Override
@@ -117,12 +118,13 @@ public class DetailExchangeFragment extends Fragment {
     }
 
     private void configImgBack() {
-        String shortcuts[] = App.context.getResources().getStringArray(R.array.category_array);
-        if (exchange.getCategory().equals(shortcuts[0].toLowerCase())) {
+        if(exchange.getCategory() == null){
             imageBck.setImageResource(R.drawable.sel);
-        } else {
-            Glide.with(this).load(App.URL_SERVER + "imageexchange/" + exchange.getCategory() + ".jpg").into((imageBck));
+        }else{
+            Glide.with(this).load(App.URL_SERVER + "imagecategory/" + exchange.getCategory() + ".jpeg").into((imageBck));
+
         }
+
     }
 
     private void configBackArrow() {
@@ -200,6 +202,7 @@ public class DetailExchangeFragment extends Fragment {
                     exchange.addExchangeOcurence(exchangeOcurence);
                     setTextViexCapacity();
                     addExchangeOcurence(exchangeOcurence);
+                    updateExchangeFragment();
                     configOptWithdraw();
                 }
             }
@@ -216,6 +219,7 @@ public class DetailExchangeFragment extends Fragment {
                     exchange.removeExchangeOcurecne(exchangeOcurence);
                     setTextViexCapacity();
                     deleteExchangeOcurence(exchangeOcurence);
+                    updateExchangeFragment();
                     configOptEnroll();
                 }
             }
@@ -268,5 +272,10 @@ public class DetailExchangeFragment extends Fragment {
         bottomNavigationView.setVisibility(View.GONE);
         getFragmentManager().beginTransaction()
                 .add(R.id.fragment_home_container, fragment, null).addToBackStack("fragment_edit_exchange").commit();
+    }
+
+    private void updateExchangeFragment() {
+        exchangeFragment = (ExchangeFragment) getFragmentManager().findFragmentByTag("fragment_exchange");
+        exchangeFragment.updateExchangeToList(exchange);
     }
 }

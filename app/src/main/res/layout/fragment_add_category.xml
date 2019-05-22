@@ -1,0 +1,83 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/custom_background"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:id="@+id/header_add_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="21dp">
+
+        <include
+            android:id="@+id/header_view"
+            layout="@layout/header_view" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="176dp"
+            android:layout_height="176dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:elevation="12dp">
+
+            <ImageView
+                android:id="@+id/image_category"
+                android:layout_width="match_parent"
+                android:layout_height="176dp"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/foto_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Choose a picture ."
+                android:textColor="@color/colorBackgroundExchange" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/enter_the_category_name"
+            android:textColor="@color/colorExchangeItem"
+            android:textSize="20sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fragment_add_category_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="flagNoExtractUi"
+            app:errorEnabled="true"
+            app:errorTextAppearance="@color/colorExchangeItem"
+            app:passwordToggleEnabled="true"
+            app:theme="@style/TextInputLayoutAppearance">
+
+            <EditText
+                android:id="@+id/fragment_add_category_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/category"
+                android:imeOptions="flagNoExtractUi"
+                android:textColor="@color/colorExchangeItem"
+                app:theme="@style/MyEditText" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_add_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/shadow"
+            android:text="@string/add_category"
+            app:theme="@style/buttonStyle" />
+
+    </LinearLayout>
+
+
+</ScrollView>

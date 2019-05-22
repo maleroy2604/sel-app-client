@@ -13,20 +13,27 @@ import android.widget.DatePicker;
 import android.widget.ImageButton;
 
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.selclientapp.selapp.App;
 import com.selclientapp.selapp.R;
+import com.selclientapp.selapp.model.Category;
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.utils.Tools;
+import com.selclientapp.selapp.view_models.ExchangeViewModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.support.AndroidSupportInjection;
 
 public class SortingBottomSheetFragment extends BottomSheetDialogFragment implements AdapterView.OnItemSelectedListener {
 
@@ -41,28 +48,43 @@ public class SortingBottomSheetFragment extends BottomSheetDialogFragment implem
     Button btnSearch;
 
     //FOR DATA
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
+    protected ExchangeViewModel exchangeViewModel;
     private DatePickerDialog.OnDateSetListener mDateStartSetListener, mDateEndSetListener;
     private String dateEndSorting, dateStartSorting, category;
     private Date dateStart, dateEnd;
     private List<Exchange> exchangesIsFull;
     private ExchangeFragment exchangeFragment;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sorting, container, false);
         ButterKnife.bind(this, view);
+        configureDagger();
         configElemview();
         getExchangeList();
         return view;
+    }
+
+    private void configureDagger() {
+        AndroidSupportInjection.inject(this);
+    }
+
+    private void configViewModel() {
+        exchangeViewModel = ViewModelProviders.of(this, viewModelFactory).get(ExchangeViewModel.class);
     }
 
     private void configElemview() {
         configBtnSearch();
         configBtnEndDate();
         btnEndDate.setEnabled(false);
+        configViewModel();
         configBtnStartDate();
         configureSpinner();
     }
+
 
     private void configBtnSearch() {
         btnSearch.setOnClickListener(new View.OnClickListener() {
@@ -161,11 +183,15 @@ public class SortingBottomSheetFragment extends BottomSheetDialogFragment implem
     }
 
     private void configureSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.category_array, R.layout.cunstom_spinner);
-        spinnerCategory.getBackground().setColorFilter(getResources().getColor(R.color.colorText), PorterDuff.Mode.SRC_ATOP);
-        spinnerCategory.setAdapter(adapter);
-        spinnerCategory.setOnItemSelectedListener(this);
+        exchangeViewModel.getAllCategory();
+        exchangeViewModel.getCategoryList().observe(this, categories -> {
+            System.out.println("categories " + categories);
+            ArrayAdapter<Category> adapter = new ArrayAdapter<>(getActivity(), R.layout.cunstom_spinner, categories);
+            spinnerCategory.getBackground().setColorFilter(getResources().getColor(R.color.colorText), PorterDuff.Mode.SRC_ATOP);
+            spinnerCategory.setAdapter(adapter);
+            spinnerCategory.setOnItemSelectedListener(this);
+        });
+
     }
 
     private void getExchangeList() {
@@ -174,21 +200,18 @@ public class SortingBottomSheetFragment extends BottomSheetDialogFragment implem
     }
 
     private List<Exchange> sortingListExchange() {
-        String shortcuts[] = App.context.getResources().getStringArray(R.array.category_array);
         List<Exchange> filteredList = new ArrayList<>();
-        if (dateStart == null && category.equals((shortcuts[0].toLowerCase()))) {
+        if (dateStart == null && category == null) {
             filteredList.addAll(exchangesIsFull);
         } else {
             for (Exchange item : exchangesIsFull) {
                 Date exchangeDate = Tools.getDate(item.getDate());
-                System.out.println("exchangeDate" + exchangeDate);
-                System.out.println("dateStart" + dateStart);
                 if (dateStart == null) {
                     if (item.getCategory().equals(category)) {
                         filteredList.add(item);
                     }
                 } else {
-                    if (dateStart.compareTo(exchangeDate) < 0 && category == null && dateEnd == null) {
+                    if (dateStart.compareTo(exchangeDate) <= 0 && dateEnd == null) {
                         filteredList.add(item);
                     } else {
                         if (dateEnd == null && dateStart.compareTo(exchangeDate) <= 0 && item.getCategory().equals(category)) {

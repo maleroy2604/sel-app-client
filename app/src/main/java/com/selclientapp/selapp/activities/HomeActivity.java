@@ -30,7 +30,9 @@ import androidx.appcompat.widget.SearchView;
 
 
 import com.google.android.material.navigation.NavigationView;
+import com.selclientapp.selapp.App;
 import com.selclientapp.selapp.R;
+import com.selclientapp.selapp.fragments.AddCategoryFragment;
 import com.selclientapp.selapp.fragments.AddExchangeFragment;
 
 import com.selclientapp.selapp.fragments.EditProfileFragment;
@@ -74,6 +76,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     ViewModelProvider.Factory viewModelFactory;
     private LoginAndSignUpViewModel loginModel;
     private ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
+    ExchangeFragment exchangeFragment;
 
 
     @Inject
@@ -157,7 +160,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         inflater.inflate(R.menu.search_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
-        ExchangeFragment exchangeFragment = (ExchangeFragment) getSupportFragmentManager().findFragmentByTag("fragment_exchange");
+        exchangeFragment = (ExchangeFragment) getSupportFragmentManager().findFragmentByTag("fragment_exchange");
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -215,10 +218,13 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
             case R.id.nav_edit_profile:
                 if (Tools.hasInternetConnection()) {
                     showEditProfileFragment();
+
                 } else {
                     showNoConnexionFragment();
                 }
-
+                break;
+            case R.id.nav_new_category:
+                showAddCategoryFragment();
                 break;
         }
 
@@ -252,9 +258,12 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
 
     @Override
     public void onBackPressed() {
-        restartLoader();
-        refreshExchange();
-        setElemProfile();
+        exchangeFragment = (ExchangeFragment) getSupportFragmentManager().findFragmentByTag("fragment_exchange");
+        if (!(exchangeFragment.getBtnCloseSorting().getVisibility() == View.VISIBLE)) {
+            restartLoader();
+            refreshExchange();
+            setElemProfile();
+        }
         bottomNavigationView.setSelectedItemId(R.id.action_home);
         ActionBar actionBar = (this).getSupportActionBar();
         actionBar.show();
@@ -289,6 +298,11 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         NoConnexionFragment fragment = new NoConnexionFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_home_container, fragment, "fragment_no_connexion").addToBackStack("fragment_no_connexion").commit();
+    }
+
+    private void showAddCategoryFragment() {
+        AddCategoryFragment fragment = new AddCategoryFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_home_container, fragment, "add_fragment_category").addToBackStack("add_fragment_category").commit();
     }
 
 

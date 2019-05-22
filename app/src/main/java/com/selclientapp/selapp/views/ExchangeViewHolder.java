@@ -53,7 +53,6 @@ public class ExchangeViewHolder extends RecyclerView.ViewHolder {
     public void updateWithExchange(Exchange exchange, ExchangeAdapter.Listener callback) {
         String dateExchange = exchange.getDate().substring(0, 10);
         String timeExchange = exchange.getDate().substring(10, 16);
-        String shortcuts[] = App.context.getResources().getStringArray(R.array.category_array);
 
         this.textViewName.setText(String.format(exchange.getName()).toUpperCase());
         this.textViewAuthor.setText(String.format(exchange.getOwnerName()));
@@ -61,10 +60,10 @@ public class ExchangeViewHolder extends RecyclerView.ViewHolder {
         this.textViewCapacity.setText(String.format(exchange.getCurrentCapacity() + "/" + exchange.getCapacity()));
         this.callbackWeakRef = new WeakReference<>(callback);
         Glide.with(App.context).load(exchange.getAvatarUrl()).into(imageProfile);
-        if (exchange.getCategory().equals(shortcuts[0].toLowerCase())) {
+        if (exchange.getCategory() == null) {
             imageBck.setImageResource(R.drawable.sel);
         } else {
-            Glide.with(App.context).load(App.URL_SERVER + "imageexchange/" + exchange.getCategory().toLowerCase() + ".jpg").into(imageBck);
+            Glide.with(App.context).load(App.URL_SERVER + "imagecategory/" + exchange.getCategory().toLowerCase() + ".jpeg").into(imageBck);
         }
         configHoriz();
     }
@@ -80,4 +79,3 @@ public class ExchangeViewHolder extends RecyclerView.ViewHolder {
         });
     }
 }
-

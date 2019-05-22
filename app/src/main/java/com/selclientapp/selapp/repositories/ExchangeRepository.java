@@ -4,16 +4,21 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.selclientapp.selapp.api.ExchangeWebService;
-import com.selclientapp.selapp.fragments.ExchangeFragment;
+import com.selclientapp.selapp.model.Category;
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.utils.NumberLimits;
 import com.selclientapp.selapp.utils.Tools;
 
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -110,6 +115,59 @@ public class ExchangeRepository {
 
                 @Override
                 public void onFailure(Call<Exchange> call, Throwable t) {
+
+                }
+            });
+        });
+        return data;
+    }
+
+    public void addCategory(File file, String category) {
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file));
+        executor.execute(() -> {
+            Category cat =  new Category(category);
+            exchangeWebService.addCategoryName(cat).enqueue(new Callback<Category>() {
+                @Override
+                public void onResponse(Call<Category> call, Response<Category> response) {
+                    if(response.isSuccessful()){
+                        executor.execute(() -> {
+                            exchangeWebService.uploadCategory(filePart).enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                }
+                            });
+                        });
+                    }else{
+                        Tools.backgroundThreadShortToast("This category already exists");
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<Category> call, Throwable t) {
+
+                }
+            });
+        });
+    }
+
+    public MutableLiveData<List<Category>> getAllCategory() {
+        MutableLiveData<List<Category>> data = new MutableLiveData<>();
+        executor.execute(() -> {
+            exchangeWebService.getAllCategory().enqueue(new Callback<List<Category>>() {
+                @Override
+                public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+                    data.postValue(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<List<Category>> call, Throwable t) {
 
                 }
             });

@@ -28,9 +28,6 @@ public class OcurenceViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.fragment_management_hours)
     EditText hours;
 
-    @BindView(R.id.fragment_management_delete)
-    ImageButton delete;
-
     @BindView(R.id.fragment_management_send_hours)
     Button sendHours;
 
@@ -50,7 +47,7 @@ public class OcurenceViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void configElemView(ExchangeOcurence exchangeOcurence) {
-        sendHours.setEnabled(false);
+        //sendHours.setEnabled(false);
         hours.addTextChangedListener(watchHours);
         sendHours.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,16 +64,6 @@ public class OcurenceViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                OcurenceAdapter.Listener callback = callbackWeakRef.get();
-
-                if (callback != null) {
-                    callback.onClickRemoveParticipant(getAdapterPosition());
-                }
-            }
-        });
     }
 
     TextWatcher watchHours = new TextWatcher() {
@@ -87,8 +74,8 @@ public class OcurenceViewHolder extends RecyclerView.ViewHolder {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String hour = hours.getText().toString().trim();
-            sendHours.setEnabled(!(hour.isEmpty()));
+           // String hour = hours.getText().toString().trim();
+            //sendHours.setEnabled(!(hour.isEmpty()));
         }
 
         @Override

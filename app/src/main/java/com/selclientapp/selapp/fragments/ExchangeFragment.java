@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.selclientapp.selapp.R;
+import com.selclientapp.selapp.model.Category;
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.model.ExchangeOcurence;
 import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
@@ -70,7 +71,6 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
         View view = inflater.inflate(R.layout.fragment_exchange, container, false);
         ButterKnife.bind(this, view);
         this.configureDagger();
-        this.configOnclickRecyclerView();
         return view;
     }
 
@@ -78,6 +78,7 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.configureViewmodel();
+        this.configOnclickRecyclerView();
     }
 
     // -----------------
@@ -294,8 +295,13 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
     }
 
     private void showDetailExchangeFragment(DetailExchangeFragment fragment) {
-        getFragmentManager().beginTransaction()
-                .add(R.id.fragment_home_container, fragment, null).addToBackStack("fragment_exchange_detail").commit();
+        if (Tools.hasInternetConnection()) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.fragment_home_container, fragment, null).addToBackStack("fragment_exchange_detail").commit();
+        } else {
+            showNoConnexionFragment();
+        }
+
     }
 
     private void showNoConnexionFragment() {
@@ -387,6 +393,5 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
     public ImageButton getBtnCloseSorting() {
         return imgBtnCloseSorting;
     }
-
 }
 

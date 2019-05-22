@@ -14,7 +14,7 @@ import com.selclientapp.selapp.di.component.DaggerAppComponent;
 
 public class App extends Application implements HasActivityInjector {
 
-    public static final String URL_SERVER = "https://sel-app.herokuapp.com/";
+    public static final String URL_SERVER ="http://10.0.2.2:5000/";
     //"https://sel-app.herokuapp.com/"
     //"http://10.0.2.2:5000/"
 
@@ -31,8 +31,8 @@ public class App extends Application implements HasActivityInjector {
         context = getApplicationContext();
     }
 
-    public DispatchingAndroidInjector<Activity> activityInjector() {
     @Override
+    public DispatchingAndroidInjector<Activity> activityInjector() {
         return dispatchingAndroidInjector;
     }
 

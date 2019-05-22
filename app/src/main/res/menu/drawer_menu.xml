@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:title="Actions">
+    <group android:title="@string/actions">
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout"
-            android:title="Log Out" />
+            android:title="@string/log_out" />
 
         <item
             android:id="@+id/nav_edit_profile"
             android:icon="@drawable/ic_person"
-            android:title="Edit Profile" />
+            android:title="@string/edit_profile" />
+
+        <item
+            android:id="@+id/nav_new_category"
+            android:icon="@drawable/ic_add_circle_outline_white"
+            android:title="@string/create_a_new_category" />
+
     </group>
 
 </menu>

@@ -1,5 +1,6 @@
 package com.selclientapp.selapp.di.module;
 
+import com.selclientapp.selapp.fragments.AddCategoryFragment;
 import com.selclientapp.selapp.fragments.AddExchangeFragment;
 import com.selclientapp.selapp.fragments.DetailExchangeFragment;
 import com.selclientapp.selapp.fragments.EditExchangeFragment;
@@ -9,6 +10,7 @@ import com.selclientapp.selapp.fragments.ExchangeManagementOcurence;
 import com.selclientapp.selapp.fragments.LoginFragment;
 import com.selclientapp.selapp.fragments.NoConnexionFragment;
 import com.selclientapp.selapp.fragments.SignUpFragment;
+import com.selclientapp.selapp.fragments.SortingBottomSheetFragment;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -40,5 +42,11 @@ public abstract class FragmentModule {
     abstract NoConnexionFragment contributeNoConnexionFragment();
 
     @ContributesAndroidInjector
+    abstract AddCategoryFragment contributeAddCategoryFragment();
+
+    @ContributesAndroidInjector
     abstract DetailExchangeFragment contributeDetailExchangeFragment();
+
+    @ContributesAndroidInjector()
+    abstract SortingBottomSheetFragment contributeSortingBottomSheet();
 }

@@ -3,7 +3,6 @@ package com.selclientapp.selapp.fragments;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -33,7 +32,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.selclientapp.selapp.App;
 import com.selclientapp.selapp.R;
+import com.selclientapp.selapp.model.Category;
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 import com.selclientapp.selapp.utils.ExchangeListener;
@@ -41,8 +42,10 @@ import com.selclientapp.selapp.view_models.ExchangeViewModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -84,7 +87,7 @@ public class AddExchangeFragment extends Fragment implements AdapterView.OnItemS
     @BindView(R.id.fragment_arrow)
     ImageButton imgArrowBack;
     @BindView(R.id.spinner_ex_edit)
-    Spinner spinner;
+    protected Spinner spinner;
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private TimePickerDialog.OnTimeSetListener mTimeSetListener;
@@ -390,12 +393,15 @@ public class AddExchangeFragment extends Fragment implements AdapterView.OnItemS
 
     }
 
-    private void configureSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.category_array, R.layout.cunstom_spinner);
-        spinner.getBackground().setColorFilter(getResources().getColor(R.color.colorText), PorterDuff.Mode.SRC_ATOP);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+    protected void configureSpinner() {
+        exchangeViewModel.getAllCategory();
+        exchangeViewModel.getCategoryList().observe(this, categories -> {
+            categories.add(0, new Category(null));
+            ArrayAdapter<Category> adapter = new ArrayAdapter<>(getActivity(), R.layout.cunstom_spinner, categories);
+            spinner.getBackground().setColorFilter(getResources().getColor(R.color.colorText), PorterDuff.Mode.SRC_ATOP);
+            spinner.setAdapter(adapter);
+            spinner.setOnItemSelectedListener(this);
+        });
     }
     // -----------------
     // UTILS
@@ -428,7 +434,9 @@ public class AddExchangeFragment extends Fragment implements AdapterView.OnItemS
         } else if (Integer.parseInt(editText) < 2) {
             textInputLayout.setError("Must be superior to one");
             return false;
-
+        } else if (Integer.parseInt(editText) > 300) {
+            textInputLayout.setError("Capacity is limited to 300");
+            return false;
         } else {
             textInputLayout.setError("");
             return true;

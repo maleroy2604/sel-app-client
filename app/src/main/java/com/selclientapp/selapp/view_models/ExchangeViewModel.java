@@ -3,18 +3,23 @@ package com.selclientapp.selapp.view_models;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.selclientapp.selapp.model.Category;
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.repositories.ExchangeRepository;
 import com.selclientapp.selapp.utils.NumberLimits;
 
+import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import okhttp3.ResponseBody;
 
 public class ExchangeViewModel extends ViewModel {
     private ExchangeRepository exchangeRepository;
     private LiveData<List<Exchange>> allExchanges;
     private LiveData<Exchange> exchangeLiveData;
+    private LiveData<List<Category>> categoryList;
 
     @Inject
     public ExchangeViewModel(ExchangeRepository exchangeRepository) {
@@ -35,6 +40,18 @@ public class ExchangeViewModel extends ViewModel {
 
     public void updateExchange(Exchange exchange) {
         exchangeLiveData = exchangeRepository.updateExchange(exchange);
+    }
+
+    public void addCategoryExchange(File file, String categoryName){
+       exchangeRepository.addCategory(file,categoryName);
+    }
+
+    public void getAllCategory(){
+        categoryList = exchangeRepository.getAllCategory();
+    }
+
+    public LiveData<List<Category>> getCategoryList() {
+        return categoryList;
     }
 
     public LiveData<List<Exchange>> getAllExchanges() {

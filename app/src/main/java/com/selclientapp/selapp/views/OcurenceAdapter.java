@@ -15,7 +15,6 @@ public class OcurenceAdapter extends RecyclerView.Adapter<OcurenceViewHolder> {
 
     public interface Listener {
         void onClickSendHours(int position);
-        void onClickRemoveParticipant(int position);
     }
 
     //FOR DATA

@@ -93,12 +93,6 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
         updateExchangeOcurence(exchangeOcurence);
     }
 
-    @Override
-    public void onClickRemoveParticipant(int position) {
-        ExchangeOcurence exchangeOcurence = ocurenceAdapter.getExchangeOcurence(position);
-        deleteExchangeOcurence(exchangeOcurence);
-    }
-
     // -----------------
     // CONFIGURATION
     // -----------------
@@ -125,16 +119,10 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
         });
     }
 
-    private void deleteExchangeOcurence(ExchangeOcurence exchangeOcurence) {
-        exchangeOcurenceViewModel.deleteExchangeOcurence(exchangeOcurence);
-        exchangeOcurenceViewModel.getExchangeOcurenceLiveData().observe(this, ocurence -> {
-            refreshExchangeOcurence(exchangeOcurence.getExchangeId());
-        });
-    }
-
     private void refreshExchangeOcurence(Integer exchangeId) {
         exchangeOcurenceViewModel.getAllExchangeOcurence(exchangeId);
         exchangeOcurenceViewModel.getListExchangeOcurence().observe(this, ocurences -> {
+            System.out.println(ocurences);
             updateUi(ocurences);
         });
     }

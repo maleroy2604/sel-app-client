@@ -19,11 +19,11 @@
     <string name="retry">Retry</string>
     <string name="enroll">Enroll</string>
     <string name="withdraw">Withdraw</string>
-
-    <string-array name="category_array">
-        <item>no category selected</item>
-        <item> bricolage </item>
-        <item> cuisine </item>
-        <item> jardinage </item>
-    </string-array>
+    <string name="create_a_new_category"> New Category</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="log_out">Log Out</string>
+    <string name="actions">Actions</string>
+    <string name="enter_the_category_name">Enter the category name</string>
+    <string name="add_category">add category</string>
+    <string name="category">Category</string>
 </resources>

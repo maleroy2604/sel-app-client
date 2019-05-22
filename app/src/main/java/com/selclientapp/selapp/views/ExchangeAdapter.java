@@ -101,10 +101,4 @@ public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> im
         this.exchanges.addAll(exchanges);
         notifyDataSetChanged();
     }
-
-    // method test
-    public void testResetList() {
-        updateList(exchangesIsFull);
-    }
-
 }

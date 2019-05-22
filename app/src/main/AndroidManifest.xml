@@ -20,7 +20,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         android:largeHeap="true"
-        tools:targetApi="n">
+        tools:targetApi="24">
         <activity android:name=".activities.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>

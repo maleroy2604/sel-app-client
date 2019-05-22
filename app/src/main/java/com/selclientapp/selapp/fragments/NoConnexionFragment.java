@@ -28,6 +28,7 @@ public class NoConnexionFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.connexion_unable, container, false);
         ButterKnife.bind(this, view);
+        configureDagger();
         configElemView();
         return view;
     }
@@ -54,15 +55,10 @@ public class NoConnexionFragment extends Fragment {
     }
 
     private void showExchangeFragment() {
-        int count = getFragmentManager().getBackStackEntryCount();
-        if (count != 0) {
-            getFragmentManager().popBackStack();
-        } else {
             ExchangeFragment fragment = new ExchangeFragment();
             getFragmentManager().beginTransaction()
                     .add(R.id.fragment_home_container, fragment, "fragment_exchange")
                     .commit();
-        }
     }
 
 

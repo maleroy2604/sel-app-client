@@ -8,7 +8,11 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 
+import com.selclientapp.selapp.model.Category;
 import com.selclientapp.selapp.model.Exchange;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EditExchangeFragment extends AddExchangeFragment {
 
@@ -58,14 +62,28 @@ public class EditExchangeFragment extends AddExchangeFragment {
         exchange.setCapacity(capa);
         exchange.setDate(dateExchange + timeExchange);
         exchange.setName(username.getText().toString());
-        exchange.setDescription(description.getText().toString());
-        exchange.setCategory(category.toLowerCase());
+        if(category != null){
+            exchange.setCategory(category.toLowerCase());
+        }else{
+            exchange.setCategory(null);
+        }
     }
 
     private void configureSpinnerTest() {
-        ArrayAdapter myAdap = (ArrayAdapter) spinner.getAdapter();
-        int spinnerPosition = myAdap.getPosition(exchange.getCategory());
-        spinner.setSelection(spinnerPosition);
+        //spinner.setSelection(spinnerPosition);
+        exchangeViewModel.getAllCategory();
+        exchangeViewModel.getCategoryList().observe(this, categories -> {
+            categories.add(0, new Category(null));
+            List<Category> categoriesList = new ArrayList<>(categories);
+            for(int i=0; i < categoriesList.size(); ++i){
+                if(categoriesList.get(i).getCategory() != null && categoriesList.get(i).getCategory().equals(exchange.getCategory())){
+                   spinner.setSelection(i);
+                }else if (categoriesList.get(i).getCategory() == null){
+                    spinner.setSelection(i);
+                }
+            }
+        });
+
     }
 
 }

@@ -53,8 +53,6 @@ public class ExchangeOcurence {
         this.id = id;
     }
 
-
-
     public void setHours(Integer hours) {
         this.hours = hours;
     }
@@ -62,6 +60,6 @@ public class ExchangeOcurence {
     @NonNull
     @Override
     public String toString() {
-        return id + " " + exchangeId + " " + participantId + " " + participantName;
+        return id + " " + exchangeId + " " + participantId + " " + participantName + "hours " + hours;
     }
 }
