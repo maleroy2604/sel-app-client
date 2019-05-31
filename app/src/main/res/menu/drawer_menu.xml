@@ -16,6 +16,10 @@
             android:id="@+id/nav_new_category"
             android:icon="@drawable/ic_add_circle_outline_white"
             android:title="@string/create_a_new_category" />
+        <item
+            android:id="@+id/nav_my_category"
+            android:icon="@drawable/ic_assignment"
+            android:title="@string/my_category" />
 
     </group>
 

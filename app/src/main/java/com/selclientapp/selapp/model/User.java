@@ -29,9 +29,9 @@ public class User {
     @Expose
     private Integer counterhours;
 
-    @SerializedName("avatarurl")
+    @SerializedName("imagename")
     @Expose
-    private String avatarurl;
+    private String fileName;
 
     public User(String username, String password, String confirmpassword, String email, int counterhours) {
         setUsername(username);
@@ -59,7 +59,7 @@ public class User {
         user.setPassword(user.getPassword());
         user.setEmail(user.getEmail());
         user.setCounterhours(user.getCounterhours());
-        user.setAvatarurl(user.avatarurl);
+        user.setFileName(user.fileName);
     }
 
     public Integer getId() {
@@ -106,12 +106,12 @@ public class User {
         this.confirmpassword = confirmpassword;
     }
 
-    public String getAvatarurl() {
-        return avatarurl;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setAvatarurl(String avatarurl) {
-        this.avatarurl = avatarurl;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     @Override

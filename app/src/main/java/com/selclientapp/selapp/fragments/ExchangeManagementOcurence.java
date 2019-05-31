@@ -41,11 +41,8 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
     //FOR DESIGN
     @BindView(R.id.fragment_exchange_management_recycler_view)
     RecyclerView recyclerView;
-
     @BindView(R.id.fragment_arrow)
     ImageButton imgArrowBack;
-
-
     @BindView(R.id.fragment_title_header)
     TextView titleHeader;
 
@@ -122,7 +119,6 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
     private void refreshExchangeOcurence(Integer exchangeId) {
         exchangeOcurenceViewModel.getAllExchangeOcurence(exchangeId);
         exchangeOcurenceViewModel.getListExchangeOcurence().observe(this, ocurences -> {
-            System.out.println(ocurences);
             updateUi(ocurences);
         });
     }

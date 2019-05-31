@@ -47,18 +47,19 @@ public class OcurenceViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void configElemView(ExchangeOcurence exchangeOcurence) {
-        //sendHours.setEnabled(false);
+        sendHours.setEnabled(false);
         hours.addTextChangedListener(watchHours);
         sendHours.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 OcurenceAdapter.Listener callback = callbackWeakRef.get();
-                if( managementTokenAndUSer.getCurrentUser().getCounterhours() == 0 ||  managementTokenAndUSer.getCurrentUser().getCounterhours() < Integer.parseInt(hours.getText().toString().trim())){
+                if (managementTokenAndUSer.getCurrentUser().getCounterhours() == 0 || managementTokenAndUSer.getCurrentUser().getCounterhours() < Integer.parseInt(hours.getText().toString().trim())) {
                     Tools.backgroundThreadShortToast("Not enough hours !");
-                }else{
+                } else {
                     exchangeOcurence.setHours(Integer.parseInt(hours.getText().toString()));
                     if (callback != null) {
                         callback.onClickSendHours(getAdapterPosition());
+                        hours.setText("");
                     }
                 }
             }
@@ -74,8 +75,8 @@ public class OcurenceViewHolder extends RecyclerView.ViewHolder {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-           // String hour = hours.getText().toString().trim();
-            //sendHours.setEnabled(!(hour.isEmpty()));
+            String hour = hours.getText().toString().trim();
+            sendHours.setEnabled(!(hour.isEmpty()));
         }
 
         @Override

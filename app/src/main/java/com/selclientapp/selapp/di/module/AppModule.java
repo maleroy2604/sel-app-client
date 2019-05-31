@@ -6,12 +6,16 @@ import com.selclientapp.selapp.App;
 import com.selclientapp.selapp.api.ExchangeOcurenceWebService;
 import com.selclientapp.selapp.api.ExchangeWebService;
 import com.selclientapp.selapp.api.ImageWebService;
+import com.selclientapp.selapp.api.MessageWebService;
 import com.selclientapp.selapp.api.TokenWebService;
 import com.selclientapp.selapp.api.UserWebService;
+import com.selclientapp.selapp.model.Message;
 import com.selclientapp.selapp.repositories.ExchangeOcurenceRepository;
 import com.selclientapp.selapp.repositories.ExchangeRepository;
 import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
+import com.selclientapp.selapp.repositories.MessageRepository;
 import com.selclientapp.selapp.repositories.UserRepository;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -36,7 +40,7 @@ public class AppModule {
     @Provides
     @Singleton
     UserRepository provideUserRepository(UserWebService userWebService, Executor executor, TokenWebService tokenWebService, ManagementTokenAndUSer managementTokenAndUSer, ImageWebService imageWebService) {
-        return new UserRepository(userWebService, executor, tokenWebService, managementTokenAndUSer,imageWebService);
+        return new UserRepository(userWebService, executor, tokenWebService, managementTokenAndUSer, imageWebService);
     }
 
     @Provides
@@ -45,10 +49,11 @@ public class AppModule {
         return new ExchangeRepository(webservice, executor);
     }
 
+
     @Provides
     @Singleton
-    ExchangeOcurenceRepository provideExchangeOcurenceRepository(ExchangeOcurenceWebService webservice, Executor executor) {
-        return new ExchangeOcurenceRepository(webservice, executor);
+    MessageRepository provideMessageRepository(MessageWebService webservice, Executor executor) {
+        return new MessageRepository(webservice, executor);
     }
 
 
@@ -111,14 +116,9 @@ public class AppModule {
         return restAdapter.create(ExchangeOcurenceWebService.class);
     }
 
-    // --- ASYNC INJECTION ---
-
-    /*@Provides
+    @Provides
     @Singleton
-    CompressImage provideCompressImage(File image) {
-        return new CompressImage(image);
-    }*/
-
-
-
+    MessageWebService provideMessageWebservice(Retrofit restAdapter) {
+        return restAdapter.create(MessageWebService.class);
+    }
 }

@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.selclientapp.selapp.R;
-import com.selclientapp.selapp.model.Category;
+
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.model.ExchangeOcurence;
 import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
@@ -154,6 +154,13 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
                 configTextInscription(textInscription, exchange, dialog);
             }
             TextView discussion = dialog.findViewById(R.id.dialog_option_discussion);
+            discussion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showDiscussionFragment(position);
+                    dialog.dismiss();
+                }
+            });
             ImageButton imageButtonClose = dialog.findViewById(R.id.dialog_option_close);
             imageButtonClose.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -285,10 +292,8 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
     }
 
     private void showExchangeManagment(int position) {
-        Exchange exchange = adapter.getExchange(position);
         ExchangeManagementOcurence fragment = new ExchangeManagementOcurence();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("exchange", exchange);
+        Bundle bundle = bundleWithExchange(position);
         fragment.setArguments(bundle);
         getFragmentManager().beginTransaction()
                 .add(R.id.fragment_home_container, fragment, null).addToBackStack("fragment_management").commit();
@@ -302,6 +307,21 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
             showNoConnexionFragment();
         }
 
+    }
+
+    private void showDiscussionFragment(int position) {
+        DiscussionFragment fragment = new DiscussionFragment();
+        Bundle bundle = bundleWithExchange(position);
+        fragment.setArguments(bundle);
+        getFragmentManager().beginTransaction()
+                .add(R.id.fragment_home_container, fragment, null).addToBackStack("fragment_discussion").commit();
+    }
+
+    private Bundle bundleWithExchange(int position) {
+        Exchange exchange = adapter.getExchange(position);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("exchange", exchange);
+        return bundle;
     }
 
     private void showNoConnexionFragment() {

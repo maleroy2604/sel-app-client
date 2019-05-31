@@ -30,6 +30,8 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.selclientapp.selapp.R;
+import com.selclientapp.selapp.model.Category;
+import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 import com.selclientapp.selapp.utils.Tools;
 import com.selclientapp.selapp.utils.WriteIntoFile;
 import com.selclientapp.selapp.view_models.ExchangeViewModel;
@@ -67,6 +69,7 @@ public class AddCategoryFragment extends Fragment {
     private Uri mImageUri;
     private File image;
     private ExecutorService executorService = Executors.newFixedThreadPool(1);
+    private ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
     @Inject
     ViewModelProvider.Factory viewModelFactory;
     ExchangeViewModel exchangeViewModel;
@@ -86,7 +89,7 @@ public class AddCategoryFragment extends Fragment {
         return view;
     }
 
-    private void configureDagger() {
+   private void configureDagger() {
         AndroidSupportInjection.inject(this);
     }
 
@@ -94,7 +97,7 @@ public class AddCategoryFragment extends Fragment {
         this.exchangeViewModel = ViewModelProviders.of(this, viewModelFactory).get(ExchangeViewModel.class);
     }
 
-    private void configureArrowBack() {
+   private void configureArrowBack() {
         imgArrowBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,7 +140,7 @@ public class AddCategoryFragment extends Fragment {
         }
     }
 
-    private void openFileChooser() {
+   private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -152,7 +155,7 @@ public class AddCategoryFragment extends Fragment {
                     image = new File("data/data/com.selclientapp.selapp/" + addCategoryEditText.getText().toString().trim() + ".JPEG");
                     WriteIntoFile writeIntoFile = new WriteIntoFile(image, mImageUri);
                     executorService.execute(writeIntoFile);
-                    exchangeViewModel.addCategoryExchange(image, addCategoryEditText.getText().toString().trim());
+                    exchangeViewModel.addCategoryExchange(image, new Category(addCategoryEditText.getText().toString().trim(), managementTokenAndUSer.getCurrentUser().getId()));
                     backToActivity();
                 } else {
                     Tools.backgroundThreadShortToast("Choose an image or enter a category name");

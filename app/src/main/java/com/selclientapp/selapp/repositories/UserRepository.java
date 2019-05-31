@@ -133,17 +133,15 @@ public class UserRepository {
     public MutableLiveData<User> uploadImageTest(File file, String avatarUrl) {
         final MutableLiveData<User> data = new MutableLiveData<>();
         if (avatarUrl != null) {
-            int lastIndex = avatarUrl.lastIndexOf("/");
-            String subString = avatarUrl.substring(lastIndex + 1);
             executor.execute(() -> {
-                imageWebService.deleteImage(subString).enqueue(new Callback<ResponseBody>() {
+                imageWebService.deleteImage(managementTokenAndUSer.getCurrentUser().getId()).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         MultipartBody.Part filePart = MultipartBody.Part.createFormData("image",
                                 file.getName(),
-                                RequestBody.create(MediaType.parse("multipart/form-data"), file));
+                                RequestBody.create(MediaType.parse("image/jpeg"), file));
                         executor.execute(() -> {
-                            imageWebService.uploadImage(filePart).enqueue(new Callback<User>() {
+                            imageWebService.uploadImage(filePart,managementTokenAndUSer.getCurrentUser().getId() ).enqueue(new Callback<User>() {
                                 @Override
                                 public void onResponse(Call<User> call, Response<User> response) {
                                     data.postValue(response.body());
@@ -163,9 +161,9 @@ public class UserRepository {
             });
 
         } else {
-            MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file));
+            MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", file.getName(), RequestBody.create(MediaType.parse("image/jpeg"), file));
             executor.execute(() -> {
-                imageWebService.uploadImage(filePart).enqueue(new Callback<User>() {
+                imageWebService.uploadImage(filePart, managementTokenAndUSer.getCurrentUser().getId()).enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
                         data.postValue(response.body());

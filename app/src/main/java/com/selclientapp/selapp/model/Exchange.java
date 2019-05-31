@@ -9,7 +9,6 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import androidx.annotation.NonNull;
 
 public class Exchange implements Parcelable {
 
@@ -55,12 +54,11 @@ public class Exchange implements Parcelable {
 
     @SerializedName("messages")
     @Expose
-    private List<Object> messages = null;
+    private List<Message> messages = new ArrayList<>();
 
     @SerializedName("category")
     @Expose
     private String category;
-
 
     public Exchange(String name, String description, String ownerName, String date, Integer capacity, Integer owner, String avatarUrl, String category) {
         this.name = name;
@@ -71,6 +69,18 @@ public class Exchange implements Parcelable {
         this.ownerName = ownerName;
         this.avatarUrl = avatarUrl;
         this.category = category;
+    }
+
+    public Exchange (Exchange exchange) {
+        this.setId(exchange.getId());
+        this.setName(exchange.getName());
+        this.setDescription(exchange.getDescription());
+        this.setDate(exchange.getDate());
+        this.setCapacity(exchange.getCapacity());
+        this.setOwner(exchange.getOwner());
+        this.setOwnerName(exchange.getOwnerName());
+        this.setAvatarUrl(exchange.getAvatarUrl());
+        this.setCategory(exchange.getCategory());
     }
 
     protected Exchange(Parcel in) {
@@ -112,6 +122,22 @@ public class Exchange implements Parcelable {
         }
     };
 
+    public void setCurrentCapacity(Integer currentCapacity) {
+        this.currentCapacity = currentCapacity;
+    }
+
+    public void setOwner(Integer owner) {
+        this.owner = owner;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
     public String getOwnerName() {
         return ownerName;
     }
@@ -134,10 +160,6 @@ public class Exchange implements Parcelable {
 
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getDate() {
@@ -170,6 +192,14 @@ public class Exchange implements Parcelable {
         } else {
             return this.exchangeocurences.size();
         }
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void addMessage(Message message) {
+        this.messages.add(message);
     }
 
     public Integer getOwner() {

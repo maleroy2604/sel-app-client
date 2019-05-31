@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
+
 
 import com.selclientapp.selapp.model.Category;
 import com.selclientapp.selapp.model.Exchange;
@@ -38,6 +38,7 @@ public class EditExchangeFragment extends AddExchangeFragment {
         titleHeader.setText("Edit Exchange");
         configurBtnUpdate();
         configureSpinnerTest();
+        System.out.println("first exchange " + exchange);
     }
 
     private void configurBtnUpdate() {
@@ -45,8 +46,10 @@ public class EditExchangeFragment extends AddExchangeFragment {
             @Override
             public void onClick(View v) {
                 updateExchange();
+                Exchange exchangeCopy = new Exchange(exchange);
+                System.out.println("exchange copy " + exchangeCopy);
                 callbackAddListener.updateExchange(exchange);
-                exchangeViewModel.updateExchange(exchange);
+                exchangeViewModel.updateExchange(exchangeCopy);
                 exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {
                     getActivity().onBackPressed();
                     final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -62,23 +65,23 @@ public class EditExchangeFragment extends AddExchangeFragment {
         exchange.setCapacity(capa);
         exchange.setDate(dateExchange + timeExchange);
         exchange.setName(username.getText().toString());
-        if(category != null){
-            exchange.setCategory(category.toLowerCase());
-        }else{
+        exchange.setDescription(description.getText().toString());
+        if (category != null) {
+            exchange.setCategory(category);
+        } else {
             exchange.setCategory(null);
         }
     }
 
     private void configureSpinnerTest() {
-        //spinner.setSelection(spinnerPosition);
         exchangeViewModel.getAllCategory();
         exchangeViewModel.getCategoryList().observe(this, categories -> {
             categories.add(0, new Category(null));
             List<Category> categoriesList = new ArrayList<>(categories);
-            for(int i=0; i < categoriesList.size(); ++i){
-                if(categoriesList.get(i).getCategory() != null && categoriesList.get(i).getCategory().equals(exchange.getCategory())){
-                   spinner.setSelection(i);
-                }else if (categoriesList.get(i).getCategory() == null){
+            for (int i = 0; i < categoriesList.size(); ++i) {
+                if (categoriesList.get(i).getCategory() != null && categoriesList.get(i).getCategory().equals(exchange.getCategory())) {
+                    spinner.setSelection(i);
+                } else if (categoriesList.get(i).getCategory() == null) {
                     spinner.setSelection(i);
                 }
             }

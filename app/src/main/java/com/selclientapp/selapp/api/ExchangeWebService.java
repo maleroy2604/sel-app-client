@@ -28,16 +28,27 @@ public interface ExchangeWebService {
     @DELETE("exchange/{id}")
     Call<Exchange> deleteExchange(@Path("id") int id);
 
+    @DELETE("category/{id}")
+    Call<List<Category>> deleteCategory(@Path("id") int id);
+
     @PUT("exchange/{id}")
     Call<Exchange> updateExchange(@Path("id") int id, @Body Exchange exchange);
 
     @Multipart
-    @POST("uploadimagecategory")
-    Call<ResponseBody>uploadCategory(@Part MultipartBody.Part filePart);
+    @POST("uploadimagecategory/image/{id}")
+    Call<ResponseBody> uploadCategory(@Part MultipartBody.Part filePart, @Path("id") int id);
 
-    @GET("categories")
-    Call<List<Category>>getAllCategory();
+    @GET("newcategory")
+    Call<List<Category>> getAllCategory();
 
-    @POST("categories")
-    Call<Category>addCategoryName(@Body Category category);
+    @GET("mycategorylist/{id}")
+    Call<List<Category>> getMyCategories(@Path("id") int id);
+
+    @POST("category/{id}")
+    Call<Category> addCategoryName(@Body Category category, @Path("id") int id);
+
+    @Multipart
+    @POST("/imagecategory/{id}")
+    Call<ResponseBody> updateImagedCategory(@Part MultipartBody.Part filePart, @Path("id") int id);
+
 }

@@ -47,8 +47,8 @@ public class OcurenceAdapter extends RecyclerView.Adapter<OcurenceViewHolder> {
         return this.exchangeOcurences.size();
     }
 
-    public ExchangeOcurence getExchangeOcurence(int possition) {
-        return this.exchangeOcurences.get(possition);
+    public ExchangeOcurence getExchangeOcurence(int position) {
+        return this.exchangeOcurences.get(position);
     }
 
 

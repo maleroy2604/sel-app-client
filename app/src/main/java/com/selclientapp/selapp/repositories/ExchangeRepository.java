@@ -27,6 +27,7 @@ public class ExchangeRepository {
 
     private final ExchangeWebService exchangeWebService;
     private final Executor executor;
+    private ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
 
     @Inject
     public ExchangeRepository(ExchangeWebService exchangeWebService, Executor executor) {
@@ -64,6 +65,7 @@ public class ExchangeRepository {
                 public void onResponse(Call<List<Exchange>> call, Response<List<Exchange>> response) {
                     if (response.isSuccessful()) {
                         data.postValue(response.body());
+                        System.out.println(response.body().toString());
                     } else {
                         data.postValue(null);
                         Tools.backgroundThreadShortToast("Unable to load the exchanges ! ");
@@ -103,6 +105,7 @@ public class ExchangeRepository {
     }
 
     public LiveData<Exchange> updateExchange(Exchange exchange) {
+        System.out.println("BEFORE REQUEST UPDATE " + exchange);
         final MutableLiveData<Exchange> data = new MutableLiveData<>();
         executor.execute(() -> {
             exchangeWebService.updateExchange(exchange.getId(), exchange).enqueue(new Callback<Exchange>() {
@@ -122,16 +125,16 @@ public class ExchangeRepository {
         return data;
     }
 
-    public void addCategory(File file, String category) {
+    public void addCategory(File file,Category category) {
+        System.out.println(file.getTotalSpace());
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file));
         executor.execute(() -> {
-            Category cat =  new Category(category);
-            exchangeWebService.addCategoryName(cat).enqueue(new Callback<Category>() {
+            exchangeWebService.addCategoryName(category, managementTokenAndUSer.getCurrentUser().getId()).enqueue(new Callback<Category>() {
                 @Override
                 public void onResponse(Call<Category> call, Response<Category> response) {
-                    if(response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         executor.execute(() -> {
-                            exchangeWebService.uploadCategory(filePart).enqueue(new Callback<ResponseBody>() {
+                            exchangeWebService.uploadCategory(filePart, managementTokenAndUSer.getCurrentUser().getId()).enqueue(new Callback<ResponseBody>() {
                                 @Override
                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
@@ -143,7 +146,7 @@ public class ExchangeRepository {
                                 }
                             });
                         });
-                    }else{
+                    } else {
                         Tools.backgroundThreadShortToast("This category already exists");
                     }
 
@@ -173,6 +176,44 @@ public class ExchangeRepository {
             });
         });
         return data;
+    }
+
+    public MutableLiveData<List<Category>> getMyCategories() {
+        MutableLiveData<List<Category>> data = new MutableLiveData<>();
+        executor.execute(() -> {
+            exchangeWebService.getMyCategories(managementTokenAndUSer.getCurrentUser().getId()).enqueue(new Callback<List<Category>>() {
+                @Override
+                public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+                    data.postValue(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<List<Category>> call, Throwable t) {
+
+                }
+            });
+        });
+        return data;
+    }
+
+    public MutableLiveData<List<Category>> deleteCategory() {
+        MutableLiveData<List<Category>> data = new MutableLiveData<>();
+        executor.execute(() -> {
+            exchangeWebService.deleteCategory(managementTokenAndUSer.getCurrentUser().getId()).enqueue(new Callback<List<Category>>() {
+                @Override
+                public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+                    data.postValue(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<List<Category>> call, Throwable t) {
+
+                }
+            });
+        });
+
+        return data;
+
     }
 
 }

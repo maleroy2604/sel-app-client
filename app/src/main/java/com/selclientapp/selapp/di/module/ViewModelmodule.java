@@ -8,6 +8,7 @@ import com.selclientapp.selapp.view_models.ExchangeOcurenceViewModel;
 import com.selclientapp.selapp.view_models.ExchangeViewModel;
 import com.selclientapp.selapp.view_models.FactoryViewModel;
 import com.selclientapp.selapp.view_models.LoginAndSignUpViewModel;
+import com.selclientapp.selapp.view_models.MessageViewModel;
 
 import dagger.Binds;
 import dagger.Module;
@@ -30,6 +31,11 @@ public abstract class ViewModelmodule {
     @IntoMap
     @ViewModelKey(ExchangeOcurenceViewModel.class)
     abstract ViewModel bindExchangeOcurenceViewModel(ExchangeOcurenceViewModel repoViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MessageViewModel.class)
+    abstract ViewModel bindMessageViewModel(MessageViewModel repoViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(FactoryViewModel factory);

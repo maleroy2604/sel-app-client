@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide;
 import com.selclientapp.selapp.App;
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
+import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 
 import java.lang.ref.WeakReference;
 
@@ -59,7 +60,12 @@ public class ExchangeViewHolder extends RecyclerView.ViewHolder {
         this.textViewDate.setText(String.format(dateExchange + " at " + timeExchange));
         this.textViewCapacity.setText(String.format(exchange.getCurrentCapacity() + "/" + exchange.getCapacity()));
         this.callbackWeakRef = new WeakReference<>(callback);
-        Glide.with(App.context).load(exchange.getAvatarUrl()).into(imageProfile);
+        if (exchange.getAvatarUrl() == null) {
+            imageBck.setImageResource(R.drawable.sel);
+        } else {
+            Glide.with(App.context).load(App.URL_SERVER + "imageavatar/" + exchange.getAvatarUrl()).into(imageProfile);
+        }
+
         if (exchange.getCategory() == null) {
             imageBck.setImageResource(R.drawable.sel);
         } else {

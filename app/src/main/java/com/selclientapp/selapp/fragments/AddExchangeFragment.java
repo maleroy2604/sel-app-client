@@ -93,7 +93,7 @@ public class AddExchangeFragment extends Fragment implements AdapterView.OnItemS
     private TimePickerDialog.OnTimeSetListener mTimeSetListener;
     protected static String dateExchange;
     protected static String timeExchange;
-    protected String category;
+    protected String category = null;
 
     //FOR DATA
     @Inject
@@ -250,7 +250,7 @@ public class AddExchangeFragment extends Fragment implements AdapterView.OnItemS
                         dateExchange + timeExchange + ":00",
                         capa,
                         managementTokenAndUSer.getCurrentUser().getId(),
-                        managementTokenAndUSer.getCurrentUser().getAvatarurl(),
+                        managementTokenAndUSer.getCurrentUser().getFileName(),
                         category);
                 callbackAddListener.addExchange(exchange);
                 exchangeViewModel.AddExchange(exchange);
@@ -396,11 +396,16 @@ public class AddExchangeFragment extends Fragment implements AdapterView.OnItemS
     protected void configureSpinner() {
         exchangeViewModel.getAllCategory();
         exchangeViewModel.getCategoryList().observe(this, categories -> {
-            categories.add(0, new Category(null));
+            if (categories != null) {
+                categories.add(0, new Category(null));
+            } else {
+                categories = new ArrayList<>();
+            }
             ArrayAdapter<Category> adapter = new ArrayAdapter<>(getActivity(), R.layout.cunstom_spinner, categories);
             spinner.getBackground().setColorFilter(getResources().getColor(R.color.colorText), PorterDuff.Mode.SRC_ATOP);
             spinner.setAdapter(adapter);
             spinner.setOnItemSelectedListener(this);
+
         });
     }
     // -----------------

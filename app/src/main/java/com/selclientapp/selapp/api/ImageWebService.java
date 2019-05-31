@@ -13,9 +13,9 @@ import retrofit2.http.Path;
 
 public interface ImageWebService {
     @Multipart
-    @POST("uploadavatar/image")
-    Call<User> uploadImage(@Part MultipartBody.Part filePart);
+    @POST("uploadavatar/image/{id}")
+    Call<User> uploadImage(@Part MultipartBody.Part filePart, @Path("id") int userId);
 
-    @DELETE("imageavatar/{filename}")
-    Call<ResponseBody> deleteImage(@Path("filename") String filename);
+    @DELETE("uploadavatar/image/{id}")
+    Call<ResponseBody> deleteImage(@Path("id") int userId);
 }

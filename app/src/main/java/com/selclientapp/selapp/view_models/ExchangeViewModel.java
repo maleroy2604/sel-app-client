@@ -42,12 +42,20 @@ public class ExchangeViewModel extends ViewModel {
         exchangeLiveData = exchangeRepository.updateExchange(exchange);
     }
 
-    public void addCategoryExchange(File file, String categoryName){
-       exchangeRepository.addCategory(file,categoryName);
+    public void addCategoryExchange(File file, Category category){
+       exchangeRepository.addCategory(file,category);
     }
 
     public void getAllCategory(){
         categoryList = exchangeRepository.getAllCategory();
+    }
+
+    public void deleteCategory(){
+        categoryList = exchangeRepository.deleteCategory();
+    }
+
+    public void getMyCategories(){
+        categoryList = exchangeRepository.getMyCategories();
     }
 
     public LiveData<List<Category>> getCategoryList() {

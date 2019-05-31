@@ -87,12 +87,12 @@ public class DetailExchangeFragment extends Fragment {
         Bundle bundle = getArguments();
         exchange = bundle.getParcelable("exchange");
         if (managementTokenAndUSer.getCurrentUser().getId() == exchange.getOwner()) {
-            configBtnOwner();
             configBtnManagement();
             configBtnEdit();
         } else {
             configBtnParticipant();
         }
+        configDiscussion();
         configureElemView();
         configBackArrow();
     }
@@ -118,9 +118,9 @@ public class DetailExchangeFragment extends Fragment {
     }
 
     private void configImgBack() {
-        if(exchange.getCategory() == null){
+        if (exchange.getCategory() == null) {
             imageBck.setImageResource(R.drawable.sel);
-        }else{
+        } else {
             Glide.with(this).load(App.URL_SERVER + "imagecategory/" + exchange.getCategory() + ".jpeg").into((imageBck));
 
         }
@@ -136,9 +136,6 @@ public class DetailExchangeFragment extends Fragment {
         });
     }
 
-    private void configBtnOwner() {
-
-    }
 
     private void configBtnParticipant() {
         btnOtp4.setVisibility(View.GONE);
@@ -266,6 +263,15 @@ public class DetailExchangeFragment extends Fragment {
         });
     }
 
+    private void configDiscussion() {
+        btnOtp2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDiscussionFragment();
+            }
+        });
+    }
+
     private void showEditExchangeFragment(EditExchangeFragment fragment) {
         getFragmentManager().popBackStack();
         BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.home_activity_bottom_navigation);
@@ -277,5 +283,15 @@ public class DetailExchangeFragment extends Fragment {
     private void updateExchangeFragment() {
         exchangeFragment = (ExchangeFragment) getFragmentManager().findFragmentByTag("fragment_exchange");
         exchangeFragment.updateExchangeToList(exchange);
+    }
+
+    private void showDiscussionFragment() {
+        getFragmentManager().popBackStack();
+        DiscussionFragment discussionFragment = new DiscussionFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("exchange", exchange);
+        discussionFragment.setArguments(bundle);
+        getFragmentManager().beginTransaction()
+                .add(R.id.fragment_home_container, discussionFragment, null).addToBackStack("fragment_discussion").commit();
     }
 }

@@ -26,4 +26,9 @@
     <string name="enter_the_category_name">Enter the category name</string>
     <string name="add_category">add category</string>
     <string name="category">Category</string>
+    <string name="my_category">My Category</string>
+    <string name="my_categories">My Categories</string>
+    <string name="send">Send</string>
+    <string name="message">message</string>
+
 </resources>

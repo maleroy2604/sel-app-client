@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ import com.selclientapp.selapp.fragments.AddExchangeFragment;
 
 import com.selclientapp.selapp.fragments.EditProfileFragment;
 import com.selclientapp.selapp.fragments.ExchangeFragment;
+import com.selclientapp.selapp.fragments.FragmentCategory;
 import com.selclientapp.selapp.fragments.NoConnexionFragment;
 import com.selclientapp.selapp.fragments.SortingBottomSheetFragment;
 import com.selclientapp.selapp.model.Exchange;
@@ -52,6 +54,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+
+import java.sql.SQLOutput;
 
 import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
@@ -226,6 +230,9 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
             case R.id.nav_new_category:
                 showAddCategoryFragment();
                 break;
+            case R.id.nav_my_category:
+                showCategoryFragment();
+                break;
         }
 
         drawer.closeDrawer(GravityCompat.START);
@@ -259,6 +266,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     @Override
     public void onBackPressed() {
         exchangeFragment = (ExchangeFragment) getSupportFragmentManager().findFragmentByTag("fragment_exchange");
+        System.out.println(exchangeFragment.getAdapter());
         if (!(exchangeFragment.getBtnCloseSorting().getVisibility() == View.VISIBLE)) {
             restartLoader();
             refreshExchange();
@@ -305,6 +313,11 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_home_container, fragment, "add_fragment_category").addToBackStack("add_fragment_category").commit();
     }
 
+    private void showCategoryFragment(){
+        FragmentCategory fragmentCategory = new FragmentCategory();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_home_container, fragmentCategory,"fragment_my_categories").addToBackStack("fragment_my_categories").commit();
+    }
+
 
     @Override
     public void restartLoader() {
@@ -315,6 +328,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     @Override
     public void refreshExchange() {
         ExchangeFragment exchangeFragment = (ExchangeFragment) getSupportFragmentManager().findFragmentByTag("fragment_exchange");
+        System.out.println("pass");
         exchangeFragment.refreshExchanges();
     }
 
@@ -346,8 +360,14 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         loginModel.getUser(managementTokenAndUSer.getCurrentUser().getId());
         loginModel.getUserLiveData().observe(this, user -> {
             String hours = getString(R.string.toolbar_txt_counter_hours, user.getCounterhours());
-            Glide.with(this).load(user.getAvatarurl()).into(imgHeaderDrawer);
-            Glide.with(this).load(user.getAvatarurl()).into(imageViewProfile);
+            String imageUrl = App.URL_SERVER + "imageavatar/" + user.getFileName();
+            if (user.getFileName() == null) {
+                imgHeaderDrawer.setImageResource(R.drawable.sel);
+                imageViewProfile.setImageResource(R.drawable.sel);
+            } else {
+                Glide.with(this).load(imageUrl).into(imgHeaderDrawer);
+                Glide.with(this).load(imageUrl).into(imageViewProfile);
+            }
             counterHours.setText(hours);
             profileName.setText(user.getUsername());
             profileHours.setText(hours);

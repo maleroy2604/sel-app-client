@@ -163,7 +163,7 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void updateImageOnly() {
-        loginAndSignUpViewModel.uploadImage(image, managementTokenAndUSer.getCurrentUser().getAvatarurl());
+        loginAndSignUpViewModel.uploadImage(image, managementTokenAndUSer.getCurrentUser().getFileName());
         loginAndSignUpViewModel.getUserLiveData().observe(getActivity(), user -> {
             updateUserInfo();
         });
@@ -303,7 +303,7 @@ public class EditProfileFragment extends Fragment {
         titleHeader.setText("Edit Profile.");
         editProfileUsername.setText(managementTokenAndUSer.getCurrentUser().getUsername());
         emailEdit.setText(managementTokenAndUSer.getCurrentUser().getEmail());
-        Glide.with(this).load(managementTokenAndUSer.getCurrentUser().getAvatarurl()).into(imageProfile);
+        Glide.with(this).load(managementTokenAndUSer.getCurrentUser().getFileName()).into(imageProfile);
         editProfileUsername.addTextChangedListener(watcherUsername);
         passwordEdit.addTextChangedListener(watcherPassword);
         emailEdit.addTextChangedListener(watcherEmail);
@@ -336,12 +336,11 @@ public class EditProfileFragment extends Fragment {
     // -----------------
     public String getSingleName() {
         String randomString = Tools.randomAlphaNumeric(6);
-        if (managementTokenAndUSer.getCurrentUser().getAvatarurl() == null) {
+        if (managementTokenAndUSer.getCurrentUser().getFileName() == null) {
             return randomString;
         } else {
-            String avatarUrl = managementTokenAndUSer.getCurrentUser().getAvatarurl();
-            int lastindex = avatarUrl.lastIndexOf("/");
-            String singleName = avatarUrl.substring(lastindex);
+            String fileName = managementTokenAndUSer.getCurrentUser().getFileName();
+            String singleName = fileName;
 
             while (singleName.equals(randomString)) {
                 randomString = Tools.randomAlphaNumeric(6);
