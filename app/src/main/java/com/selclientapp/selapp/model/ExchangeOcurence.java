@@ -57,6 +57,10 @@ public class ExchangeOcurence {
         this.hours = hours;
     }
 
+    public Integer getHours() {
+        return hours;
+    }
+
     @NonNull
     @Override
     public String toString() {

@@ -53,6 +53,7 @@ public class OcurenceViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 OcurenceAdapter.Listener callback = callbackWeakRef.get();
+                System.out.println("counterHours " + managementTokenAndUSer.getCurrentUser().getCounterhours());
                 if (managementTokenAndUSer.getCurrentUser().getCounterhours() == 0 || managementTokenAndUSer.getCurrentUser().getCounterhours() < Integer.parseInt(hours.getText().toString().trim())) {
                     Tools.backgroundThreadShortToast("Not enough hours !");
                 } else {

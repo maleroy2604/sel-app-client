@@ -14,7 +14,6 @@ import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -99,6 +98,11 @@ public class ExchangeAdapter extends RecyclerView.Adapter<ExchangeViewHolder> im
     public void updateList(List<Exchange> exchanges) {
         this.exchanges.clear();
         this.exchanges.addAll(exchanges);
+        exchangesIsFull = new ArrayList<>(exchanges);
         notifyDataSetChanged();
+    }
+
+    public void removeExchangeIntoExchangeIsFull(Exchange exchange) {
+        exchangesIsFull.remove(exchange);
     }
 }

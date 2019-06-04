@@ -54,9 +54,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
-
-import java.sql.SQLOutput;
-
 import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
 import dagger.android.DispatchingAndroidInjector;
@@ -74,6 +71,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     ImageView imgHeaderDrawer;
     TextView profileName;
     TextView profileHours;
+    Toolbar toolbar;
 
     //FOR DATA
     @Inject
@@ -81,6 +79,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     private LoginAndSignUpViewModel loginModel;
     private ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
     ExchangeFragment exchangeFragment;
+    private boolean searchViewActived;
 
 
     @Inject
@@ -90,7 +89,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         configureElemToolbar(toolbar);
@@ -168,7 +167,8 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (exchangeFragment.getBtnCloseSorting().getVisibility() == View.VISIBLE) {
+                searchViewActived = true;
+                if (exchangeFragment.getBtnCloseSorting().getVisibility() == View.VISIBLE || searchView.isIconified()) {
                     searchView.setIconified(true);
                     SortingBottomSheetFragment bottomSheet = new SortingBottomSheetFragment();
                     bottomSheet.show(getSupportFragmentManager(), "sortingBottomSheet");
@@ -182,6 +182,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
+                searchViewActived = false;
                 bottomNavigationView.setVisibility(View.VISIBLE);
                 return false;
             }
@@ -266,8 +267,7 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     @Override
     public void onBackPressed() {
         exchangeFragment = (ExchangeFragment) getSupportFragmentManager().findFragmentByTag("fragment_exchange");
-        System.out.println(exchangeFragment.getAdapter());
-        if (!(exchangeFragment.getBtnCloseSorting().getVisibility() == View.VISIBLE)) {
+        if (!(exchangeFragment.getBtnCloseSorting().getVisibility() == View.VISIBLE) && !searchViewActived) {
             restartLoader();
             refreshExchange();
             setElemProfile();
@@ -313,9 +313,9 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_home_container, fragment, "add_fragment_category").addToBackStack("add_fragment_category").commit();
     }
 
-    private void showCategoryFragment(){
+    private void showCategoryFragment() {
         FragmentCategory fragmentCategory = new FragmentCategory();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_home_container, fragmentCategory,"fragment_my_categories").addToBackStack("fragment_my_categories").commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_home_container, fragmentCategory, "fragment_my_categories").addToBackStack("fragment_my_categories").commit();
     }
 
 
@@ -328,7 +328,6 @@ public class HomeActivity extends AppCompatActivity implements HasSupportFragmen
     @Override
     public void refreshExchange() {
         ExchangeFragment exchangeFragment = (ExchangeFragment) getSupportFragmentManager().findFragmentByTag("fragment_exchange");
-        System.out.println("pass");
         exchangeFragment.refreshExchanges();
     }
 

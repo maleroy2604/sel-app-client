@@ -38,7 +38,6 @@ public class EditExchangeFragment extends AddExchangeFragment {
         titleHeader.setText("Edit Exchange");
         configurBtnUpdate();
         configureSpinnerTest();
-        System.out.println("first exchange " + exchange);
     }
 
     private void configurBtnUpdate() {
@@ -47,7 +46,6 @@ public class EditExchangeFragment extends AddExchangeFragment {
             public void onClick(View v) {
                 updateExchange();
                 Exchange exchangeCopy = new Exchange(exchange);
-                System.out.println("exchange copy " + exchangeCopy);
                 callbackAddListener.updateExchange(exchange);
                 exchangeViewModel.updateExchange(exchangeCopy);
                 exchangeViewModel.getExchangeLiveData().observe(getActivity(), ex -> {

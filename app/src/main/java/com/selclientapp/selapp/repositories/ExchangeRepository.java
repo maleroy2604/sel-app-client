@@ -65,7 +65,6 @@ public class ExchangeRepository {
                 public void onResponse(Call<List<Exchange>> call, Response<List<Exchange>> response) {
                     if (response.isSuccessful()) {
                         data.postValue(response.body());
-                        System.out.println(response.body().toString());
                     } else {
                         data.postValue(null);
                         Tools.backgroundThreadShortToast("Unable to load the exchanges ! ");
@@ -105,7 +104,6 @@ public class ExchangeRepository {
     }
 
     public LiveData<Exchange> updateExchange(Exchange exchange) {
-        System.out.println("BEFORE REQUEST UPDATE " + exchange);
         final MutableLiveData<Exchange> data = new MutableLiveData<>();
         executor.execute(() -> {
             exchangeWebService.updateExchange(exchange.getId(), exchange).enqueue(new Callback<Exchange>() {
@@ -125,8 +123,7 @@ public class ExchangeRepository {
         return data;
     }
 
-    public void addCategory(File file,Category category) {
-        System.out.println(file.getTotalSpace());
+    public void addCategory(File file, Category category) {
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", file.getName(), RequestBody.create(MediaType.parse("multipart/form-data"), file));
         executor.execute(() -> {
             exchangeWebService.addCategoryName(category, managementTokenAndUSer.getCurrentUser().getId()).enqueue(new Callback<Category>() {
@@ -199,18 +196,31 @@ public class ExchangeRepository {
     public MutableLiveData<List<Category>> deleteCategory() {
         MutableLiveData<List<Category>> data = new MutableLiveData<>();
         executor.execute(() -> {
-            exchangeWebService.deleteCategory(managementTokenAndUSer.getCurrentUser().getId()).enqueue(new Callback<List<Category>>() {
+            exchangeWebService.deleteImageCategory(managementTokenAndUSer.getCurrentUser().getId()).enqueue(new Callback<ResponseBody>() {
                 @Override
-                public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
-                    data.postValue(response.body());
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    executor.execute(() -> {
+                        exchangeWebService.deleteCategory(managementTokenAndUSer.getCurrentUser().getId()).enqueue(new Callback<List<Category>>() {
+                            @Override
+                            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+                                data.postValue(response.body());
+                            }
+
+                            @Override
+                            public void onFailure(Call<List<Category>> call, Throwable t) {
+
+                            }
+                        });
+                    });
                 }
 
                 @Override
-                public void onFailure(Call<List<Category>> call, Throwable t) {
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
 
                 }
             });
         });
+
 
         return data;
 

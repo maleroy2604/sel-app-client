@@ -44,5 +44,6 @@ public class ServiceInterceptor implements Interceptor {
         return chain.proceed(request);
     }
 }
-//"https://sel-app.herokuapp.com/"
-//"http://10.0.2.2:5000/"
+
+
+

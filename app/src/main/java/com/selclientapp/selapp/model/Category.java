@@ -25,7 +25,7 @@ public class Category implements Parcelable {
     @Expose
     private String category;
 
-    public Category( String category, Integer owner){
+    public Category(String category, Integer owner) {
         this.category = category;
         this.owner = owner;
         this.imageName = category;

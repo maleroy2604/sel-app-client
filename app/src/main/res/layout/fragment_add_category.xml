@@ -65,7 +65,8 @@
                 android:hint="@string/category"
                 android:imeOptions="flagNoExtractUi"
                 android:textColor="@color/colorExchangeItem"
-                app:theme="@style/MyEditText" />
+                app:theme="@style/MyEditText"
+                android:maxLength="30"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button

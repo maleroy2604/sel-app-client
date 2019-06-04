@@ -71,7 +71,7 @@ public class Exchange implements Parcelable {
         this.category = category;
     }
 
-    public Exchange (Exchange exchange) {
+    public Exchange(Exchange exchange) {
         this.setId(exchange.getId());
         this.setName(exchange.getName());
         this.setDescription(exchange.getDescription());
@@ -271,7 +271,7 @@ public class Exchange implements Parcelable {
                 ", owner=" + owner +
                 ", ownerName='" + ownerName + '\'' +
                 ", exchangeocurences=" + exchangeocurences +
-                ", messages=" + messages +
+                ", messages=" + messages + "filename" + this.avatarUrl +
                 '}';
     }
 }

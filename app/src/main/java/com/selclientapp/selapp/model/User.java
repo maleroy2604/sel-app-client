@@ -114,6 +114,11 @@ public class User {
         this.fileName = fileName;
     }
 
+    public User decreaseHours(int hours){
+        this.setCounterhours(counterhours-hours);
+        return this;
+    }
+
     @Override
     public String toString() {
         return "User{" +

@@ -280,6 +280,7 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
 
     private void deleteExchange(Exchange exchange) {
         this.exchanges.remove(exchange);
+        adapter.removeExchangeIntoExchangeIsFull(exchange);
         adapter.notifyDataSetChanged();
         exchangeViewModel.deleteOneExchange(exchange.getId());
     }
@@ -397,9 +398,10 @@ public class ExchangeFragment extends Fragment implements ExchangeAdapter.Listen
     }
 
     public void updateExchangeToList(Exchange exchange) {
-        for (Exchange ex : this.exchanges) {
-            if (ex.getOwner() == managementTokenAndUSer.getCurrentUser().getId()) {
-                ex = exchange;
+        System.out.println(exchanges);
+        for (int i = this.exchanges.size() - 1; i >=0; i--) {
+            if (exchanges.get(i).getOwner() == managementTokenAndUSer.getCurrentUser().getId()) {
+                exchanges.set(i, exchange);
             }
         }
         this.adapter.notifyDataSetChanged();

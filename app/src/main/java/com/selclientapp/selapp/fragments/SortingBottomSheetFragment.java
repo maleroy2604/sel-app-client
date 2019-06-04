@@ -185,7 +185,7 @@ public class SortingBottomSheetFragment extends BottomSheetDialogFragment implem
     private void configureSpinner() {
         exchangeViewModel.getAllCategory();
         exchangeViewModel.getCategoryList().observe(this, categories -> {
-            System.out.println("categories " + categories);
+            categories.add(0, new Category(null));
             ArrayAdapter<Category> adapter = new ArrayAdapter<>(getActivity(), R.layout.cunstom_spinner, categories);
             spinnerCategory.getBackground().setColorFilter(getResources().getColor(R.color.colorText), PorterDuff.Mode.SRC_ATOP);
             spinnerCategory.setAdapter(adapter);
@@ -207,7 +207,7 @@ public class SortingBottomSheetFragment extends BottomSheetDialogFragment implem
             for (Exchange item : exchangesIsFull) {
                 Date exchangeDate = Tools.getDate(item.getDate());
                 if (dateStart == null) {
-                    if (item.getCategory().equals(category)) {
+                    if (item.getCategory() != null && item.getCategory().equals(category)) {
                         filteredList.add(item);
                     }
                 } else {

@@ -28,11 +28,11 @@ public interface ExchangeWebService {
     @DELETE("exchange/{id}")
     Call<Exchange> deleteExchange(@Path("id") int id);
 
-    @DELETE("category/{id}")
-    Call<List<Category>> deleteCategory(@Path("id") int id);
-
     @PUT("exchange/{id}")
     Call<Exchange> updateExchange(@Path("id") int id, @Body Exchange exchange);
+
+    @DELETE("imagecategory/{id}")
+    Call<ResponseBody> deleteImageCategory(@Path("id") int id);
 
     @Multipart
     @POST("uploadimagecategory/image/{id}")
@@ -46,9 +46,6 @@ public interface ExchangeWebService {
 
     @POST("category/{id}")
     Call<Category> addCategoryName(@Body Category category, @Path("id") int id);
-
-    @Multipart
-    @POST("/imagecategory/{id}")
-    Call<ResponseBody> updateImagedCategory(@Part MultipartBody.Part filePart, @Path("id") int id);
-
+    @DELETE("category/{id}")
+    Call<List<Category>> deleteCategory(@Path("id") int id);
 }

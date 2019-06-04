@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,7 +91,7 @@ public class AddCategoryFragment extends Fragment {
         return view;
     }
 
-   private void configureDagger() {
+    private void configureDagger() {
         AndroidSupportInjection.inject(this);
     }
 
@@ -97,7 +99,7 @@ public class AddCategoryFragment extends Fragment {
         this.exchangeViewModel = ViewModelProviders.of(this, viewModelFactory).get(ExchangeViewModel.class);
     }
 
-   private void configureArrowBack() {
+    private void configureArrowBack() {
         imgArrowBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,6 +122,7 @@ public class AddCategoryFragment extends Fragment {
             }
         });
         titleHeader.setText("Add Category");
+        addCategoryEditText.addTextChangedListener(categoryEditTextWatcher);
         configBtnAddCategory();
     }
 
@@ -140,7 +143,7 @@ public class AddCategoryFragment extends Fragment {
         }
     }
 
-   private void openFileChooser() {
+    private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -164,6 +167,34 @@ public class AddCategoryFragment extends Fragment {
             }
         });
     }
+
+
+    TextWatcher categoryEditTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String categoryName = addCategoryEditText.getText().toString();
+            if (categoryName.length() > 29) {
+                addCategoryInput.setError("Category name can't be so long");
+                btnAddCategory.setEnabled(false);
+            } else if (categoryName.trim().isEmpty()) {
+                addCategoryInput.setError("Category name can't be empty");
+                btnAddCategory.setEnabled(false);
+            } else {
+                addCategoryInput.setError("");
+                btnAddCategory.setEnabled(true);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 
 
 }

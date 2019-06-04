@@ -102,6 +102,8 @@ public class AddExchangeFragment extends Fragment implements AdapterView.OnItemS
     protected AddExchangeListener callbackAddListener;
     protected ExchangeListener callbackExchangeListener;
     protected ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
+    protected static final int MAX_LENGHT_DESCRIPTION = 255;
+    protected static final int MAX_LENGHT_NAME = 23;
 
 
     public interface AddExchangeListener {
@@ -289,7 +291,7 @@ public class AddExchangeFragment extends Fragment implements AdapterView.OnItemS
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String name = username.getText().toString().trim();
-            hasToSetError(name, usernameInput);
+            hasToSetError(name, usernameInput, MAX_LENGHT_NAME);
             btnCreate.setEnabled(validBtnCreate());
 
         }
@@ -309,7 +311,7 @@ public class AddExchangeFragment extends Fragment implements AdapterView.OnItemS
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String desc = description.getText().toString().trim();
-            hasToSetError(desc, descriptionInput);
+            hasToSetError(desc, descriptionInput, MAX_LENGHT_DESCRIPTION);
             btnCreate.setEnabled(validBtnCreate());
 
         }
@@ -329,7 +331,7 @@ public class AddExchangeFragment extends Fragment implements AdapterView.OnItemS
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String date = datePicker.getText().toString().trim();
-            hasToSetError(date, dateInput);
+            hasToSetError(date, dateInput, MAX_LENGHT_DESCRIPTION);
             btnCreate.setEnabled(validBtnCreate());
 
         }
@@ -422,9 +424,12 @@ public class AddExchangeFragment extends Fragment implements AdapterView.OnItemS
         category = null;
     }
 
-    private boolean hasToSetError(String editText, TextInputLayout textInputLayout) {
+    private boolean hasToSetError(String editText, TextInputLayout textInputLayout, int maxLenght) {
         if (editText.isEmpty()) {
             textInputLayout.setError("Field can't be empty");
+            return false;
+        } else if (editText.length() > maxLenght) {
+            textInputLayout.setError("Field can't be too long");
             return false;
         } else {
             textInputLayout.setError("");
@@ -459,7 +464,6 @@ public class AddExchangeFragment extends Fragment implements AdapterView.OnItemS
                 e.printStackTrace();
             }
 
-
             if (editText.isEmpty()) {
                 textInputLayout.setError("Field can't be empty");
                 return false;
@@ -474,6 +478,7 @@ public class AddExchangeFragment extends Fragment implements AdapterView.OnItemS
         } else {
             return false;
         }
+
     }
 
     private boolean validBtnCreate() {
@@ -482,7 +487,7 @@ public class AddExchangeFragment extends Fragment implements AdapterView.OnItemS
         String capa = capacity.getText().toString().trim();
         String date = datePicker.getText().toString().trim();
         String time = timePicker.getText().toString().trim();
-        return (hasToSetError(name, usernameInput) && hasToSetError(desc, descriptionInput) && hasToSetError(date, dateInput) && hasToSetErrorTime(time, timeInput) && hasToSetErrorCapacity(capa, capacityInput));
+        return (hasToSetError(name, usernameInput, MAX_LENGHT_NAME) && hasToSetError(desc, descriptionInput, MAX_LENGHT_DESCRIPTION) && hasToSetError(date, dateInput, MAX_LENGHT_DESCRIPTION) && hasToSetErrorTime(time, timeInput) && hasToSetErrorCapacity(capa, capacityInput));
     }
 
     @Override

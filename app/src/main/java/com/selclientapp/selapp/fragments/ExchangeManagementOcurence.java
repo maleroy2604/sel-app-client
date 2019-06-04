@@ -23,6 +23,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.model.ExchangeOcurence;
+import com.selclientapp.selapp.model.User;
+import com.selclientapp.selapp.repositories.ManagementTokenAndUSer;
 import com.selclientapp.selapp.utils.ExchangeListener;
 import com.selclientapp.selapp.view_models.ExchangeOcurenceViewModel;
 import com.selclientapp.selapp.views.OcurenceAdapter;
@@ -54,6 +56,7 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
     private List<ExchangeOcurence> exchangeOcurences;
     private OcurenceAdapter ocurenceAdapter;
     private ExchangeListener callback;
+    ManagementTokenAndUSer managementTokenAndUSer = new ManagementTokenAndUSer();
 
     public ExchangeManagementOcurence() {
 
@@ -87,6 +90,8 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
     @Override
     public void onClickSendHours(int position) {
         ExchangeOcurence exchangeOcurence = ocurenceAdapter.getExchangeOcurence(position);
+        User user = managementTokenAndUSer.getCurrentUser().decreaseHours(exchangeOcurence.getHours());
+        managementTokenAndUSer.saveUser(user);
         updateExchangeOcurence(exchangeOcurence);
     }
 
@@ -117,6 +122,7 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
     }
 
     private void refreshExchangeOcurence(Integer exchangeId) {
+
         exchangeOcurenceViewModel.getAllExchangeOcurence(exchangeId);
         exchangeOcurenceViewModel.getListExchangeOcurence().observe(this, ocurences -> {
             updateUi(ocurences);
@@ -140,7 +146,7 @@ public class ExchangeManagementOcurence extends Fragment implements OcurenceAdap
         });
     }
 
-    private void configElemView(){
+    private void configElemView() {
         titleHeader.setText(" Validate Exchange");
     }
 
