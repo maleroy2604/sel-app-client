@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/colorText"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,31 +25,45 @@
 
         </androidx.recyclerview.widget.RecyclerView>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:background="@color/colorExchangeItem"
-            android:layout_margin="10dp">
+            android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/fragment_discussion_message"
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/fragment_discussion_input_message"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/fragment_discussion_btn_send" />
+                android:layout_weight="10"
+                android:imeOptions="flagNoExtractUi"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@color/colorBackgroundExchange"
+                app:theme="@style/TextInputLayoutAppearanceDiscussion">
+
+                <EditText
+                    android:id="@+id/fragment_discussion_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/fragment_discussion_btn_send"
+                    android:maxLength="256"
+                    android:textColor="@color/colorBackgroundExchange"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/fragment_discussion_btn_send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
+                android:layout_alignEnd="@+id/fragment_discussion_input_message"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
                 android:background="@drawable/shadow"
                 android:text="@string/send"
-                android:textColor="@color/colorExchangeItem"
-                android:layout_marginStart="4dp"/>
+                android:textColor="@color/colorExchangeItem" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
 
     </LinearLayout>

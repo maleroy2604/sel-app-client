@@ -398,11 +398,10 @@ public class AddExchangeFragment extends Fragment implements AdapterView.OnItemS
     protected void configureSpinner() {
         exchangeViewModel.getAllCategory();
         exchangeViewModel.getCategoryList().observe(this, categories -> {
-            if (categories != null) {
-                categories.add(0, new Category(null));
-            } else {
+            if (categories == null) {
                 categories = new ArrayList<>();
             }
+            categories.add(0, new Category("no category"));
             ArrayAdapter<Category> adapter = new ArrayAdapter<>(getActivity(), R.layout.cunstom_spinner, categories);
             spinner.getBackground().setColorFilter(getResources().getColor(R.color.colorText), PorterDuff.Mode.SRC_ATOP);
             spinner.setAdapter(adapter);
@@ -421,7 +420,7 @@ public class AddExchangeFragment extends Fragment implements AdapterView.OnItemS
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        category = null;
+        category = "no category";
     }
 
     private boolean hasToSetError(String editText, TextInputLayout textInputLayout, int maxLenght) {

@@ -118,7 +118,7 @@ public class DetailExchangeFragment extends Fragment {
     }
 
     private void configImgBack() {
-        if (exchange.getCategory() == null) {
+        if (exchange.getCategory().equals("no category")) {
             imageBck.setImageResource(R.drawable.sel);
         } else {
             Glide.with(this).load(App.URL_SERVER + "imagecategory/" + exchange.getCategory() + ".jpeg").into((imageBck));

@@ -185,7 +185,7 @@ public class SortingBottomSheetFragment extends BottomSheetDialogFragment implem
     private void configureSpinner() {
         exchangeViewModel.getAllCategory();
         exchangeViewModel.getCategoryList().observe(this, categories -> {
-            categories.add(0, new Category(null));
+            categories.add(0, new Category("no category"));
             ArrayAdapter<Category> adapter = new ArrayAdapter<>(getActivity(), R.layout.cunstom_spinner, categories);
             spinnerCategory.getBackground().setColorFilter(getResources().getColor(R.color.colorText), PorterDuff.Mode.SRC_ATOP);
             spinnerCategory.setAdapter(adapter);
@@ -201,7 +201,7 @@ public class SortingBottomSheetFragment extends BottomSheetDialogFragment implem
 
     private List<Exchange> sortingListExchange() {
         List<Exchange> filteredList = new ArrayList<>();
-        if (dateStart == null && category == null) {
+        if (dateStart == null && category.equals("no category")) {
             filteredList.addAll(exchangesIsFull);
         } else {
             for (Exchange item : exchangesIsFull) {
@@ -216,7 +216,7 @@ public class SortingBottomSheetFragment extends BottomSheetDialogFragment implem
                     } else {
                         if (dateEnd == null && dateStart.compareTo(exchangeDate) <= 0 && item.getCategory().equals(category)) {
                             filteredList.add(item);
-                        } else if (dateEnd != null && dateEnd.compareTo(exchangeDate) >= 0 && dateStart.compareTo(exchangeDate) <= 0 && category == null) {
+                        } else if (dateEnd != null && dateEnd.compareTo(exchangeDate) >= 0 && dateStart.compareTo(exchangeDate) <= 0 && category.equals("no category")) {
                             filteredList.add(item);
                         } else if (dateEnd != null && dateEnd.compareTo(exchangeDate) >= 0 && dateStart.compareTo(exchangeDate) <= 0 && item.getCategory().equals(category)) {
                             filteredList.add(item);

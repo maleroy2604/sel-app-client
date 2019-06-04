@@ -59,6 +59,8 @@ public class SignUpFragment extends Fragment {
                     "[a-z0-9]{4,}" +
                     "$");
 
+    final static int MAX_LENGHT = 29;
+
     @BindView(R.id.fragment_sign_up_input_username)
     TextInputLayout usernameInput;
     @BindView(R.id.fragment_sign_up_username)
@@ -106,7 +108,7 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (Tools.hasInternetConnection()) {
-                    User user = new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(), passwordConfirmEditText.getText().toString(), emailEditText.getText().toString(),2);
+                    User user = new User(usernameEditText.getText().toString(), passwordEditText.getText().toString(), passwordConfirmEditText.getText().toString(), emailEditText.getText().toString(), 2);
                     loginModel.saveUser(user);
                     loginModel.getUserLiveData().observe(getActivity(), userLiveData -> {
                         Intent intent = new Intent(getActivity(), HomeActivity.class);
@@ -146,7 +148,7 @@ public class SignUpFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            validField(usernameEditText, usernameInput, USERNAME_PATTERN, "Username hasn't 4 character or contains white space or specail character.");
+            validField(usernameEditText, usernameInput, USERNAME_PATTERN, "Username hasn't 4 character or contains white space or specail character.", MAX_LENGHT);
             validBtn();
         }
 
@@ -164,7 +166,7 @@ public class SignUpFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            validField(passwordEditText, passwordInput, PASSWORD_PATTERN, "Password must contains : 4 character, one digit, one lower and one  upper case letter and  one special character.");
+            validField(passwordEditText, passwordInput, PASSWORD_PATTERN, "Password must contains : 4 character, one digit, one lower and one  upper case letter and  one special character.", MAX_LENGHT);
             validBtn();
         }
 
@@ -182,7 +184,7 @@ public class SignUpFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            validField(emailEditText, emailInput, Patterns.EMAIL_ADDRESS, "Please enter a valid email address");
+            validField(emailEditText, emailInput, Patterns.EMAIL_ADDRESS, "Please enter a valid email address", MAX_LENGHT);
             validBtn();
         }
 
@@ -235,13 +237,16 @@ public class SignUpFragment extends Fragment {
     // UTILS
     // -----------------
 
-    private boolean validField(EditText editText, TextInputLayout input, Pattern PTN, String msg) {
-        String password = editText.getText().toString().trim();
-        if (password.isEmpty()) {
+    private boolean validField(EditText editText, TextInputLayout input, Pattern PTN, String msg, int maxlenght) {
+        String stringEditText = editText.getText().toString().trim();
+        if (stringEditText.isEmpty()) {
             input.setError("Field can't be empty.");
             return false;
-        } else if (!PTN.matcher(password).matches()) {
+        } else if (!PTN.matcher(stringEditText).matches()) {
             input.setError(msg);
+            return false;
+        } else if (stringEditText.length() > maxlenght) {
+            input.setError("Field can't be so long ");
             return false;
         } else {
             input.setError("");
@@ -259,6 +264,9 @@ public class SignUpFragment extends Fragment {
         } else if (confirmPassword.equals(password)) {
             passwordConfirmInput.setError("");
             return true;
+        } else if (confirmPassword.length() > MAX_LENGHT) {
+            passwordConfirmInput.setError("Field can't be so long");
+            return false;
         } else {
             passwordConfirmInput.setError("Has to be equals to password.");
             return false;
@@ -267,9 +275,9 @@ public class SignUpFragment extends Fragment {
     }
 
     private void validBtn() {
-        boolean usernameIsValid = validField(usernameEditText, usernameInput, USERNAME_PATTERN, "Username hasn't 4 character or contains white space or specail character.");
-        boolean passwordIsValid = validField(passwordEditText, passwordInput, PASSWORD_PATTERN, "Password must contains : 4 character, one digit, one lower and one  upper case letter and  one special character.");
-        boolean emailIsValid = validField(emailEditText, emailInput, Patterns.EMAIL_ADDRESS, "Please enter a valid email address");
+        boolean usernameIsValid = validField(usernameEditText, usernameInput, USERNAME_PATTERN, "Username hasn't 4 character or contains white space or specail character.", MAX_LENGHT);
+        boolean passwordIsValid = validField(passwordEditText, passwordInput, PASSWORD_PATTERN, "Password must contains : 4 character, one digit, one lower and one  upper case letter and  one special character.", MAX_LENGHT);
+        boolean emailIsValid = validField(emailEditText, emailInput, Patterns.EMAIL_ADDRESS, "Please enter a valid email address", MAX_LENGHT);
 
         btnSignUp.setEnabled(usernameIsValid && passwordIsValid && validConfirmPassword() && emailIsValid);
     }

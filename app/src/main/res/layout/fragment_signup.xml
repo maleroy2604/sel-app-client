@@ -45,6 +45,7 @@
                 android:autofillHints=""
                 android:hint="Username"
                 android:imeOptions="flagNoExtractUi"
+                android:maxLength="30"
                 android:textColor="@color/colorExchangeItem"
                 app:theme="@style/MyEditText" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -68,7 +69,8 @@
                 android:imeOptions="flagNoExtractUi"
                 android:inputType="textPassword"
                 android:textColor="@color/colorExchangeItem"
-                app:theme="@style/MyEditText" />
+                app:theme="@style/MyEditText"
+                android:maxLength="30"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -90,7 +92,8 @@
                 android:imeOptions="flagNoExtractUi"
                 android:inputType="textPassword"
                 android:textColor="@color/colorExchangeItem"
-                app:theme="@style/MyEditText" />
+                app:theme="@style/MyEditText"
+                android:maxLength="30"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -100,8 +103,8 @@
             android:imeOptions="flagNoExtractUi"
             android:textColor="@color/colorExchangeItem"
             app:errorEnabled="true"
-            app:theme="@style/TextInputLayoutAppearance"
-            app:errorTextAppearance="@color/colorExchangeItem">
+            app:errorTextAppearance="@color/colorExchangeItem"
+            app:theme="@style/TextInputLayoutAppearance">
 
             <EditText
                 android:id="@+id/fragment_sign_up_email"
@@ -110,6 +113,7 @@
                 android:hint="Email"
                 android:imeOptions="flagNoExtractUi"
                 android:inputType="textEmailAddress"
+                android:maxLength="30"
                 android:textColor="@color/colorExchangeItem"
                 app:theme="@style/MyEditText" />
         </com.google.android.material.textfield.TextInputLayout>

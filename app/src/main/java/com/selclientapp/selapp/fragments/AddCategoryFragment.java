@@ -122,6 +122,7 @@ public class AddCategoryFragment extends Fragment {
             }
         });
         titleHeader.setText("Add Category");
+        addCategoryInput.setError("Field can't be empty");
         addCategoryEditText.addTextChangedListener(categoryEditTextWatcher);
         configBtnAddCategory();
     }
@@ -179,10 +180,10 @@ public class AddCategoryFragment extends Fragment {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String categoryName = addCategoryEditText.getText().toString();
             if (categoryName.length() > 29) {
-                addCategoryInput.setError("Category name can't be so long");
+                addCategoryInput.setError("Field can't be so long");
                 btnAddCategory.setEnabled(false);
             } else if (categoryName.trim().isEmpty()) {
-                addCategoryInput.setError("Category name can't be empty");
+                addCategoryInput.setError("Field can't be empty");
                 btnAddCategory.setEnabled(false);
             } else {
                 addCategoryInput.setError("");

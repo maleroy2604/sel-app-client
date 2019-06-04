@@ -81,11 +81,11 @@ public class LoginFragment extends Fragment {
                     TokenBody tokenBody = new TokenBody(usernameEditText.getText().toString(), passwordEditText.getText().toString());
                     loginModel.login(tokenBody);
                     loginModel.getUserLiveData().observe(getActivity(), user -> {
-                        if(user != null){
+                        if (user != null) {
                             Intent intent = new Intent(getActivity(), HomeActivity.class);
                             startActivity(intent);
-                        }else{
-                          Tools.backgroundThreadShortToast("Wrong password or username !");
+                        } else {
+                            Tools.backgroundThreadShortToast("Wrong password or username !");
                         }
                     });
 
@@ -173,9 +173,12 @@ public class LoginFragment extends Fragment {
     // -----------------
 
     private void hasToSetError(EditText editText, TextInputLayout input) {
-        if (editText.getText().toString().trim().isEmpty()) {
+        String userNameEditText = editText.getText().toString().trim();
+        if (userNameEditText.isEmpty()) {
             input.setError("Field can't be empty");
             hasToSetEnableBtn();
+        } else if (userNameEditText.length() > 29) {
+            input.setError("Field can't be so long ");
         } else {
             input.setError("");
             hasToSetEnableBtn();

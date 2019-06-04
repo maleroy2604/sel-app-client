@@ -2,6 +2,8 @@ package com.selclientapp.selapp.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.textfield.TextInputLayout;
 import com.selclientapp.selapp.R;
 import com.selclientapp.selapp.model.Exchange;
 import com.selclientapp.selapp.model.Message;
@@ -46,6 +49,8 @@ public class DiscussionFragment extends Fragment {
     Button btnSend;
     @BindView(R.id.fragment_discussion_message)
     EditText editTextMessage;
+    @BindView(R.id.fragment_discussion_input_message)
+    TextInputLayout messageInputLayout;
     @BindView(R.id.fragment_arrow)
     ImageButton imgArrowBack;
     @BindView(R.id.fragment_title_header)
@@ -142,6 +147,29 @@ public class DiscussionFragment extends Fragment {
 
     private void configElemView() {
         titleHeader.setText("Discussion");
+        editTextMessage.addTextChangedListener(messageEditextWatcher);
     }
+
+    TextWatcher messageEditextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String message = editTextMessage.getText().toString();
+            if (message.length() > 255) {
+                messageInputLayout.setError("your message can't be to long ");
+            } else {
+                messageInputLayout.setError("");
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 
 }

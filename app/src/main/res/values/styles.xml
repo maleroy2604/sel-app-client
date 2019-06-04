@@ -22,6 +22,13 @@
         <item name="android:textColorHint">@color/colorExchangeItem</item>
     </style>
 
+    <style name="TextInputLayoutAppearanceDiscussion">
+        <item name="colorControlNormal">@color/colorBackgroundExchange</item>
+        <item name="colorControlActivated">@color/colorBackgroundExchange</item>
+        <item name="android:textColor">@color/colorBackgroundExchange</item>
+        <item name="android:textColorHint">@color/colorBackgroundExchange</item>
+    </style>
+
     <style name="MyEditText" parent="TextInputLayoutAppearance">
 
     </style>
