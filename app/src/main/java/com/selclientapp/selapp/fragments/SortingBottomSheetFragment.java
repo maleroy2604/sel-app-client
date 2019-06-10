@@ -201,32 +201,29 @@ public class SortingBottomSheetFragment extends BottomSheetDialogFragment implem
 
     private List<Exchange> sortingListExchange() {
         List<Exchange> filteredList = new ArrayList<>();
-        if (dateStart == null && category.equals("no category")) {
-            filteredList.addAll(exchangesIsFull);
-        } else {
-            for (Exchange item : exchangesIsFull) {
-                Date exchangeDate = Tools.getDate(item.getDate());
-                if (dateStart == null) {
-                    if (item.getCategory() != null && item.getCategory().equals(category)) {
-                        filteredList.add(item);
-                    }
-                } else {
-                    if (dateStart.compareTo(exchangeDate) <= 0 && dateEnd == null) {
-                        filteredList.add(item);
-                    } else {
-                        if (dateEnd == null && dateStart.compareTo(exchangeDate) <= 0 && item.getCategory().equals(category)) {
-                            filteredList.add(item);
-                        } else if (dateEnd != null && dateEnd.compareTo(exchangeDate) >= 0 && dateStart.compareTo(exchangeDate) <= 0 && category.equals("no category")) {
-                            filteredList.add(item);
-                        } else if (dateEnd != null && dateEnd.compareTo(exchangeDate) >= 0 && dateStart.compareTo(exchangeDate) <= 0 && item.getCategory().equals(category)) {
-                            filteredList.add(item);
-                        }
-                    }
-
+        for (Exchange item : exchangesIsFull) {
+            Date exchangeDate = Tools.getDate(item.getDate());
+            if (dateStart == null) {
+                if (item.getCategory() != null && item.getCategory().equals(category)) {
+                    filteredList.add(item);
                 }
+            } else {
+                if (dateStart.compareTo(exchangeDate) <= 0 && dateEnd == null) {
+                    filteredList.add(item);
+                } else {
+                    if (dateEnd == null && dateStart.compareTo(exchangeDate) <= 0 && item.getCategory().equals(category)) {
+                        filteredList.add(item);
+                    } else if (dateEnd != null && dateEnd.compareTo(exchangeDate) >= 0 && dateStart.compareTo(exchangeDate) <= 0 && category.equals("no category")) {
+                        filteredList.add(item);
+                    } else if (dateEnd != null && dateEnd.compareTo(exchangeDate) >= 0 && dateStart.compareTo(exchangeDate) <= 0 && item.getCategory().equals(category)) {
+                        filteredList.add(item);
+                    }
+                }
+
             }
-            configBtnCloseSorting();
         }
+        configBtnCloseSorting();
+
         return filteredList;
 
     }
@@ -250,6 +247,6 @@ public class SortingBottomSheetFragment extends BottomSheetDialogFragment implem
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        category = null;
+        category = "no category";
     }
 }

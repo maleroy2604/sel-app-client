@@ -116,6 +116,9 @@ public class UserRepository {
                         managementTokenAndUSer.saveSelApiToken(response.body());
                         data.postValue(response.body().getUser());
                     } else {
+                        System.out.println(response.code());
+                        System.out.println(response.message());
+                        System.out.println(response.errorBody());
                         Tools.backgroundThreadShortToast("User already exists ! ");
                     }
                 }

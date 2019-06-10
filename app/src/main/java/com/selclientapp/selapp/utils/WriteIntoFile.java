@@ -35,9 +35,9 @@ public class WriteIntoFile implements Runnable {
     private byte[] getByteArray() {
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(App.context.getContentResolver(), uri);
-            Bitmap bitmapResized = Bitmap.createScaledBitmap(bitmap, 130, 130, true);
+            Bitmap bitmapResized = Bitmap.createScaledBitmap(bitmap, 350, 350, true);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmapResized.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+            bitmapResized.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             byte[] byteArray = stream.toByteArray();
             return byteArray;
         } catch (IOException e) {

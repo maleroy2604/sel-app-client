@@ -358,15 +358,15 @@ public class EditProfileFragment extends Fragment {
         if (password.equals(oldPassword) && !oldPassword.isEmpty()) {
             input.setError("New password has to be different then old password !");
             return false;
-        } else if (!PTN.matcher(password).matches()) {
-            input.setError(msg);
-            return false;
         } else if (password.length() > MAX_LENGHT) {
             input.setError("Field can't be so long");
             return false;
         } else if (password.isEmpty() && oldPassword.isEmpty()) {
             input.setError("");
             return true;
+        } else if (!PTN.matcher(password).matches()) {
+            input.setError(msg);
+            return false;
         } else {
             input.setError("");
             return true;

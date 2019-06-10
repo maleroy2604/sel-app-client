@@ -65,7 +65,7 @@ public class ExchangeViewHolder extends RecyclerView.ViewHolder {
         } else {
             Glide.with(App.context).load(App.URL_SERVER + "imageavatar/" + exchange.getAvatarUrl()).into(imageProfile);
         }
-
+        System.out.println(exchange.getCategory());
         if (exchange.getCategory().equals("no category")) {
             imageBck.setImageResource(R.drawable.sel);
         } else {
